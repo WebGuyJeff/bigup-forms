@@ -1,0 +1,43 @@
+.bigup__form {
+    --fallback_white: #fff;
+    --fallback_black: #262626;
+    --fallback_orange: #ffb908;
+    --fallback_green: #63CFA7;
+	--fallback_red: #fd6a42;
+	--fallback_blue: #70d3e5;
+    --fallback_lightGrey: #eee;
+    --bigup_border: solid 1px;
+	--bigup_padding: 0.5em 0.75em;
+	--bigup_gutter: 0.5em;
+    position: relative;
+
+	// Hide the anti-bot honeypot.
+	.saveTheBees {
+		display: none;
+	}
+
+	&.bigup__form-locked * {
+		cursor: default;
+		pointer-events: none !important;
+	}
+
+	.bigup__form_submitLabel-notReady { display: none;}
+	.bigup__form_submitLabel-ready { display: inline;}
+
+	button:disabled {
+		.bigup__form_submitLabel-notReady { display: inline;}
+		.bigup__form_submitLabel-ready { display: none;}
+	}
+
+	.bigup__alert_output {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		flex-flow: column nowrap;
+		align-items: center;
+		justify-content: center;
+		transition: opacity 150ms ease-in-out;
+	}
+}

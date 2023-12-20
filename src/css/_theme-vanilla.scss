@@ -1,0 +1,102 @@
+.bigup__form:not( .bigup__form-nostyles ) {
+	--bigup_radius: unset;
+    --bigup_border: solid 1px;
+	width: clamp(10em, 100%, 34em);
+	text-align: inherit;
+	font: inherit;
+	max-width: 96vw;
+	margin: 0 auto;
+
+	.bigup__form_section {
+		margin: 0;
+		border: none;
+		padding: 0;
+		width: 100%;
+		transition: opacity 150ms ease-in-out;
+	}
+
+	&.bigup__form-locked .bigup__form_section {
+		opacity: 0.5;
+	}
+
+	.bigup__form_message {
+		margin: 1em 0 1.688em 0;
+	}
+
+	.bigup__form_inputWrap {
+		position: relative;
+		transition: 0.2s;
+		margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
+		border: var( --bigup_border );
+		min-width: 8em;
+		min-height: fit-content;
+		overflow: hidden;
+		resize: none;
+		width: 100%;
+
+		&-short {
+			max-width: 22em;
+		}
+	}
+
+	.bigup__form_input {
+		display: block;
+		outline: none;
+		border: none;
+		padding: var(--bigup_padding);
+		width: 100%;
+		height: 100%;
+		resize: vertical;
+		color: inherit;
+
+		&:not(.bigup__form-locked *):hover {
+			cursor: text;
+		}
+	}
+
+	.bigup__form_submit {
+		margin-top: calc( 4 * var(--bigup_gutter) );
+	}
+
+	.bigup__form_flag {
+		display: flex;
+		position: absolute;
+		top: -1.5em;
+		right: 0.2em;
+		align-items: center;
+		justify-content: center;
+		transition: top 0.15s;
+		border-radius: 0 0 0 2em;
+		width: 1.5em;
+		height: 1.5em;
+
+		&-hover {
+			background: var(--wp--preset--color--luminous-vivid-amber, var(--fallback_orange) );
+		}
+
+		&-focus {
+			background: var(--wp--preset--color--vivid-green-cyan, var(--fallback_green) );
+		}
+	}
+
+	.bigup__form_inputWrap:not(.bigup__form-locked *) {
+
+		&:hover .bigup__form_flag-hover,
+		&:focus-within .bigup__form_flag-focus {
+			top: 0.2em;
+		}
+	}
+}
+
+:not( .bigup__form-nostyles ) {
+
+	/* Widget overrides */
+	.widget .bigup__form_message {
+		margin: 1em 0;
+		font-size: 0.8em;
+	}
+		.widget .bigup__form_inputWrap {
+			margin: var(--bigup_gutter) auto 0 0;
+			width: 100%;
+		}
+}

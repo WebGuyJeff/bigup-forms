@@ -1,0 +1,50 @@
+.bigup__customFileUpload {
+	display: block;
+
+	&_label {
+		display: block;
+		margin: var(--bigup_gutter) 0 var(--bigup_gutter) 0;
+		border: var(--bigup_border);
+		border-radius: var(--bigup_radius);
+		cursor: pointer;
+		padding: var(--bigup_padding);
+		width: fit-content;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&_input {
+		display: none;
+	}
+
+	&_icon {
+		display: inline-block;
+		width: 1.5em;
+		vertical-align: middle;
+		text-align: left;
+	}
+
+	&_output ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			border: var(--bigup_border);
+			border-radius: var(--bigup_radius);
+			padding: var(--bigup_padding);
+			margin: var(--bigup_gutter) 0 var(--bigup_gutter) 0;
+		}
+	}
+
+	button {
+		margin: 0;
+		border: 0;
+		background: none;
+		padding: 0;
+		color: inherit;
+		font-size: inherit;
+	}
+}

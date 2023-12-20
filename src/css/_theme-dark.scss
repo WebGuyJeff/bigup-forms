@@ -1,0 +1,44 @@
+.bigup__form:not( .bigup__form-nostyles ).bigup__form-dark {
+    --bigup_shadow-inset: inset -0.1em 0.2em 0.5em 0.2em #000c;
+	--bigup_border: solid 0.2em var(--wp--preset--color--white, var(--fallback_lightGrey) );
+	--bigup_radius: 0.6em;
+	padding: 1em;
+	text-align: center;
+
+	.bigup__form_inputWrap {
+		margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
+		border: var( --bigup_border );
+		border-radius: var(--bigup_radius);
+		box-shadow: var(--bigup_shadow-inset);
+		background: var(--wp--preset--color--black, var(--fallback_black) );
+
+		&-wide {
+			width: 100%;
+		}
+	}
+
+	.bigup__form_input {
+		background: #0000;
+		padding: var(--bigup_padding);
+		text-shadow: 0 0 white;
+		color: var(--wp--preset--color--white, var(--fallback_white) );
+	}
+
+	.bigup__form_submit {
+		margin-top: calc( 4 * var(--bigup_gutter) );
+	}
+
+	.bigup__form_flag {
+		right: 0;
+		border-radius: 0 0 0 1em;
+		box-shadow: inset -0.3em 0.4em 0.5em 0 #000c;
+	}
+
+	.bigup__form_inputWrap:not(.bigup__form-locked *) {
+
+		&:hover .bigup__form_flag-hover,
+		&:focus-within .bigup__form_flag-focus {
+			top: 0;
+		}
+	}
+}
