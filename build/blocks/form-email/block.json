@@ -1,0 +1,17 @@
+{
+  "apiVersion": 2,
+  "name": "bigup-forms/form-email",
+  "version": "0.0.1",
+  "title": "Form Email",
+  "category": "widgets",
+  "icon": "forms",
+  "description": "Email input field for a form",
+  "keywords": [
+    "form",
+    "input",
+    "email"
+  ],
+  "textdomain": "bigup-forms",
+  "editorScript": "file:./form-email.js",
+  "viewScript": "file:./form-email-view.js"
+}

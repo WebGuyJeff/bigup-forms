@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/blocks/form/svg/logo.svg":
-/*!**************************************!*\
-  !*** ./src/blocks/form/svg/logo.svg ***!
-  \**************************************/
+/***/ "./src/blocks/form-files/svg/logo.svg":
+/*!********************************************!*\
+  !*** ./src/blocks/form-files/svg/logo.svg ***!
+  \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -32,10 +32,10 @@ var SvgLogo = function SvgLogo(props) {
 
 /***/ }),
 
-/***/ "./src/blocks/form/edit.js":
-/*!*********************************!*\
-  !*** ./src/blocks/form/edit.js ***!
-  \*********************************/
+/***/ "./src/blocks/form-files/edit.js":
+/*!***************************************!*\
+  !*** ./src/blocks/form-files/edit.js ***!
+  \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -48,57 +48,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_Honeypot__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Honeypot */ "./src/components/Honeypot.js");
 
 
 
 
-const ALLOWED_BLOCKS = ['bigup-forms/form-name', 'bigup-forms/form-email', 'bigup-forms/form-message', 'bigup-forms/form-files'];
+/**
+ * The edit function describes the structure of your block in the context of the
+ * editor. This represents what the editor will render when the block is used.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
+ *
+ * @return {WPElement} Element to render.
+ */
 function Edit() {
-  const noStyles = false,
-    // Bool - remove all styles on true.
-    styles = true,
-    // Bool - Apply fancy dark theme on true.
-    classes = ['bigup__form', noStyles ? 'bigup__form-nostyles' : '',
-    // noStyles === true.
-    styles ? 'bigup__form-dark' : 'bigup__form-vanilla' // styles === true.
-    ];
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps)({
-    className: classes
+    className: 'bigup__customFileUpload'
   });
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
-    ...blockProps,
-    method: "post",
-    acceptCharset: "utf-8",
-    autocomplete: "on"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("header", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Contact Form")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bigup__form_section"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Honeypot__WEBPACK_IMPORTED_MODULE_3__.Honeypot, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks, {
-    allowedBlocks: ALLOWED_BLOCKS
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
-    className: "button bigup__form_submit",
-    type: "submit",
-    value: "Submit",
-    disabled: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "bigup__form_submitLabel-ready"
-  }, 'Submit'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "bigup__form_submitLabel-notReady"
-  }, '[please wait]'))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("footer", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bigup__alert_output",
-    style: {
-      display: 'none',
-      opacity: 0
-    }
-  })));
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    ...blockProps
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "bigup__customFileUpload_label"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "bigup__customFileUpload_input",
+    title: "Attach a File",
+    type: "file",
+    name: "files",
+    multiple: true
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "bigup__customFileUpload_icon"
+  }, '[FILES ICON]'), 'Attach file'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bigup__customFileUpload_output"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("template", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "bigup__customFileUpload_icon"
+  }, '[BIN ICON]')));
 }
 
 /***/ }),
 
-/***/ "./src/blocks/form/save.js":
-/*!*********************************!*\
-  !*** ./src/blocks/form/save.js ***!
-  \*********************************/
+/***/ "./src/blocks/form-files/save.js":
+/*!***************************************!*\
+  !*** ./src/blocks/form-files/save.js ***!
+  \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -111,100 +101,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_Honeypot__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Honeypot */ "./src/components/Honeypot.js");
 
 
 
 
+/**
+ * The save function defines the way in which the different attributes should
+ * be combined into the final markup, which is then serialized by the block
+ * editor into `post_content`.
+ *
+ * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
+ *
+ * @return {WPElement} Element to render.
+ */
 function save() {
-  const noStyles = false,
-    // Bool - remove all styles on true.
-    styles = true,
-    // Bool - Apply fancy dark theme on true.
-    classes = ['bigup__form', noStyles ? 'bigup__form-nostyles' : '',
-    // noStyles === true.
-    styles ? 'bigup__form-dark' : 'bigup__form-vanilla' // styles === true.
-    ];
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.useBlockProps.save({
-    className: classes
+    className: 'bigup__customFileUpload'
   });
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
-    ...blockProps,
-    method: "post",
-    acceptCharset: "utf-8",
-    autocomplete: "on"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("header", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Contact Form")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bigup__form_section"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Honeypot__WEBPACK_IMPORTED_MODULE_3__.Honeypot, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.InnerBlocks.Content, null)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("footer", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bigup__alert_output",
-    style: {
-      display: 'none',
-      opacity: 0
-    }
-  })));
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    ...blockProps
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "bigup__customFileUpload_label"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "bigup__customFileUpload_input",
+    title: "Attach a File",
+    type: "file",
+    name: "files",
+    multiple: true
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "bigup__customFileUpload_icon"
+  }, '[FILES ICON]'), 'Attach file'), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bigup__customFileUpload_output"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("template", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "bigup__customFileUpload_icon"
+  }, '[BIN ICON]')));
 }
 
 /***/ }),
 
-/***/ "./src/blocks/form/svg.js":
-/*!********************************!*\
-  !*** ./src/blocks/form/svg.js ***!
-  \********************************/
+/***/ "./src/blocks/form-files/svg.js":
+/*!**************************************!*\
+  !*** ./src/blocks/form-files/svg.js ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Logo: () => (/* reexport safe */ _svg_logo_svg__WEBPACK_IMPORTED_MODULE_0__.ReactComponent)
 /* harmony export */ });
-/* harmony import */ var _svg_logo_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./svg/logo.svg */ "./src/blocks/form/svg/logo.svg");
+/* harmony import */ var _svg_logo_svg__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./svg/logo.svg */ "./src/blocks/form-files/svg/logo.svg");
 /**
  * Webpack entry point.
  */
 
 
-
-
-/***/ }),
-
-/***/ "./src/components/Honeypot.js":
-/*!************************************!*\
-  !*** ./src/components/Honeypot.js ***!
-  \************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Honeypot: () => (/* binding */ Honeypot)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-
-const Honeypot = () => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    style: {
-      position: 'absolute',
-      height: 0,
-      overflow: 'hidden',
-      opacity: 0
-    },
-    className: "bigup__form_input saveTheBees",
-    name: "required_field",
-    type: "text",
-    autocomplete: "off"
-  });
-};
-
-
-/***/ }),
-
-/***/ "./src/blocks/form/form.scss":
-/*!***********************************!*\
-  !*** ./src/blocks/form/form.scss ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
 
 
 /***/ }),
@@ -249,13 +199,13 @@ module.exports = window["wp"]["i18n"];
 
 /***/ }),
 
-/***/ "./src/blocks/form/block.json":
-/*!************************************!*\
-  !*** ./src/blocks/form/block.json ***!
-  \************************************/
+/***/ "./src/blocks/form-files/block.json":
+/*!******************************************!*\
+  !*** ./src/blocks/form-files/block.json ***!
+  \******************************************/
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"apiVersion":2,"name":"bigup-forms/form","version":"0.0.1","title":"Form","category":"widgets","icon":"forms","description":"Build any form type with customisable fields","keywords":["form","contact","booking","input"],"textdomain":"bigup-forms","editorScript":"file:./form.js","viewScript":"file:./form-view.js","editorStyle":"file:./form-editor.css","style":"file:./form.css"}');
+module.exports = JSON.parse('{"apiVersion":2,"name":"bigup-forms/form-files","version":"0.0.1","title":"Form Files","category":"widgets","icon":"forms","description":"Files input field for a form","keywords":["form","input","files"],"textdomain":"bigup-forms","editorScript":"file:./form-files.js","viewScript":"file:./form-files-view.js"}');
 
 /***/ })
 
@@ -330,46 +280,44 @@ module.exports = JSON.parse('{"apiVersion":2,"name":"bigup-forms/form","version"
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!*********************************!*\
-  !*** ./src/blocks/form/form.js ***!
-  \*********************************/
+/*!*********************************************!*\
+  !*** ./src/blocks/form-files/form-files.js ***!
+  \*********************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
 /* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./svg */ "./src/blocks/form/svg.js");
-/* harmony import */ var _form_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./form.scss */ "./src/blocks/form/form.scss");
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./edit */ "./src/blocks/form/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./save */ "./src/blocks/form/save.js");
-/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./block.json */ "./src/blocks/form/block.json");
+/* harmony import */ var _svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./svg */ "./src/blocks/form-files/svg.js");
+/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./edit */ "./src/blocks/form-files/edit.js");
+/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./save */ "./src/blocks/form-files/save.js");
+/* harmony import */ var _block_json__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./block.json */ "./src/blocks/form-files/block.json");
 
 
 
 
 
 
-
-console.log(_block_json__WEBPACK_IMPORTED_MODULE_6__.name + ' BLOCK LOADED');
+console.log(_block_json__WEBPACK_IMPORTED_MODULE_5__.name + ' BLOCK LOADED');
 // RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
 
 /**
  * Register the block.
  */
-(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_6__.name, {
-  ..._block_json__WEBPACK_IMPORTED_MODULE_6__,
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_1__.registerBlockType)(_block_json__WEBPACK_IMPORTED_MODULE_5__.name, {
+  ..._block_json__WEBPACK_IMPORTED_MODULE_5__,
   icon: _svg__WEBPACK_IMPORTED_MODULE_2__.Logo,
   /**
    * @see ./edit.js
    */
-  edit: _edit__WEBPACK_IMPORTED_MODULE_4__["default"],
+  edit: _edit__WEBPACK_IMPORTED_MODULE_3__["default"],
   /**
    * @see ./save.js
    */
-  save: _save__WEBPACK_IMPORTED_MODULE_5__["default"]
+  save: _save__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
 })();
 
 /******/ })()
 ;
-//# sourceMappingURL=form.js.map
+//# sourceMappingURL=form-files.js.map

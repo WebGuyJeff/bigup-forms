@@ -45,6 +45,7 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
             name="required_field"
             type="text"
             autocomplete="off"
+			style="position:absolute;height:0;overflow:hidden;opacity:0;"
         >
 
 		<?php if ( $decorative_markup ) : ?>

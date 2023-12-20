@@ -1,0 +1,1 @@
+{"version":3,"file":"blocks/form-email/form-email-view.js","mappings":";;;;;AAAA;AACA;AACA;AACA,G","sources":["webpack://bigup-forms/./src/blocks/form-email/form-email-view.js"],"sourcesContent":["/**\n * When this file is defined as the value of the `viewScript` property\n * in `block.json` it will be enqueued on the front end of the site.\n */\n"],"names":[],"sourceRoot":""}

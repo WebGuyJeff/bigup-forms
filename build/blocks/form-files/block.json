@@ -1,0 +1,17 @@
+{
+  "apiVersion": 2,
+  "name": "bigup-forms/form-files",
+  "version": "0.0.1",
+  "title": "Form Files",
+  "category": "widgets",
+  "icon": "forms",
+  "description": "Files input field for a form",
+  "keywords": [
+    "form",
+    "input",
+    "files"
+  ],
+  "textdomain": "bigup-forms",
+  "editorScript": "file:./form-files.js",
+  "viewScript": "file:./form-files-view.js"
+}

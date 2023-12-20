@@ -1,0 +1,13 @@
+{
+	"apiVersion": 2,
+	"name": "bigup-forms/form-name",
+	"version": "0.0.1",
+	"title": "Form Name",
+	"category": "widgets",
+	"icon": "forms",
+	"description": "Name input field for a form",
+	"keywords": [ "form", "input", "name" ],
+	"textdomain": "bigup-forms",
+	"editorScript": "file:./form-name.js",
+	"viewScript": "file:./form-name-view.js"
+}

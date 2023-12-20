@@ -1,36 +1,20 @@
 import { __ } from '@wordpress/i18n'
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor'
+import { Honeypot } from '../../components/Honeypot'
 
-/**
- * The save function defines the way in which the different attributes should
- * be combined into the final markup, which is then serialized by the block
- * editor into `post_content`.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
- *
- * @return {WPElement} Element to render.
- */
 export default function save() {
 
+	const noStyles = false, // Bool - remove all styles on true.
+	styles     = true,  // Bool - Apply fancy dark theme on true.
+	classes = [
+		'bigup__form',
+		noStyles ? 'bigup__form-nostyles' : '',               // noStyles === true.
+		styles ? 'bigup__form-dark' : 'bigup__form-vanilla'  // styles === true.
+	]
 
 	const blockProps = useBlockProps.save( {
-		className: 'bigup__form'
+		className: classes
 	} )
-
-
-	const Honeypot = () => {
-		return (
-			<input
-				style={{ height: 0, overflow: 'hidden' }}
-				className='bigup__form_input saveTheBees'
-				name='required_field'
-				type='text'
-				autocomplete='off'
-			/>
-		)
-	}
-
-
 
 	return (
 		<form
@@ -48,14 +32,8 @@ export default function save() {
 
 				<Honeypot />
 
-				<button className='button bigup__form_submit' type='submit' value='Submit' disabled>
-					<span className='bigup__form_submitLabel-ready'>
-						{'Submit'}
-					</span>
-					<span className='bigup__form_submitLabel-notReady'>
-						{'[please wait]'}
-					</span>
-				</button>
+				<InnerBlocks.Content />
+
 
 			</div>
 

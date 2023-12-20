@@ -776,20 +776,20 @@ function makeHumanReadable(string) {
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!**************************************!*\
-  !*** ./src/blocks/form/form-view.js ***!
-  \**************************************/
+/*!*******************************!*\
+  !*** ./src/js/view-public.js ***!
+  \*******************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _js_submit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../js/_submit */ "./src/js/_submit.js");
-/* harmony import */ var _js_form_lock__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../js/_form-lock */ "./src/js/_form-lock.js");
-/* harmony import */ var _js_file_upload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../js/_file-upload */ "./src/js/_file-upload.js");
+/* harmony import */ var _submit__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_submit */ "./src/js/_submit.js");
+/* harmony import */ var _form_lock__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_form-lock */ "./src/js/_form-lock.js");
+/* harmony import */ var _file_upload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_file-upload */ "./src/js/_file-upload.js");
+
+
+
+
 /**
- * When this file is defined as the value of the `viewScript` property
- * in `block.json` it will be enqueued on the front end of the site.
+ * Public client view.
  */
-
-
-
 
 function init() {
   // Hide the honeypot input field(s)
@@ -803,15 +803,15 @@ function init() {
   // Attach listeners to the form(s)
   document.querySelectorAll('.bigup__form').forEach(form => {
     // Attach submit function.
-    form.addEventListener('submit', _js_submit__WEBPACK_IMPORTED_MODULE_0__.submit);
+    form.addEventListener('submit', _submit__WEBPACK_IMPORTED_MODULE_0__.submit);
 
     // Enable the submit button now js is ready (disabled by default).
-    (0,_js_form_lock__WEBPACK_IMPORTED_MODULE_1__.formLock)(form, false);
+    (0,_form_lock__WEBPACK_IMPORTED_MODULE_1__.formLock)(form, false);
 
     // File upload.
     const filesInput = form.querySelector('.bigup__customFileUpload_input');
     if (filesInput) {
-      filesInput.addEventListener('change', _js_file_upload__WEBPACK_IMPORTED_MODULE_2__.fileUpload);
+      filesInput.addEventListener('change', _file_upload__WEBPACK_IMPORTED_MODULE_2__.fileUpload);
     }
   });
 }
@@ -827,4 +827,4 @@ let docReady = setInterval(() => {
 
 /******/ })()
 ;
-//# sourceMappingURL=form-view.js.map
+//# sourceMappingURL=bigup-forms-public.js.map
