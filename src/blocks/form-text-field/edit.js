@@ -1,7 +1,8 @@
 import { __ } from '@wordpress/i18n'
 import { PanelBody, PanelRow, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor'
+import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrapper } from '../../components/InputWrapper'
+import metadata from './block.json'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -14,25 +15,62 @@ import { InputWrapper } from '../../components/InputWrapper'
 export default function Edit( { attributes, setAttributes }  ) {
 
 	// Input field friendly-names.
-	const { type, name, label, required, placeholder, value } = attributes;
+	const { type, name, label, required, placeholder, value, maxlength } = attributes;
 
 	const typeOptions = [
-		{ label: 'Text', value: 'text' },
-		{ label: 'Text Large', value: 'textarea' },
-		{ label: 'Password', value: 'password' },
-		{ label: 'Email', value: 'email' },
-		{ label: 'Number', value: 'number' },
-		{ label: 'Phone', value: 'tel' },
-		{ label: 'URL', value: 'url' },
-		{ label: 'Date', value: 'date' },
-		{ label: 'Time', value: 'time' },
-
+		{ label: __('Text', 'bigup-forms'), value: 'text' },
+		{ label: __('Text Large', 'bigup-forms'), value: 'textarea' },
+		{ label: __('Password', 'bigup-forms'), value: 'password' },
+		{ label: __('Email', 'bigup-forms'), value: 'email' },
+		{ label: __('Number', 'bigup-forms'), value: 'number' },
+		{ label: __('Phone', 'bigup-forms'), value: 'tel' },
+		{ label: __('URL', 'bigup-forms'), value: 'url' },
+		{ label: __('Date', 'bigup-forms'), value: 'date' },
+		{ label: __('Time', 'bigup-forms'), value: 'time' },
 	];
 
+	const placeholderPlaceholders = {
+		'text': __('type placeholder text', 'bigup-forms'),
+		'textarea': __('type placeholder text', 'bigup-forms'),
+		'password': __('******', 'bigup-forms'),
+		'email': __('type email placeholder text', 'bigup-forms'),
+		'number': __('123', 'bigup-forms'),
+		'tel': __('08000 123 456', 'bigup-forms'),
+		'url': __('https://url.placeholder.text', 'bigup-forms'),
+		'date': '2000-01-01',
+		'time': '09:00'
+	}
+
+	const setPlaceholder = ( type ) => {
+		setAttributes( { placeholder: placeholderPlaceholders[ type ] } )
+	}
+	if ( ! placeholder ) setPlaceholder( type )
+
+	const typeChangeHandler = ( newType ) => {
+		setAttributes( { type: newType } )
+		setPlaceholder( newType )
+	}
 
 	const blockProps = useBlockProps( {
-		className: 'bigup__form_input'
+		className: 'bigup__form_inputWrap'
 	} )
+
+	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
+
+    const inputAttributes = {
+		'name': name,
+		'className': "bigup__form_input",
+		'id': 'inner-' + blockProps.id,
+		'title': label,
+		'aria-label': label,
+		'placeholder': placeholder,
+		'onfocus': 'this.placeholder=""',
+		'onblur': 'this.placeholder="Name (required)"',
+		'required': required
+    }
+	// Add these attributes conditionally.
+	if ( 'textarea' !== type ) inputAttributes.type = type
+	if ( maxlength ) inputAttributes.maxlength = maxlength
 
 	return (
 
@@ -45,18 +83,12 @@ export default function Edit( { attributes, setAttributes }  ) {
 						title="fieldType"
 						value={ type }
 						options={ typeOptions }
-						onChange={ ( value ) =>
-							setAttributes( { type: value } )
-						}
+						onChange={ ( newValue ) => typeChangeHandler( newValue ) }
 					/>
 					<CheckboxControl
 						label={ __( 'Required' ) }
 						checked={ required }
-						onChange={ ( newVal ) => {
-							setAttributes( {
-								required: newVal,
-							} )
-						} }
+						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -65,41 +97,23 @@ export default function Edit( { attributes, setAttributes }  ) {
 					autoComplete="off"
 					label={ __( 'Name' ) }
 					value={ name }
-					onChange={ ( newVal ) => {
-						setAttributes( {
-							name: newVal,
-						} );
-					} }
-					help={ __(
-						'Name of the field in the submitted results.'
-					) }
+					onChange={ ( newValue ) => { setAttributes( { name: newValue, } ) } }
+					help={ __( 'Name of the field in the submitted results.' ) }
 				/>
 			</InspectorControls>
 
-			<InputWrapper>
+			<InputWrapper props={ blockProps } >
 				<RichText
-					tagName="span"
-					className="wp-block-form-input__label-content"
+					tagName="label"
+					for={ 'inner-' + blockProps.id }
+					className="bigup__form_inputLabel"
 					value={ label }
-					onChange={ ( newLabel ) =>
-						setAttributes( { label: newLabel } )
-					}
+					onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
 					aria-label={ label ? __( 'Label' ) : __( 'Empty label' ) }
-					placeholder={ __( 'Type the label for this input' ) }
+					placeholder={ __( 'Add a label to this input' ) }
 				/>
-				<input
-					{ ...blockProps }
-					name={ name }
-					type={ type }
-					maxlength='100'
-					title={ label }
-					aria-label={ label }
-					placeholder='Name (required)'
-					onfocus='this.placeholder=""'
-					onblur='this.placeholder="Name (required)"'
-					required={ required }
-				/>
-			</InputWrapper>z
+				<InputTagName { ...inputAttributes } />
+			</InputWrapper>
 
 		</>
 	)

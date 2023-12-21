@@ -1,9 +1,8 @@
-import { InnerBlocks } from '@wordpress/block-editor'
+const InputWrapper = ( { children, props } ) => {
 
-const InputWrapper = () => {
 	return (
-		<div className='bigup__form_inputWrap'>
-			<InnerBlocks/>
+		<div { ...props }>
+			{ children }
 			<span className='bigup__form_flag bigup__form_flag-hover'></span>
 			<span className='bigup__form_flag bigup__form_flag-focus'></span>
 		</div>

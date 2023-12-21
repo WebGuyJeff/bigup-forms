@@ -5,11 +5,14 @@
 	"require": {
 		"phpmailer/phpmailer": "^6.8"
 	},
-	"license": "GPL-3.0",
-	"authors": [
-		{
-			"name": "jefferson",
-			"email": "me@jeffersonreal.uk"
-		}
-	]
+	"require-dev": {
+        "squizlabs/php_codesniffer": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"wp-coding-standards/wpcs": "^3.0"
+    },
+	"scripts": {
+		"lint": "vendor/bin/phpcs -ps ./classes --standard=WordPress",
+		"lint-fix": "vendor/bin/phpcbf -ps ./classes --standard=WordPress",
+        "phpcompat": "./vendor/bin/phpcs -p . --standard=PHPCompatibilityWP --extensions=php --runtime-set testVersion 5.6-"
+    }
 }

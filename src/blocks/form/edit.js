@@ -8,7 +8,8 @@ const ALLOWED_BLOCKS = [
 	'bigup-forms/form-name',
 	'bigup-forms/form-email',
 	'bigup-forms/form-message',
-	'bigup-forms/form-files'
+	'bigup-forms/form-files',
+	'bigup-forms/form-text-field'
 ];
 
 export default function Edit() {

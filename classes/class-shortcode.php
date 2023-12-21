@@ -11,32 +11,30 @@ namespace Bigup\Forms;
  * @copyright Copyright (c) 2023, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
- * 
  */
 
-class Shortcode { 
+class Shortcode {
 
 
-    /**
-     * This function is called by WordPress when the shortcode is used.
-     */
-    public static function display_shortcode( $attributes= array() ) {
+	/**
+	 * This function is called by WordPress when the shortcode is used.
+	 */
+	public static function display_shortcode( $attributes = array() ) {
 
-        //enqueue contact form and styles
-        wp_enqueue_script('bigup_forms_public_js');
-        wp_enqueue_style('bigup_forms_public_css');
+		// enqueue contact form and styles
+		wp_enqueue_script( 'bigup_forms_public_js' );
+		wp_enqueue_style( 'bigup_forms_public_css' );
 
-        if ( empty( $attributes[ 'title' ] ) ) {
-            $attributes[ 'title' ] = false;
-        }
+		if ( empty( $attributes['title'] ) ) {
+			$attributes['title'] = false;
+		}
 
-        if ( empty( $attributes[ 'message' ] ) ) {
-            $attributes[ 'message' ] = false;
-        }
+		if ( empty( $attributes['message'] ) ) {
+			$attributes['message'] = false;
+		}
 
-		//get the form markup built with the passed vars.
+		// get the form markup built with the passed vars.
 		$form = Form_Generator::get_form( $attributes );
-        return $form;
-    }
-
+		return $form;
+	}
 }

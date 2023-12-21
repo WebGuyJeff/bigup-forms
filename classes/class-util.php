@@ -18,7 +18,7 @@ class Util {
 
 	/**
 	 * Retrieve file contents the 'WordPress way'.
-	 * 
+	 *
 	 * @param string $path File system path.
 	 */
 	public static function get_contents( $path ) {
@@ -31,5 +31,4 @@ class Util {
 		$string        = $wp_filesystem->get_contents( $path );
 		return $string;
 	}
-
 }

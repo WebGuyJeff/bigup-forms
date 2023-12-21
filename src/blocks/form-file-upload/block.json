@@ -9,5 +9,6 @@
 	"keywords": [ "form", "input", "files" ],
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-file-upload.js",
-	"viewScript": "file:./form-file-upload-view.js"
+	"viewScript": "file:./form-file-upload-view.js",
+	"parent": [ "bigup-forms/form" ]
 }

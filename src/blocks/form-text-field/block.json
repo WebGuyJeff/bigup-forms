@@ -10,6 +10,7 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-text-field.js",
 	"viewScript": "file:./form-text-field-view.js",
+	"parent": [ "bigup-forms/form" ],
 	"attributes": {
 		"type": {
 			"type": "string",
@@ -22,25 +23,32 @@
 		"label": {
 			"type": "rich-text",
 			"default": "Label",
-			"selector": ".wp-block-form-input__label-content",
+			"selector": "label",
 			"source": "rich-text"
 		},
 		"required": {
 			"type": "boolean",
 			"default": false,
-			"selector": ".wp-block-form-input__input",
+			"selector": "input",
 			"source": "attribute",
 			"attribute": "required"
 		},
 		"placeholder": {
 			"type": "string",
-			"selector": ".wp-block-form-input__input",
+			"selector": "input",
 			"source": "attribute",
 			"attribute": "placeholder"
 		},
 		"value": {
 			"type": "string",
 			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "value"
+		},
+		"maxlength": {
+			"type": "string",
+			"default": null,
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "value"

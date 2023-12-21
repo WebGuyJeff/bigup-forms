@@ -70,7 +70,6 @@ class Admin_Settings {
 			array( &$this, 'create_settings_page' ), // function
 			null,                               // position
 		);
-
 	}
 
 

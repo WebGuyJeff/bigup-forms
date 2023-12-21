@@ -13,7 +13,6 @@ namespace Bigup\Forms;
  * @copyright Copyright (c) 2023, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
- * 
  */
 
 // Import PHPMailer for use of the email validation method.
@@ -27,12 +26,12 @@ class Get_Settings {
 
 	/**
 	 * Get the SMTP options.
-	 * 
+	 *
 	 * Performs initial validation to ensure no values are empty.
 	 */
 	public static function smtp() {
-		
-		$option_names = [
+
+		$option_names = array(
 			'username',
 			'password',
 			'host',
@@ -41,11 +40,11 @@ class Get_Settings {
 			'use_local_mail_server',
 			'from_email',
 			'to_email',
-		];
+		);
 
-		$smtp_settings = Self::get_options_from_database( $option_names );
+		$smtp_settings = self::get_options_from_database( $option_names );
 
-		if ( Self::validate_settings( $smtp_settings ) ) {
+		if ( self::validate_settings( $smtp_settings ) ) {
 			// settings ok
 			return $smtp_settings;
 		}
@@ -55,20 +54,20 @@ class Get_Settings {
 
 	/**
 	 * Get the local mail server options.
-	 * 
+	 *
 	 * Performs initial validation to ensure no values are empty.
 	 */
 	public static function local_mail_server() {
-		
-		$option_names = [
+
+		$option_names = array(
 			'use_local_mail_server',
 			'from_email',
 			'to_email',
-		];
+		);
 
-		$local_mail_server_settings = Self::get_options_from_database( $option_names );
+		$local_mail_server_settings = self::get_options_from_database( $option_names );
 
-		if ( Self::validate_settings( $local_mail_server_settings ) ) {
+		if ( self::validate_settings( $local_mail_server_settings ) ) {
 			// settings ok
 			return $local_mail_server_settings;
 		}
@@ -80,7 +79,7 @@ class Get_Settings {
 
 	/**
 	 * Get all passed option names from the db.
-	 * 
+	 *
 	 * Returns false if ANY option is empty.
 	 */
 	private static function get_options_from_database( $option_names ) {
@@ -89,7 +88,6 @@ class Get_Settings {
 			foreach ( $option_names as $option ) {
 				$settings[ $option ] = $saved_settings[ $option ] ?? false;
 			}
-
 		} else {
 			error_log( 'Bigup_Forms: get_options_from_database expects string or array but ' . gettype( $option_names ) . ' received.' );
 			return false;
@@ -100,7 +98,7 @@ class Get_Settings {
 
 	/**
 	 * Validate settings
-	 * 
+	 *
 	 * Returns false if ANY option is invalid.
 	 * This only validates settings and should not manipulate values.
 	 */
@@ -121,7 +119,7 @@ class Get_Settings {
 
 				case 'host':
 					if ( is_string( $value ) ) {
-						$ip = gethostbyname( $value );
+						$ip    = gethostbyname( $value );
 						$valid = ( filter_var( $ip, FILTER_VALIDATE_IP ) ) ? true : false;
 					} else {
 						$valid = false;
@@ -129,45 +127,43 @@ class Get_Settings {
 					break;
 
 				case 'port':
-					$valid_ports = [ 25, 465, 587, 2525 ];
-					$valid = in_array( intval( $value ), $valid_ports, true );
+					$valid_ports = array( 25, 465, 587, 2525 );
+					$valid       = in_array( intval( $value ), $valid_ports, true );
 					break;
 
 				case 'auth':
-					$valid = ( is_bool( (bool)$value ) ) ? true : false;
+					$valid = ( is_bool( (bool) $value ) ) ? true : false;
 					break;
 
 				case 'use_local_mail_server':
-					$valid = ( is_bool( (bool)$value ) ) ? true : false;
+					$valid = ( is_bool( (bool) $value ) ) ? true : false;
 					break;
 
 				case 'from_email':
 					$valid = ( PHPMailer::validateAddress( $value ) ) ? true : false;
-					break;            
+					break;
 
 				case 'to_email':
 					$valid = ( PHPMailer::validateAddress( $value ) ) ? true : false;
-					break;	
+					break;
 
 				case 'styles':
-					$valid = ( is_bool( (bool)$value ) ) ? true : false;
+					$valid = ( is_bool( (bool) $value ) ) ? true : false;
 					break;
 
 				case 'nostyles':
-					$valid = ( is_bool( (bool)$value ) ) ? true : false;
+					$valid = ( is_bool( (bool) $value ) ) ? true : false;
 					break;
 
 			}
 			if ( $valid === false ) {
-				//settings bad - we're done here
-				error_log( 'Bigup_Forms: Setting "' . $name . '" has failed validation.');
+				// settings bad - we're done here
+				error_log( 'Bigup_Forms: Setting "' . $name . '" has failed validation.' );
 				return false;
 			}
 		}
-		
-		//settings ok
+
+		// settings ok
 		return true;
 	}
-
-
 }

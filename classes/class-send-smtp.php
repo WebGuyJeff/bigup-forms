@@ -13,7 +13,6 @@ namespace Bigup\Forms;
  * @copyright Copyright (c) 2023, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
- * 
  */
 
 // Import PHPMailer classes into the global namespace
@@ -33,47 +32,47 @@ use function get_site_url;
 
 class Send_SMTP {
 
-    /**
-     * Hold the SMTP account settings retrieved from the database.
-     */
-    private $smtp_settings;
+	/**
+	 * Hold the SMTP account settings retrieved from the database.
+	 */
+	private $smtp_settings;
 
 
-    /**
-     * Init the class by grabbing the saved options.
-     * 
-     * Prepares SMTP settings and form data to pass to compose_email.
-     * Form data is passed by handler.
-     */
-    public function __construct() {
-        $this->smtp_settings = Get_Settings::smtp();
-    }
+	/**
+	 * Init the class by grabbing the saved options.
+	 *
+	 * Prepares SMTP settings and form data to pass to compose_email.
+	 * Form data is passed by handler.
+	 */
+	public function __construct() {
+		$this->smtp_settings = Get_Settings::smtp();
+	}
 
 
-    /**
-     * Compose and send an SMTP email.
-     */
-    public function compose_and_send_email( $form_data ) {
+	/**
+	 * Compose and send an SMTP email.
+	 */
+	public function compose_and_send_email( $form_data ) {
 
 		// Check settings are ready.
-        if ( false === !! $this->smtp_settings || true === $this->smtp_settings[ 'use_local_mail_server' ] ) {
+		if ( false === ! ! $this->smtp_settings || true === $this->smtp_settings['use_local_mail_server'] ) {
 			error_log( 'Bigup_Forms: Invalid SMTP settings retrieved from database.' );
-			return [ 500, 'Sending your message failed due to a bad local mailserver configuration.' ];
-        }
+			return array( 500, 'Sending your message failed due to a bad local mailserver configuration.' );
+		}
 
-        $mail = new PHPMailer( true );
+		$mail = new PHPMailer( true );
 
-        extract( $this->smtp_settings );
-        extract( $form_data[ 'fields' ] );
+		extract( $this->smtp_settings );
+		extract( $form_data['fields'] );
 
-        $site_url  = html_entity_decode( get_bloginfo( 'url' ) );
+		$site_url  = html_entity_decode( get_bloginfo( 'url' ) );
 		$domain    = parse_url( $site_url, PHP_URL_HOST );
 		$site_name = html_entity_decode( get_bloginfo( 'name' ) );
 		$from_name = $site_name ? $site_name : 'Bigup Forms';
 		$subject   = 'New website message from ' . $domain;
 
-// Build plaintext email body
-$plaintext = <<<PLAIN
+		// Build plaintext email body
+		$plaintext         = <<<PLAIN
 This message was sent via the contact form at $site_url.
 
 From: $name
@@ -87,10 +86,10 @@ disallowed HTML content in your email client. To view this and any future
 messages from this sender in complete HTML formatting, try adding the sender
 domain to your spam filter whitelist.
 PLAIN;
-$plaintext_cleaned = wp_strip_all_tags( $plaintext );
+		$plaintext_cleaned = wp_strip_all_tags( $plaintext );
 
-// Build html email body
-$html = <<<HTML
+		// Build html email body
+		$html = <<<HTML
 <table>
     <tr>
         <td height="60px">
@@ -118,65 +117,64 @@ $html = <<<HTML
 </table>
 HTML;
 
-        // Make sure PHP server script limit is higher than mailer timeout!
-        set_time_limit( 60 );
+		// Make sure PHP server script limit is higher than mailer timeout!
+		set_time_limit( 60 );
 		// Ensure PHP time zone is set as SMTP requires accurate times.
 		date_default_timezone_set( 'UTC' );
 
-        try {
+		try {
 
 			// Server settings.
 
-			$port = (int)$port;
+			$port = (int) $port;
 			// SMTPS/STARTTLS (ssl/tls).
 			if ( $port !== 25 && $port !== 2525 ) {
 				$mail->SMTPSecure = ( $port === 465 ) ? 'ssl' : 'tls';
 			}
-            $mail->SMTPDebug    = SMTP::DEBUG_OFF;   // Debug level: DEBUG_[OFF/SERVER/CONNECTION]
-            $mail->Debugoutput  = 'error_log';       // How to handle debug output
-			$mail->Helo         = get_site_url();    // Sender's FQDN to identify as
+			$mail->SMTPDebug   = SMTP::DEBUG_OFF;   // Debug level: DEBUG_[OFF/SERVER/CONNECTION]
+			$mail->Debugoutput = 'error_log';       // How to handle debug output
+			$mail->Helo        = get_site_url();    // Sender's FQDN to identify as
 			$mail->isSMTP();                         // Use SMTP
-            $mail->Host         = $host;             // SMTP server to send through
-            $mail->SMTPAuth     = (bool)$auth;       // Enable SMTP authentication
-            $mail->Username     = $username;         // SMTP username
-            $mail->Password     = $password;         // SMTP password
-            $mail->Port         = $port;             // TCP port
-            $mail->Timeout      = 6;                 // Connection timeout (secs)
-            $mail->getSMTPInstance()->Timelimit = 8; // Time allowed for each SMTP command response
+			$mail->Host                         = $host;             // SMTP server to send through
+			$mail->SMTPAuth                     = (bool) $auth;       // Enable SMTP authentication
+			$mail->Username                     = $username;         // SMTP username
+			$mail->Password                     = $password;         // SMTP password
+			$mail->Port                         = $port;             // TCP port
+			$mail->Timeout                      = 6;                 // Connection timeout (secs)
+			$mail->getSMTPInstance()->Timelimit = 8; // Time allowed for each SMTP command response
 
-            // Recipients.
-            $mail->setFrom( $from_email, $from_name); // Use fixed and owned SMTP account address to pass SPF checks.
-            $mail->addAddress( $to_email, );
-            $mail->addReplyTo( $email, $name );
+			// Recipients.
+			$mail->setFrom( $from_email, $from_name ); // Use fixed and owned SMTP account address to pass SPF checks.
+			$mail->addAddress( $to_email, );
+			$mail->addReplyTo( $email, $name );
 
-            // Content.
-			$mail->isHTML(true);
-			$mail->CharSet = "UTF-8";
+			// Content.
+			$mail->isHTML( true );
+			$mail->CharSet = 'UTF-8';
 			$mail->Subject = $subject;
 			$mail->Body    = $html;
 			$mail->AltBody = $plaintext_cleaned;
 
 			// File attachments.
 			if ( array_key_exists( 'files', $form_data ) ) {
-				foreach ( $form_data[ 'files' ] as $file ) {
-					$mail->AddAttachment( $file[ 'tmp_name' ], $file[ 'name' ] );
+				foreach ( $form_data['files'] as $file ) {
+					$mail->AddAttachment( $file['tmp_name'], $file['name'] );
 				}
 			}
 
-            // Gotime.
-            $sent = $mail->send();
+			// Gotime.
+			$sent = $mail->send();
 			if ( $sent ) {
-				return [ 200, 'Message sent successfully.' ];
+				return array( 200, 'Message sent successfully.' );
 			} else {
 				throw new Exception( 'SMTP Error: ' . $mail->ErrorInfo );
 			}
+		} catch ( Exception $e ) {
 
-        } catch ( Exception $e ) {
-
-            //PHPMailer exceptions are not public-safe - Send to logs.
-            error_log( 'Bigup_Forms: ' . $mail->ErrorInfo );
-            //Generic public error.
-            return [ 500, 'Sending your message failed while connecting to the mail server.' ];
+			// PHPMailer exceptions are not public-safe - Send to logs.
+			error_log( 'Bigup_Forms: ' . $mail->ErrorInfo );
+			// Generic public error.
+			return array( 500, 'Sending your message failed while connecting to the mail server.' );
 		}
-    }
+	}
 }

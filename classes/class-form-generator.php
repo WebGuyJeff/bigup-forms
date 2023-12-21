@@ -11,82 +11,80 @@ namespace Bigup\Forms;
  * @copyright Copyright (c) 2023, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
- * 
  */
 
 class Form_Generator {
 
-    
-    /**
-     * Helper function - include_with_vars.
-     *
-     * This function allows the passing of variables between template parts.
-     * Example of passing a title from index.php to header.php:
-     * 
-     * index.php:
-     * includeWithVariables('header.php', array('title' => 'Header Title'));
-     * 
-     * header.php:
-     * echo $title;
-     */
-    public static function include_with_vars( $template_path, $variables = array() ) {
-        $output = NULL;
-        if( file_exists( $template_path ) ) {
 
-            // Extract variables to local namespace.
-            extract( $variables );
-            // Start output buffering.
-            ob_start();
-            // Include the template file.
-            include $template_path;
-            // End buffering and return its contents.
-            $output = ob_get_clean();
+	/**
+	 * Helper function - include_with_vars.
+	 *
+	 * This function allows the passing of variables between template parts.
+	 * Example of passing a title from index.php to header.php:
+	 *
+	 * index.php:
+	 * includeWithVariables('header.php', array('title' => 'Header Title'));
+	 *
+	 * header.php:
+	 * echo $title;
+	 */
+	public static function include_with_vars( $template_path, $variables = array() ) {
+		$output = null;
+		if ( file_exists( $template_path ) ) {
 
-        }
-        return $output;
-    }
+			// Extract variables to local namespace.
+			extract( $variables );
+			// Start output buffering.
+			ob_start();
+			// Include the template file.
+			include $template_path;
+			// End buffering and return its contents.
+			$output = ob_get_clean();
+
+		}
+		return $output;
+	}
 
 
-    /**
-     * Get Form
-	 * 
+	/**
+	 * Get Form
+	 *
 	 * Includes the correct template with the variables.
-	 * 
+	 *
 	 * @param array $vars Vars passed by caller from widget/shortcode settings.
-     */
+	 */
 	public static function get_form( $vars = array() ) {
 
 		$form_template = plugin_dir_path( __DIR__ ) . 'parts/form.php';
 
-		if ( ! isset( $vars[ 'align' ] ) ) {
-            $align = '';
-        } elseif ( 'middle' === $vars[ 'align' ] ) {
+		if ( ! isset( $vars['align'] ) ) {
+			$align = '';
+		} elseif ( 'middle' === $vars['align'] ) {
 			$align = 'aligncenter';
-		} elseif ( 'left' === $vars[ 'align' ] ) {
+		} elseif ( 'left' === $vars['align'] ) {
 			$align = 'alignleft';
-		} elseif ( 'right' === $vars[ 'align' ] ) {
+		} elseif ( 'right' === $vars['align'] ) {
 			$align = 'alignright';
 		} else {
 			$align = '';
 		}
 
-		$saved_settings = get_option( 'bigup_forms_settings' );
-		$nostyles       = $saved_settings['nostyles'] ?? false;
-		$styles         = $saved_settings['styles'] ?? false;
-		$files          = $saved_settings['files'] ?? false;
-		$vars[ 'classes' ] = '';
+		$saved_settings  = get_option( 'bigup_forms_settings' );
+		$nostyles        = $saved_settings['nostyles'] ?? false;
+		$styles          = $saved_settings['styles'] ?? false;
+		$files           = $saved_settings['files'] ?? false;
+		$vars['classes'] = '';
 
 		if ( $nostyles ) {
-			$vars[ 'classes' ] .= 'bigup__form-nostyles';
+			$vars['classes'] .= 'bigup__form-nostyles';
 		} else {
-			$vars[ 'classes' ] .= $styles ? 'bigup__form-dark' : 'bigup__form-vanilla';
+			$vars['classes'] .= $styles ? 'bigup__form-dark' : 'bigup__form-vanilla';
 		}
-		$vars[ 'classes' ] .= ' ' . $align;
-		$vars[ 'files' ]    = isset( $vars[ 'files' ] ) ? $vars[ 'files' ] : $files;
+		$vars['classes'] .= ' ' . $align;
+		$vars['files']    = isset( $vars['files'] ) ? $vars['files'] : $files;
 
 		// Include the form template with the widget vars.
 		$form = self::include_with_vars( $form_template, $vars );
-        return $form;
-    }
-
+		return $form;
+	}
 }
