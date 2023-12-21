@@ -21,12 +21,15 @@ export default function save() {
 		<InputWrapper>
 			<input
 				{ ...blockProps }
-				name='email' type='text'
-				maxlength='100' title='Email'
-				required aria-label='Email'
+				name='email'
+				type='text'
+				maxlength='100'
+				title='Email'
+				aria-label='Email'
 				placeholder='Email (required)'
 				onfocus='this.placeholder=""'
 				onblur='this.placeholder="Email (required)"'
+				required={ true }
 			/>
 		</InputWrapper>
 	)

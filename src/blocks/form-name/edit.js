@@ -24,10 +24,11 @@ export default function Edit() {
 				type='text'
 				maxlength='100'
 				title='Name'
-				required aria-label='Name'
+				aria-label='Name'
 				placeholder='Name (required)'
 				onfocus='this.placeholder=""'
 				onblur='this.placeholder="Name (required)"'
+				required={ true }
 			/>
 		</InputWrapper>
 	)

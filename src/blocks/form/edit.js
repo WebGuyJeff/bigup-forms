@@ -1,6 +1,8 @@
 import { __ } from '@wordpress/i18n'
-import { InnerBlocks, useBlockProps } from '@wordpress/block-editor'
+import { InnerBlocks, useBlockProps, InspectorControls } from '@wordpress/block-editor'
+import { PanelBody, PanelRow } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
+import { SubmitButton } from '../../components/SubmitButton'
 
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-name',
@@ -12,7 +14,7 @@ const ALLOWED_BLOCKS = [
 export default function Edit() {
 
 	const noStyles = false, // Bool - remove all styles on true.
-		styles     = true,  // Bool - Apply fancy dark theme on true.
+		styles     = false,  // Bool - Apply fancy dark theme on true.
 		classes = [
 			'bigup__form',
 			noStyles ? 'bigup__form-nostyles' : '',              // noStyles === true.
@@ -41,14 +43,7 @@ export default function Edit() {
 
 				<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
 
-				<button className='button bigup__form_submit' type='submit' value='Submit' disabled>
-					<span className='bigup__form_submitLabel-ready'>
-						{'Submit'}
-					</span>
-					<span className='bigup__form_submitLabel-notReady'>
-						{'[please wait]'}
-					</span>
-				</button>
+				<SubmitButton />
 
 			</div>
 

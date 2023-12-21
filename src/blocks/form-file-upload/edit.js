@@ -23,7 +23,7 @@ export default function Edit() {
 					title='Attach a File'
 					type='file'
 					name='files'
-					multiple
+					multiple={ true }
 				/>
 				<span className='bigup__customFileUpload_icon'>
 					{'[FILES ICON]'}

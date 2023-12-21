@@ -28,8 +28,7 @@ export default function Edit() {
 				placeholder='Type your message here...'
 				onfocus='this.placeholder=""'
 				onblur='this.placeholder="Type your message..."'
-			>
-			</textarea>
+			/>
 		</InputWrapper>
 	)
 }
