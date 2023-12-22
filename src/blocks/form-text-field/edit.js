@@ -1,9 +1,9 @@
 import { __ } from '@wordpress/i18n'
-import { PanelBody, PanelRow, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
+import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrapper } from '../../components/InputWrapper'
-import metadata from './block.json'
 import { definition } from './definition'
+import { makeNameAttributeSafe } from '../../js/_util'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -15,73 +15,70 @@ import { definition } from './definition'
  */
 export default function Edit( { attributes, setAttributes }  ) {
 
-	const { type, name, label, required, placeholder, value, maxlength } = attributes
-	const { text, textarea, password, email, number, tel, url, date, time } = definition
+	const {
+		type,
+		name,
+		label,
+		required,
+		autocomplete,
+		placeholder,
+		minlength,
+		maxlength,
+		min,
+		max,
+		step,
+		pattern,
+		size,
+		rows,
+		visibilityPermissions
+	} = attributes
 
-console.log( definition[type] )
-
-	const typeOptions = [
-		{ label: text.label, value: 'text' },
-		{ label: textarea.label, value: 'textarea' },
-		{ label: password.label, value: 'password' },
-		{ label: email.label, value: 'email' },
-		{ label: number.label, value: 'number' },
-		{ label: tel.label, value: 'tel' },
-		{ label: url.label, value: 'url' },
-		{ label: date.label, value: 'date' },
-		{ label: time.label, value: 'time' },
-	];
-
-	const setPlaceholder = ( type ) => {
-		setAttributes( { placeholder: [ type ].placeholder } )
-	}
-	if ( ! placeholder ) setPlaceholder( type )
-
+	// Set new values on input type select change.
 	const typeChangeHandler = ( newType ) => {
-		setAttributes( { type: newType } )
-		setPlaceholder( newType )
+		setAttributes( {
+			type: newType,
+			name: makeNameAttributeSafe( definition[ newType ].label ),
+			label: definition[ newType ].label 
+		} )
+	}
+
+	// Select control values.
+	const typeOptions = []
+	for ( const [ key, value ] of Object.entries( definition ) ) {
+		typeOptions.push( { label: definition[ key ].label, value: key } )
 	}
 
 	const blockProps = useBlockProps( {
 		className: 'bigup__form_inputWrap'
 	} )
 
+	// Set the HTML tag when switching between input[type='text']/textarea.
 	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
 
-	//let validationAttrs = definition[type].validationAttrs.forEach( attr => {
-	//	attr: attributes[attr]
-	//} )
-
-	let validationAttrs = {};
-	for ( const [ key, value ] of Object.entries( definition[type].validationAttrs ) ) {
-		validationAttrs[key] = attributes[key]
-	}
-
-	console.log(validationAttrs)
-
-    const inputAttributes = {
-		'name': name,
-		'className': "bigup__form_input",
-		'id': 'inner-' + blockProps.id,
-		'title': label,
-		'aria-label': label,
-		'placeholder': placeholder,
-		'onfocus': 'this.placeholder=""',
-		'onblur': 'this.placeholder="Name (required)"',
-		'required': required,
-		'autocomplete': 'on',
-		'size': '40',
-		...validationAttrs
+	// Get limit attributes from definition and get any saved values from block attributes.
+	const availableLimits = definition[type].limits
+	const savedLimits = {}
+	availableLimits.forEach( attr => {
+		if ( attributes[attr] ) {
+			savedLimits[attr] = attributes[attr]
+		}
+	} )
+	// Built attributes to apply to the component.
+    const conditionalAttributes = {
+		...savedLimits
     }
-	// Add these attributes conditionally.
-	if ( 'textarea' !== type ) inputAttributes.type = type
-	if ( 'textarea' === type ) inputAttributes.rows = '8'
+	if ( 'textarea' !== type ) conditionalAttributes.type = type
+
+	const editPlaceholder = placeholder ? placeholder : definition[type].placeholder
 
 	return (
 
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Input settings' ) }>
+				<PanelBody
+					title={ __( 'Input settings') }
+					initialOpen={ true } 
+				>
 					<SelectControl
 						label="Type"
 						labelPosition="Left"
@@ -95,6 +92,83 @@ console.log( definition[type] )
 						checked={ required }
 						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
 					/>
+					<CheckboxControl
+						label={ __( 'Autocomplete' ) }
+						checked={ ( "on" === autocomplete ) ? true : false }
+						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
+						help={ __( 'Allow browser-assisted form-filling.' ) }
+					/>
+				</PanelBody>
+			</InspectorControls>
+			<InspectorControls>
+				<PanelBody
+					title={ __( 'Input Limits' ) }
+					initialOpen={ true }
+				>
+
+					{ availableLimits.includes( 'minlength' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Minimum length' ) }
+							value={ minlength }
+							onChange={ ( newValue ) => { setAttributes( { minlength: newValue, } ) } }
+							help={ __( 'Minimum length of the text.' ) }
+						/>
+					}
+					{ availableLimits.includes( 'maxlength' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Maximum length' ) }
+							value={ maxlength }
+							onChange={ ( newValue ) => { setAttributes( { maxlength: newValue, } ) } }
+							help={ __( 'Maximum length of the text.' ) }
+						/>
+					}
+					{ availableLimits.includes( 'min' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Minimum' ) }
+							value={ min }
+							onChange={ ( newValue ) => { setAttributes( { min: newValue, } ) } }
+							help={ __( 'Minimum value.' ) }
+						/>
+					}
+					{ availableLimits.includes( 'max' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Maximum' ) }
+							value={ max }
+							onChange={ ( newValue ) => { setAttributes( { max: newValue, } ) } }
+							help={ __( 'Maximum value.' ) }
+						/>
+					}
+					{ availableLimits.includes( 'step' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Step' ) }
+							value={ step }
+							onChange={ ( newValue ) => { setAttributes( { step: newValue, } ) } }
+							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
+						/>
+					}
+					{ availableLimits.includes( 'size' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Size' ) }
+							value={ size }
+							onChange={ ( newValue ) => { setAttributes( { size: newValue, } ) } }
+							help={ __( 'The number of characters visible while editing.' ) }
+						/>
+					}
+					{ availableLimits.includes( 'rows' ) &&
+						<TextControl
+							type="number"
+							label={ __( 'Line rows' ) }
+							value={ rows }
+							onChange={ ( newValue ) => { setAttributes( { rows: newValue, } ) } }
+							help={ __( 'The number of lines made visible by the input.' ) }
+						/>
+					}
 				</PanelBody>
 			</InspectorControls>
 			<InspectorControls group="advanced">
@@ -102,9 +176,17 @@ console.log( definition[type] )
 					autoComplete="off"
 					label={ __( 'Name' ) }
 					value={ name }
-					onChange={ ( newValue ) => { setAttributes( { name: newValue, } ) } }
-					help={ __( 'Name of the field in the submitted results.' ) }
+					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ), } ) } }
+					help={ __( 'Name of the field in the submitted results. Must consist of letters, numbers, hyphens, underscores and begin with a letter.' ) }
 				/>
+				{ availableLimits.includes( 'pattern' ) &&
+					<TextControl
+						label={ __( 'Pattern' ) }
+						value={ pattern }
+						onChange={ ( newValue ) => { setAttributes( { pattern: newValue, } ) } }
+						help={ __( 'A regular expression pattern to validate the input against.' ) }
+					/>
+				}
 			</InspectorControls>
 
 			<InputWrapper props={ blockProps } >
@@ -117,7 +199,21 @@ console.log( definition[type] )
 					aria-label={ label ? __( 'Label' ) : __( 'Empty label' ) }
 					placeholder={ __( 'Add a label to this input' ) }
 				/>
-				<InputTagName { ...inputAttributes } />
+				<InputTagName
+					name={ name }
+					className={ 'bigup__form_input' }
+					id={ 'inner-' + blockProps.id }
+					title={ label }
+					aria-label={ label }
+					required={ required }
+					size={ size }
+					onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
+					placeholder={ editPlaceholder }
+					onFocus={ ( e ) => { e.target.value = editPlaceholder } }
+					onBlur={ ( e ) => { e.target.value = '' } }
+					autocomplete={ autocomplete }
+					{ ...conditionalAttributes }
+				/>
 			</InputWrapper>
 
 		</>

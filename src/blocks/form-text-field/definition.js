@@ -2,73 +2,86 @@ import { __ } from '@wordpress/i18n'
 
 const definition = {
 	'text': {
-		'label': __('Text', 'bigup-forms'),
-		'placeholder': __('type placeholder text', 'bigup-forms'),
-		'validationAttrs': [
+		'label': __( 'Text', 'bigup-forms' ),
+		'placeholder': __( 'Type placeholder text', 'bigup-forms' ),
+		'limits': [
+			'minlength',
 			'maxlength',
 			'pattern',
+			'size'
 		]
 	},
 	'textarea': {
-		'label': __('Text Large', 'bigup-forms'),
-		'placeholder': __('type placeholder text', 'bigup-forms'),
-		'validationAttrs': [
-			'maxlength',
-		]
-	},
-	'password': {
-		'label': __('Password', 'bigup-forms'),
-		'placeholder': __('******', 'bigup-forms'),
-		'validationAttrs': [
+		'label': __( 'Text Large', 'bigup-forms' ),
+		'placeholder': __( 'Type placeholder text', 'bigup-forms' ),
+		'limits': [
+			'minlength',
 			'maxlength',
 			'pattern',
+			'size',
+			'rows'
 		]
 	},
 	'email': {
-		'label': __('Email', 'bigup-forms'),
-		'placeholder': __('type email placeholder text', 'bigup-forms'),
-		'validationAttrs': [
+		'label': __( 'Email', 'bigup-forms' ),
+		'placeholder': __( 'Type email placeholder text', 'bigup-forms' ),
+		'limits': [
+			'minlength',
 			'maxlength',
 			'pattern',
-		]
-	},
-	'number': {
-		'label': __('Number', 'bigup-forms'),
-		'validationAttrs': [
-			"min",
-			"max",
-			'step'
+			'size'
 		]
 	},
 	'tel': {
-		'label': __('Phone', 'bigup-forms'),
-		'placeholder': __('type placeholder text', 'bigup-forms'),
-		'validationAttrs': [
+		'label': __( 'Phone', 'bigup-forms' ),
+		'placeholder': __( 'Type phone placeholder text', 'bigup-forms' ),
+		'limits': [
+			'minlength',
 			'maxlength',
 			'pattern',
+			'size'
+		]
+	},
+	'password': {
+		'label': __( 'Password', 'bigup-forms' ),
+		'placeholder': __( 'Type password placeholder text', 'bigup-forms' ),
+		'limits': [
+			'minlength',
+			'maxlength',
+			'pattern',
+			'size'
 		]
 	},
 	'url': {
-		'label': __('URL', 'bigup-forms'),
-		'placeholder': __('https://url.placeholder.text', 'bigup-forms'),
-		'validationAttrs': [
+		'label': __( 'URL', 'bigup-forms' ),
+		'placeholder': __( 'Type URL placeholder text', 'bigup-forms' ),
+		'limits': [
+			'minlength',
 			'maxlength',
 			'pattern',
+			'size'
 		]
 	},
-	'date': {
-		'label': __('Date', 'bigup-forms'),
-		'validationAttrs': [
-			"min",
-			"max",
+	'number': {
+		'label': __( 'Number', 'bigup-forms' ),
+		'limits': [
+			'min',
+			'max',
 			'step'
 		]
 	},
+	'date': {
+		'label': __( 'Date', 'bigup-forms' ),
+		'limits': [
+			'min',
+			'max'
+		]
+	},
 	'time': {
-		'label': __('Time', 'bigup-forms'),
-		'validationAttrs': [
-			"min",
-			"max",
+		'label': __( 'Time', 'bigup-forms' ),
+		'limits': [
+			'min',
+			'max',
 			'step'
 		]
 	},

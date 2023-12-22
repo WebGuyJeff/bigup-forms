@@ -62,4 +62,34 @@ function makeHumanReadable( string ) {
 }
 
 
-export { removeChildren, makeHumanReadable }
+/**
+ * Convert string to a slug safe for the input[ name ] attribute.
+ * 
+ * Strip a string of invalid charaters leaving only numbers, letters and "-_".
+ * Returned string cannot begin with a number.
+ * 
+ * @param {*}	string	The string to clean.
+ * @returns		string	Cleaned string, or false on no valid characters.
+ */
+function makeNameAttributeSafe( string ) {
+	// Regex patterns.
+	const badChars         = /[^A-Za-z0-9_-]/g
+	const extraSpaces      = /^\s*|\s(?=\s)|\s*$/g
+	const spaces           = /\s/g
+	const extraHyphens     = /-{2,}/g
+	const extraUnderscores = /_{2,}/g
+	const firsCharIsLetter = /^[A-Za-z]/g
+	// Process strings.
+	const goodChars       = string ? string.replace( badChars, '' ) : false
+	const goodSpaces      = goodChars ? goodChars.replace( extraSpaces, '' ) : false
+	const hyphenSpaces    = goodSpaces ? goodSpaces.replace( spaces, '-' ) : false
+	const goodHyphens     = hyphenSpaces ? hyphenSpaces.replace( extraHyphens, '-' ) : false
+	const goodUnderscores = goodHyphens ? goodHyphens.replace( extraUnderscores, '_' ) : false
+	if ( ! goodUnderscores ) return false
+	// Apply prefix if first char isn't a letter.
+	const cleanName = firsCharIsLetter.test( goodUnderscores ) ? goodUnderscores : type + '-' + goodUnderscores
+	return cleanName
+}
+
+
+export { removeChildren, makeHumanReadable, makeNameAttributeSafe }

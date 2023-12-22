@@ -33,18 +33,25 @@
 			"source": "attribute",
 			"attribute": "required"
 		},
+		"autocomplete": {
+			"type": "string",
+			"default": "off",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "autocomplete"
+		},
 		"placeholder": {
 			"type": "string",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "placeholder"
 		},
-		"value": {
+		"minlength": {
 			"type": "string",
 			"default": "",
 			"selector": "input",
 			"source": "attribute",
-			"attribute": "value"
+			"attribute": "minlength"
 		},
 		"maxlength": {
 			"type": "string",
@@ -80,6 +87,20 @@
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "pattern"
+		},
+		"size": {
+			"type": "string",
+			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "size"
+		},
+		"rows": {
+			"type": "string",
+			"default": "8",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "rows"
 		},
 		"visibilityPermissions": {
 			"type": "string",
