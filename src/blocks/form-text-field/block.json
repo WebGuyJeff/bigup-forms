@@ -48,10 +48,38 @@
 		},
 		"maxlength": {
 			"type": "string",
-			"default": null,
+			"default": "",
 			"selector": "input",
 			"source": "attribute",
-			"attribute": "value"
+			"attribute": "maxlength"
+		},
+		"min": {
+			"type": "string",
+			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "min"
+		},
+		"max": {
+			"type": "string",
+			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "max"
+		},
+		"step": {
+			"type": "string",
+			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "step"
+		},
+		"pattern": {
+			"type": "string",
+			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "pattern"
 		},
 		"visibilityPermissions": {
 			"type": "string",

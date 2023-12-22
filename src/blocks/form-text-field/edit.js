@@ -3,6 +3,7 @@ import { PanelBody, PanelRow, TextControl, CheckboxControl, SelectControl } from
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrapper } from '../../components/InputWrapper'
 import metadata from './block.json'
+import { definition } from './definition'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -14,35 +15,25 @@ import metadata from './block.json'
  */
 export default function Edit( { attributes, setAttributes }  ) {
 
-	// Input field friendly-names.
-	const { type, name, label, required, placeholder, value, maxlength } = attributes;
+	const { type, name, label, required, placeholder, value, maxlength } = attributes
+	const { text, textarea, password, email, number, tel, url, date, time } = definition
+
+console.log( definition[type] )
 
 	const typeOptions = [
-		{ label: __('Text', 'bigup-forms'), value: 'text' },
-		{ label: __('Text Large', 'bigup-forms'), value: 'textarea' },
-		{ label: __('Password', 'bigup-forms'), value: 'password' },
-		{ label: __('Email', 'bigup-forms'), value: 'email' },
-		{ label: __('Number', 'bigup-forms'), value: 'number' },
-		{ label: __('Phone', 'bigup-forms'), value: 'tel' },
-		{ label: __('URL', 'bigup-forms'), value: 'url' },
-		{ label: __('Date', 'bigup-forms'), value: 'date' },
-		{ label: __('Time', 'bigup-forms'), value: 'time' },
+		{ label: text.label, value: 'text' },
+		{ label: textarea.label, value: 'textarea' },
+		{ label: password.label, value: 'password' },
+		{ label: email.label, value: 'email' },
+		{ label: number.label, value: 'number' },
+		{ label: tel.label, value: 'tel' },
+		{ label: url.label, value: 'url' },
+		{ label: date.label, value: 'date' },
+		{ label: time.label, value: 'time' },
 	];
 
-	const placeholderPlaceholders = {
-		'text': __('type placeholder text', 'bigup-forms'),
-		'textarea': __('type placeholder text', 'bigup-forms'),
-		'password': __('******', 'bigup-forms'),
-		'email': __('type email placeholder text', 'bigup-forms'),
-		'number': __('123', 'bigup-forms'),
-		'tel': __('08000 123 456', 'bigup-forms'),
-		'url': __('https://url.placeholder.text', 'bigup-forms'),
-		'date': '2000-01-01',
-		'time': '09:00'
-	}
-
 	const setPlaceholder = ( type ) => {
-		setAttributes( { placeholder: placeholderPlaceholders[ type ] } )
+		setAttributes( { placeholder: [ type ].placeholder } )
 	}
 	if ( ! placeholder ) setPlaceholder( type )
 
@@ -57,6 +48,17 @@ export default function Edit( { attributes, setAttributes }  ) {
 
 	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
 
+	//let validationAttrs = definition[type].validationAttrs.forEach( attr => {
+	//	attr: attributes[attr]
+	//} )
+
+	let validationAttrs = {};
+	for ( const [ key, value ] of Object.entries( definition[type].validationAttrs ) ) {
+		validationAttrs[key] = attributes[key]
+	}
+
+	console.log(validationAttrs)
+
     const inputAttributes = {
 		'name': name,
 		'className': "bigup__form_input",
@@ -66,11 +68,11 @@ export default function Edit( { attributes, setAttributes }  ) {
 		'placeholder': placeholder,
 		'onfocus': 'this.placeholder=""',
 		'onblur': 'this.placeholder="Name (required)"',
-		'required': required
+		'required': required,
+		...validationAttrs
     }
 	// Add these attributes conditionally.
 	if ( 'textarea' !== type ) inputAttributes.type = type
-	if ( maxlength ) inputAttributes.maxlength = maxlength
 
 	return (
 
