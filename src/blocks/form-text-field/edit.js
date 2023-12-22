@@ -69,10 +69,13 @@ console.log( definition[type] )
 		'onfocus': 'this.placeholder=""',
 		'onblur': 'this.placeholder="Name (required)"',
 		'required': required,
+		'autocomplete': 'on',
+		'size': '40',
 		...validationAttrs
     }
 	// Add these attributes conditionally.
 	if ( 'textarea' !== type ) inputAttributes.type = type
+	if ( 'textarea' === type ) inputAttributes.rows = '8'
 
 	return (
 
