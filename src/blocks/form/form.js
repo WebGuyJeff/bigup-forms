@@ -15,14 +15,21 @@ console.log( metadata.name + ' BLOCK LOADED' )
 registerBlockType( metadata.name, {
 	...metadata,
 	icon: Logo,
-
-	/**
-	 * @see ./edit.js
-	 */
+	styles: [
+		{
+			name: 'default',
+			label: __( 'None' ),
+			isDefault: true
+		},
+		{
+			name: 'vanilla',
+			label: __( 'Vanilla' )
+		},
+		{
+			name: 'dark',
+			label: __( 'Dark' )
+		},
+	],
 	edit: Edit,
-
-	/**
-	 * @see ./save.js
-	 */
 	save,
 } )

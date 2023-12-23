@@ -10,5 +10,5 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-file-upload.js",
 	"viewScript": "file:./form-file-upload-view.js",
-	"parent": [ "bigup-forms/form" ]
+	"ancestor": [ "bigup-forms/form" ]
 }

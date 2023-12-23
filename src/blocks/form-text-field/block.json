@@ -4,13 +4,12 @@
 	"version": "0.0.1",
 	"title": "Form Text Field",
 	"category": "widgets",
-	"icon": "forms",
-	"description": "Text field for a form",
+	"description": "Customisable input field for any text type",
 	"keywords": [ "form", "input", "text" ],
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-text-field.js",
 	"viewScript": "file:./form-text-field-view.js",
-	"parent": [ "bigup-forms/form" ],
+	"ancestor": [ "bigup-forms/form" ],
 	"attributes": {
 		"type": {
 			"type": "string",
@@ -105,6 +104,10 @@
 		"visibilityPermissions": {
 			"type": "string",
 			"default": "all"
+		},
+		"variation": {
+			"type": "string",
+			"default": ""
 		}
 	}
 }
