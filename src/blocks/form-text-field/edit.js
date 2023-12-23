@@ -19,6 +19,8 @@ export default function Edit( { attributes, setAttributes }  ) {
 		type,
 		name,
 		label,
+		labelID,
+		labelIsHidden,
 		required,
 		autocomplete,
 		placeholder,
@@ -33,6 +35,10 @@ export default function Edit( { attributes, setAttributes }  ) {
 		visibilityPermissions
 	} = attributes
 
+	const blockProps = useBlockProps( {
+		className: 'bigup__form_inputWrap'
+	} )
+
 	// Set new values on input type select change.
 	const typeChangeHandler = ( newType ) => {
 		setAttributes( {
@@ -42,15 +48,13 @@ export default function Edit( { attributes, setAttributes }  ) {
 		} )
 	}
 
+	if ( ! labelID ) setAttributes( { labelID: 'inner-' + blockProps.id } )
+
 	// Select control values.
 	const typeOptions = []
 	for ( const [ key, value ] of Object.entries( definition ) ) {
 		typeOptions.push( { label: definition[ key ].label, value: key } )
 	}
-
-	const blockProps = useBlockProps( {
-		className: 'bigup__form_inputWrap'
-	} )
 
 	// Set the HTML tag when switching between input[type='text']/textarea.
 	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
@@ -63,11 +67,12 @@ export default function Edit( { attributes, setAttributes }  ) {
 			savedLimits[attr] = attributes[attr]
 		}
 	} )
-	// Built attributes to apply to the component.
+	// Build attributes to apply to the component.
     const conditionalAttributes = {
 		...savedLimits
     }
-	if ( 'textarea' !== type ) conditionalAttributes.type = type
+	// In edit, only display type="text" to allow editing of placeholder even for number inputs.
+	if ( 'textarea' !== type ) conditionalAttributes.type = 'text'
 
 	const editPlaceholder = placeholder ? placeholder : definition[type].placeholder
 
@@ -76,9 +81,21 @@ export default function Edit( { attributes, setAttributes }  ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Input settings') }
+					title={ __( 'Settings') }
 					initialOpen={ true } 
 				>
+					<TextControl
+						type="text"
+						label={ __( 'Label' ) }
+						value={ label }
+						onChange={ ( newValue ) => { setAttributes( { label: newValue, } ) } }
+						disabled={ labelIsHidden }
+					/>
+					<CheckboxControl
+						label={ __( 'Hide Label' ) }
+						checked={ labelIsHidden }
+						onChange={ ( newValue ) => { setAttributes( { labelIsHidden: newValue, } ) } }
+					/>
 					<SelectControl
 						label="Type"
 						labelPosition="Left"
@@ -102,7 +119,7 @@ export default function Edit( { attributes, setAttributes }  ) {
 			</InspectorControls>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Input Limits' ) }
+					title={ __( 'Validation' ) }
 					initialOpen={ true }
 				>
 
@@ -190,19 +207,19 @@ export default function Edit( { attributes, setAttributes }  ) {
 			</InspectorControls>
 
 			<InputWrapper props={ blockProps } >
-				<RichText
-					tagName="label"
-					for={ 'inner-' + blockProps.id }
-					className="bigup__form_inputLabel"
-					value={ label }
-					onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
-					aria-label={ label ? __( 'Label' ) : __( 'Empty label' ) }
-					placeholder={ __( 'Add a label to this input' ) }
-				/>
+				{ ! labelIsHidden &&
+					<RichText
+						tagName="label"
+						className="bigup__form_inputLabel"
+						value={ label }
+						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
+						aria-label={ label ? __( 'Label' ) : __( 'Empty label' ) }
+						placeholder={ __( 'Add a label to this input' ) }
+					/>
+				}
 				<InputTagName
 					name={ name }
 					className={ 'bigup__form_input' }
-					id={ 'inner-' + blockProps.id }
 					title={ label }
 					aria-label={ label }
 					required={ required }

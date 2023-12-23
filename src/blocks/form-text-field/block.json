@@ -23,7 +23,19 @@
 			"type": "rich-text",
 			"default": "Label",
 			"selector": "label",
-			"source": "rich-text"
+			"source": "attribute",
+			"attribute": "value"
+		},
+		"labelID": {
+			"type": "string",
+			"default": "",
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "id"
+		},
+		"labelIsHidden": {
+			"type": "boolean",
+			"default": false
 		},
 		"required": {
 			"type": "boolean",

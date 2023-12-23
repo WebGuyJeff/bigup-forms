@@ -1,4 +1,5 @@
-.bigup__form:not( .bigup__form-nostyles ).bigup__form-dark {
+.bigup__form:not( .bigup__form-nostyles ).bigup__form-dark,
+.bigup__form:not( .is-style-default ).is-style-dark  {
     --bigup_shadow-inset: inset -0.1em 0.2em 0.5em 0.2em #000c;
 	--bigup_border: solid 0.2em var(--wp--preset--color--white, var(--fallback_lightGrey) );
 	--bigup_radius: 0.6em;

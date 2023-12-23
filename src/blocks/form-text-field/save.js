@@ -1,6 +1,8 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
 import { InputWrapper } from '../../components/InputWrapper'
+import { definition } from './definition'
+
 
 /**
  * The save function defines the way in which the different attributes should
@@ -11,26 +13,69 @@ import { InputWrapper } from '../../components/InputWrapper'
  *
  * @return {WPElement} Element to render.
  */
-export default function save() {
+export default function save( { attributes } ) {
+
+	const {
+		type,
+		name,
+		label,
+		labelID,
+		labelIsHidden,
+		required,
+		autocomplete,
+		placeholder,
+		size,
+		visibilityPermissions
+	} = attributes
 
 	const blockProps = useBlockProps.save( {
-		className: 'bigup__form_input'
+		className: 'bigup__form_inputWrap'
 	} )
 
+	// Set the HTML tag to either input or textarea.
+	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
+
+	// Get limit attributes from definition and get any saved values from block attributes.
+	const availableLimits = definition[type].limits
+	const savedLimits = {}
+	availableLimits.forEach( attr => {
+		if ( attributes[attr] ) {
+			savedLimits[attr] = attributes[attr]
+		}
+	} )
+	// Build attributes to apply to the component.
+    const conditionalAttributes = {
+		...savedLimits
+    }
+	if ( 'textarea' !== type ) conditionalAttributes.type = type
+
 	return (
-		<InputWrapper>
-			<input
-				{ ...blockProps }
-				name='name'
-				type='text'
-				maxlength='100'
-				title='Name'
-				aria-label='Name'
-				placeholder='Name (required)'
-				onfocus='this.placeholder=""'
-				onblur='this.placeholder="Name (required)"'
-				required={ true }
-			/>
-		</InputWrapper>
+
+		<>
+			<InputWrapper props={ blockProps } >
+				{ label && ! labelIsHidden &&
+					<label
+						for={ labelID }
+						className="bigup__form_inputLabel"
+					>
+						{ label }
+					</label>
+				}
+				<InputTagName
+					name={ name }
+					className={ 'bigup__form_input' }
+					id={ labelID }
+					title={ label }
+					aria-label={ label }
+					required={ required }
+					size={ size }
+					placeholder={ placeholder }
+					onFocus={ ( e ) => { e.target.placeholder = '' } }
+					onBlur={ ( e ) => { e.target.placeholder = placeholder } }
+					autocomplete={ autocomplete }
+					{ ...conditionalAttributes }
+				/>
+			</InputWrapper>
+		</>
 	)
 }

@@ -1,4 +1,6 @@
-.bigup__form:not( .bigup__form-nostyles ) {
+.bigup__form:not( .bigup__form-nostyles ).bigup__form-vanilla,
+.bigup__form:not( .is-style-default ).is-style-vanilla  {
+
 	--bigup_radius: unset;
     --bigup_border: solid 1px;
 	width: clamp(10em, 100%, 34em);

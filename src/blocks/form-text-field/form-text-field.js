@@ -53,8 +53,10 @@ registerBlockType(
 					"placeholder": "Enter your email",
 					"minlength": "6",
 					"maxlength": "320",
-					// @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
-					// Unescaped regex: ^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+					/*
+					 * @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
+					 * Unescaped regex: ^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
+					 */
 					"pattern": '^(([^<>()[\\]\\\\.,;:\\s@\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\"]+)*)|.(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$',
 					"variation": "email"
 				},

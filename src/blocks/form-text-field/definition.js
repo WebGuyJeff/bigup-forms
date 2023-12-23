@@ -64,6 +64,7 @@ const definition = {
 	},
 	'number': {
 		'label': __( 'Number', 'bigup-forms' ),
+		'placeholder': __( 'Type number placeholder text', 'bigup-forms' ),
 		'limits': [
 			'min',
 			'max',
@@ -72,6 +73,7 @@ const definition = {
 	},
 	'date': {
 		'label': __( 'Date', 'bigup-forms' ),
+		'placeholder': __( 'Type date placeholder text', 'bigup-forms' ),
 		'limits': [
 			'min',
 			'max'
@@ -79,6 +81,7 @@ const definition = {
 	},
 	'time': {
 		'label': __( 'Time', 'bigup-forms' ),
+		'placeholder': __( 'Type time placeholder text', 'bigup-forms' ),
 		'limits': [
 			'min',
 			'max',
