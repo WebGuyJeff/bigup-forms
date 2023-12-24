@@ -1,40 +1,52 @@
-.bigup__alert {
-	margin-block-end: 1.688em;
-	border: var(--bigup_border);
-	border-radius: var(--bigup_radius);
-	box-shadow: 1px 3px 6px 1px #0008;
-	background: var(--wp--preset--color--white, var(--fallback_lightGrey) );
-	padding: var(--bigup_padding);
-	text-align: center;
-	color: var(--wp--preset--color--black, var(--fallback_black) );
-	font-weight: 700;
+.bigup__alert_output {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	flex-flow: column nowrap;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 150ms ease-in-out;
 
-	&::before {
-		margin-inline-end:.5em;
-		content: "\24D8";
-	}
+	.bigup__alert {
+		margin-block-end: 1.688em;
+		border: var(--bigup_border);
+		border-radius: var(--bigup_radius);
+		box-shadow: 1px 3px 6px 1px #0008;
+		background: var(--wp--preset--color--white, var(--fallback_lightGrey) );
+		padding: var(--bigup_padding);
+		text-align: center;
+		color: var(--wp--preset--color--black, var(--fallback_black) );
+		font-weight: 700;
 
-	&-danger {
-		background:var(--wp--preset--color--vivid-red, var(--fallback_red) );
-		color:#fff;
-	}
+		&::before {
+			margin-inline-end:.5em;
+			content: "\24D8";
+		}
 
-	&-success {
-		background:var(--wp--preset--color--vivid-green-cyan, var(--fallback_green) );
-		color:#fff;
-	}
+		&-danger {
+			background:var(--wp--preset--color--vivid-red, var(--fallback_red) );
+			color:#fff;
+		}
 
-	&-info {
-		background:var(--wp--preset--color--vivid-cyan-blue, var(--fallback_blue) );
-		color:#fff;
-	}
+		&-success {
+			background:var(--wp--preset--color--vivid-green-cyan, var(--fallback_green) );
+			color:#fff;
+		}
 
-	&-warning {
-		background:var(--wp--preset--color--luminous-vivid-amber, var(--fallback_orange) );
-		color:#fff;
-	}
+		&-info {
+			background:var(--wp--preset--color--vivid-cyan-blue, var(--fallback_blue) );
+			color:#fff;
+		}
 
-	&:last-child {
-		margin-block-end: 0;
+		&-warning {
+			background:var(--wp--preset--color--luminous-vivid-amber, var(--fallback_orange) );
+			color:#fff;
+		}
+
+		&:last-child {
+			margin-block-end: 0;
+		}
 	}
 }

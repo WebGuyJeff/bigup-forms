@@ -206,7 +206,7 @@ export default function Edit( { attributes, setAttributes }  ) {
 				}
 			</InspectorControls>
 
-			<InputWrapper props={ blockProps } >
+			<div { ...blockProps } >
 				{ ! labelIsHidden &&
 					<RichText
 						tagName="label"
@@ -217,22 +217,23 @@ export default function Edit( { attributes, setAttributes }  ) {
 						placeholder={ __( 'Add a label to this input' ) }
 					/>
 				}
-				<InputTagName
-					name={ name }
-					className={ 'bigup__form_input' }
-					title={ label }
-					aria-label={ label }
-					required={ required }
-					size={ size }
-					onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
-					placeholder={ editPlaceholder }
-					onFocus={ ( e ) => { e.target.value = editPlaceholder } }
-					onBlur={ ( e ) => { e.target.value = '' } }
-					autocomplete={ autocomplete }
-					{ ...conditionalAttributes }
-				/>
-			</InputWrapper>
-
+				<InputWrapper>
+					<InputTagName
+						name={ name }
+						className={ 'bigup__form_input' }
+						title={ label }
+						aria-label={ label }
+						required={ required }
+						size={ size }
+						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
+						placeholder={ editPlaceholder }
+						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
+						onBlur={ ( e ) => { e.target.value = '' } }
+						autocomplete={ autocomplete }
+						{ ...conditionalAttributes }
+					/>
+				</InputWrapper>
+			</div>
 		</>
 	)
 }

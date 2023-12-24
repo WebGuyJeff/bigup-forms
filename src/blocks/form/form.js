@@ -29,6 +29,10 @@ registerBlockType( metadata.name, {
 			name: 'dark',
 			label: __( 'Dark' )
 		},
+		{
+			name: 'light',
+			label: __( 'Light' )
+		}
 	],
 	edit: Edit,
 	save,

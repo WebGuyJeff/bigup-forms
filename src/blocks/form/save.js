@@ -5,16 +5,8 @@ import { SubmitButton } from '../../components/SubmitButton'
 
 export default function save() {
 
-	const noStyles = false, // Bool - remove all styles on true.
-		styles     = false,  // Bool - Apply fancy dark theme on true.
-		classes = [
-			'bigup__form',
-			noStyles ? 'bigup__form-nostyles' : '',              // noStyles === true.
-			styles ? 'bigup__form-dark' : 'bigup__form-vanilla'  // styles === true.
-		]
-
 	const blockProps = useBlockProps.save( {
-		className: classes
+		className: 'bigup__form'
 	} )
 
 	return (

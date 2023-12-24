@@ -1,4 +1,5 @@
-.bigup__form.is-style-default {
+.bigup__form {
+
     --fallback_white: #fff;
     --fallback_black: #262626;
     --fallback_orange: #ffb908;
@@ -6,10 +7,14 @@
 	--fallback_red: #fd6a42;
 	--fallback_blue: #70d3e5;
     --fallback_lightGrey: #eee;
-    --bigup_border: solid 1px;
-	--bigup_padding: 0.5em 0.75em;
+	--bigup_border: solid 0.2em var(--wp--preset--color--white, var(--fallback_lightGrey) );
 	--bigup_gutter: 0.5em;
+	--bigup_padding: 0.5em 0.75em;
+	--bigup_radius: 0.6em;
+    --bigup_shadow-inset: inset -0.1em 0.2em 0.5em 0.2em #000c;
+
     position: relative;
+	max-width: 100%;
 
 	// Hide the anti-bot honeypot.
 	.saveTheBees {
@@ -28,16 +33,18 @@
 		.bigup__form_submitLabel-notReady { display: inline;}
 		.bigup__form_submitLabel-ready { display: none;}
 	}
+}
 
-	.bigup__alert_output {
-		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-		flex-flow: column nowrap;
-		align-items: center;
-		justify-content: center;
-		transition: opacity 150ms ease-in-out;
+/* Widget overrides */
+:where( .widget ) {
+
+	.bigup__form_message {
+		margin: 1em 0;
+		font-size: 0.8em;
+	}
+
+	.bigup__form_inputWrap {
+		margin: var(--bigup_gutter) auto 0 0;
+		width: 100%;
 	}
 }

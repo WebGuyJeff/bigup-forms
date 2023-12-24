@@ -1,12 +1,10 @@
-.bigup__form:not( .bigup__form-nostyles ).bigup__form-vanilla,
-.bigup__form:not( .is-style-default ).is-style-vanilla  {
+.bigup__form.is-style-vanilla {
 
 	--bigup_radius: unset;
     --bigup_border: solid 1px;
 	width: clamp(10em, 100%, 34em);
 	text-align: inherit;
 	font: inherit;
-	max-width: 96vw;
 	margin: 0 auto;
 
 	.bigup__form_section {
@@ -72,13 +70,8 @@
 		width: 1.5em;
 		height: 1.5em;
 
-		&-hover {
-			background: var(--wp--preset--color--luminous-vivid-amber, var(--fallback_orange) );
-		}
-
-		&-focus {
-			background: var(--wp--preset--color--vivid-green-cyan, var(--fallback_green) );
-		}
+		&-hover { background: var(--wp--preset--color--luminous-vivid-amber, var(--fallback_orange) ); }
+		&-focus { background: var(--wp--preset--color--vivid-green-cyan, var(--fallback_green) ); }
 	}
 
 	.bigup__form_inputWrap:not(.bigup__form-locked *) {
@@ -88,17 +81,4 @@
 			top: 0.2em;
 		}
 	}
-}
-
-:not( .bigup__form-nostyles ) {
-
-	/* Widget overrides */
-	.widget .bigup__form_message {
-		margin: 1em 0;
-		font-size: 0.8em;
-	}
-		.widget .bigup__form_inputWrap {
-			margin: var(--bigup_gutter) auto 0 0;
-			width: 100%;
-		}
 }
