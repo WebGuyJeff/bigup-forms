@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
-import { InnerBlocks, useBlockProps, InspectorControls } from '@wordpress/block-editor'
-import { PanelBody, PanelRow } from '@wordpress/components'
+import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls } from '@wordpress/block-editor'
+import { PanelBody, SelectControl } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 
@@ -12,38 +12,78 @@ const ALLOWED_BLOCKS = [
 	'bigup-forms/form-text-field'
 ];
 
-export default function Edit() {
+export default function Edit( { attributes, setAttributes } ) {
+
+	const { textAlign } = attributes
 
 	const blockProps = useBlockProps( {
 		className: 'bigup__form'
 	} )
 
+	// Select control values.
+	const textAlignOptions = [
+		{ label: __( 'Left', 'bigup-forms' ), value: 'start' },
+		{ label: __( 'Centre', 'bigup-forms' ), value: 'center' },
+		{ label: __( 'Right', 'bigup-forms' ), value: 'end' }
+	]
+
 	return (
-		<form
-			{ ...blockProps }
-			method='post'
-			acceptCharset='utf-8'
-			autocomplete='on'
-		>
+		<>
 
-			<header>
-				<h3>Contact Form</h3>
-			</header>
+			{ false &&
+				<InspectorControls>
+					<PanelBody
+						title={ __( 'Settings') }
+						initialOpen={ true } 
+					>
+						<SelectControl
+							label="Text Align"
+							labelPosition="Left"
+							title="Text Align"
+							value={ textAlign }
+							options={ textAlignOptions }
+							onChange={ ( newValue ) => { setAttributes( { textAlign: newValue, } ) } }
+						/>
+					</PanelBody>
+				</InspectorControls>
+			}
 
-			<div className='bigup__form_section'>
+			{
+				<BlockControls>
+					<AlignmentToolbar
+						value={ textAlign }
+						onChange={ ( newValue ) => { setAttributes( { textAlign: newValue, } ) } }
+					/>
+				</BlockControls>
+			}
 
-				<Honeypot />
+			<form
+				{ ...blockProps }
+				method='post'
+				acceptCharset='utf-8'
+				autocomplete='on'
+				style={{ textAlign: textAlign }}
+			>
 
-				<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
+				<header>
+					<h3>Contact Form</h3>
+				</header>
 
-				<SubmitButton />
+				<div className='bigup__form_section'>
 
-			</div>
+					<Honeypot />
 
-			<footer>
-				<div className='bigup__alert_output' style={{ display: 'none', opacity: 0 }}></div>
-			</footer>
+					<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
 
-		</form>
+					<SubmitButton />
+
+				</div>
+
+				<footer>
+					<div className='bigup__alert_output' style={{ display: 'none', opacity: 0 }}></div>
+				</footer>
+
+			</form>
+		</>
 	)
 }

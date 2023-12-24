@@ -11,5 +11,12 @@
 	"editorScript": "file:./form.js",
 	"viewScript": "file:./form-view.js",
 	"editorStyle": "file:./form-editor.css",
-	"style": "file:./form.css"
+	"style": "file:./form.css",
+	"attributes": {
+		"textAlign": {
+			"type": "string",
+			"enum": [ "start", "center", "end" ],
+			"default": "text"
+		}
+	}
 }

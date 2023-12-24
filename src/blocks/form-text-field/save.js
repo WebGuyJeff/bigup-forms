@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
-import { InputWrapper } from '../../components/InputWrapper'
+import { InputWrap } from '../../components/InputWrap'
 import { definition } from './definition'
 
 
@@ -28,9 +28,7 @@ export default function save( { attributes } ) {
 		visibilityPermissions
 	} = attributes
 
-	const blockProps = useBlockProps.save( {
-		className: 'bigup__form_inputWrap'
-	} )
+	const blockProps = useBlockProps.save()
 
 	// Set the HTML tag to either input or textarea.
 	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
@@ -61,7 +59,7 @@ export default function save( { attributes } ) {
 						{ label }
 					</label>
 				}
-				<InputWrapper>
+				<InputWrap>
 					<InputTagName
 						name={ name }
 						className={ 'bigup__form_input' }
@@ -76,7 +74,7 @@ export default function save( { attributes } ) {
 						autocomplete={ autocomplete }
 						{ ...conditionalAttributes }
 					/>
-				</InputWrapper>
+				</InputWrap>
 			</div>
 		</>
 	)

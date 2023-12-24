@@ -26,12 +26,12 @@ registerBlockType( metadata.name, {
 			label: __( 'Vanilla' )
 		},
 		{
-			name: 'dark',
-			label: __( 'Dark' )
+			name: 'inset-dark',
+			label: __( 'Inset Dark' )
 		},
 		{
-			name: 'light',
-			label: __( 'Light' )
+			name: 'inset-light',
+			label: __( 'Inset Light' )
 		}
 	],
 	edit: Edit,

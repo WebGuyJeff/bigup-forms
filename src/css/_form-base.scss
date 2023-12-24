@@ -1,0 +1,48 @@
+/* Keep specificity 0 */
+:where( .bigup__form ) {
+
+	/* Colours used by alerts and themes */
+    --bigup_white: var( --wp--preset--color--white, #fff );
+    --bigup_black: #262626;
+	--bigup_textBlack: var( --wp--preset--color--black, #000 );
+    --bigup_orange: var( --wp--preset--color--luminous-vivid-amber, #ffb908 );
+    --bigup_green: var( --wp--preset--color--vivid-green-cyan, #63CFA7 );
+	--bigup_red: var( --wp--preset--color--vivid-red, #fd6a42 );
+	--bigup_blue: var( --wp--preset--color--vivid-cyan-blue, #70d3e5 );
+    --bigup_lightGrey: #eee;
+
+    position: relative;
+	max-width: 100%;
+
+	// Hide the anti-bot honeypot.
+	.saveTheBees {
+		display: none;
+	}
+
+	&.bigup__form-locked * {
+		cursor: default;
+		pointer-events: none !important;
+	}
+
+	.bigup__form_submitLabel-notReady { display: none;}
+	.bigup__form_submitLabel-ready { display: inline;}
+
+	button:disabled {
+		.bigup__form_submitLabel-notReady { display: inline;}
+		.bigup__form_submitLabel-ready { display: none;}
+	}
+}
+
+/* Widget overrides - keep specificity 0 */
+:where( .widget ) {
+
+	:where( .bigup__form_message  ) {
+		margin: 1em 0;
+		font-size: 0.8em;
+	}
+
+	:where( .bigup__form_inputWrap ) {
+		margin: 0.5em auto 0 0;
+		width: 100%;
+	}
+}

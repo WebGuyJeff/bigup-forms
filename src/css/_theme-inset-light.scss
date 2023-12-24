@@ -1,0 +1,19 @@
+.bigup__form.is-style-inset-light  {
+
+	--bigup_border: none;
+	--bigup_gutter: 0.5em;
+	--bigup_inputColor: var( --bigup_textBlack );
+	--bigup_inputWrapBackground: var( --bigup_white );
+	--bigup_padding: 0.5em 0.75em;
+	--bigup_radius: 0.6em;
+	--bigup_shadow-inset: inset 0 0px 1px 1px #0003,
+	                      inset 0 2px 2px 1px #0003,
+	                      inset 0 4px 4px 1px #0003,
+                          inset 0 6px 6px 1px #0003,
+                          inset 0 8px 8px 1px #0003;
+	
+	
+	
+	--bigup_flagShadow: inset -4px 8px 7px -2px #000a;
+
+}

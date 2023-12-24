@@ -5,7 +5,7 @@ namespace Bigup\Forms;
  * Bigup Forms - HTML Template.
  *
  * This template defines the front end form HTML.
- * 
+ *
  * Note: FormData will only use input fields that use the name attribute.
  *
  * @package bigup-forms
@@ -13,7 +13,6 @@ namespace Bigup\Forms;
  * @copyright Copyright (c) 2023, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
- * 
  */
 
 /*
@@ -30,23 +29,23 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 
 <form class="bigup__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
 
-    <header>
-        <?php
-            $title   = ( $title ) ? '<h3 id="aria_form-title" class="bigup__form_title">' . $title . '</h3>' . "\n" : '';
-            $message = ( $message ) ? '<p id="aria_form-desc" class="bigup__form_message">' . $message . '</p>' . "\n" : '';
-            echo $title . $message;
-        ?>
-    </header>
+	<header>
+		<?php
+			$title   = ( $title ) ? '<h3 id="aria_form-title" class="bigup__form_title">' . $title . '</h3>' . "\n" : '';
+			$message = ( $message ) ? '<p id="aria_form-desc" class="bigup__form_message">' . $message . '</p>' . "\n" : '';
+			echo $title . $message;
+		?>
+	</header>
 
-    <div class="bigup__form_section">
+	<div class="bigup__form_section">
 
-        <input
-            class="bigup__form_input saveTheBees"
-            name="required_field"
-            type="text"
-            autocomplete="off"
+		<input
+			class="bigup__form_input saveTheBees"
+			name="required_field"
+			type="text"
+			autocomplete="off"
 			style="position:absolute;height:0;overflow:hidden;opacity:0;"
-        >
+		>
 
 		<?php if ( $decorative_markup ) : ?>
 			<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
@@ -85,7 +84,7 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 				<span class="bigup__form_flag bigup__form_flag-hover"></span>
 				<span class="bigup__form_flag bigup__form_flag-focus"></span>
 			</div>
-        <div class="bigup__form_inputWrap bigup__form_inputWrap-wide">
+		<div class="bigup__form_inputWrap bigup__form_inputWrap-wide">
 		<?php endif ?>
 
 				<textarea
@@ -107,7 +106,7 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 		<?php endif ?>
 
 		<?php
-		if ( true === !! $files ) {
+		if ( true === ! ! $files ) {
 			?>
 
 			<div class="bigup__customFileUpload">
@@ -120,14 +119,14 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 						multiple
 					>
 					<span class="bigup__customFileUpload_icon">
-						<?php echo Util::get_contents( BIGUPFORMS_PATH . 'assets/svg/file.svg' ) ?>
+						<?php echo Util::get_contents( BIGUPFORMS_PATH . 'assets/svg/file.svg' ); ?>
 					</span>	
 					<?php _e( 'Attach file', 'bigup_forms' ); ?>
 				</label>
 				<div class="bigup__customFileUpload_output"></div>
 				<template>
 					<span class="bigup__customFileUpload_icon">
-						<?php echo Util::get_contents( BIGUPFORMS_PATH . 'assets/svg/bin.svg' ) ?>
+						<?php echo Util::get_contents( BIGUPFORMS_PATH . 'assets/svg/bin.svg' ); ?>
 					</span>	
 				</template>
 			</div>
@@ -136,19 +135,19 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 		}
 		?>
 
-        <button class="button bigup__form_submit" type="submit" value="Submit" disabled>
-            <span class="bigup__form_submitLabel-ready">
-                <?php _e( 'Submit', 'bigup_forms' ); ?>
-            </span>
+		<button class="button bigup__form_submit" type="submit" value="Submit" disabled>
+			<span class="bigup__form_submitLabel-ready">
+				<?php _e( 'Submit', 'bigup_forms' ); ?>
+			</span>
 			<span class="bigup__form_submitLabel-notReady">
-                <?php _e( '[please wait]', 'bigup_forms' ); ?>
-            </span>
-        </button>
+				<?php _e( '[please wait]', 'bigup_forms' ); ?>
+			</span>
+		</button>
 
-    </div>
+	</div>
 
-    <footer>
-        <div class="bigup__alert_output" style="display:none; opacity:0;"></div>
-    </footer>
+	<footer>
+		<div class="bigup__alert_output" style="display:none; opacity:0;"></div>
+	</footer>
 
 </form>

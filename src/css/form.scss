@@ -2,8 +2,10 @@
  * Frontend styles.
  */
 
+@import './form-base';
 @import './theme-base';
+@import './theme-inset-dark';
+@import './theme-inset-light';
+@import './theme-vanilla';
 @import './file-upload';
 @import './alert-popup';
-@import './theme-vanilla';
-@import './theme-dark';

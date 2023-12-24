@@ -1,4 +1,4 @@
-const InputWrapper = ( { children, props } ) => {
+const InputWrap = ( { children, props } ) => {
 
 	return (
 		<div className={ 'bigup__form_inputWrap' }>
@@ -9,4 +9,4 @@ const InputWrapper = ( { children, props } ) => {
 	)
 }
 
-export { InputWrapper }
+export { InputWrap }

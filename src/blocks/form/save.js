@@ -3,7 +3,9 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 
-export default function save() {
+export default function save( { attributes } ) {
+
+	const { textAlign } = attributes
 
 	const blockProps = useBlockProps.save( {
 		className: 'bigup__form'
@@ -15,6 +17,7 @@ export default function save() {
 			method='post'
 			acceptCharset='utf-8'
 			autocomplete='on'
+			style={{ textAlign: textAlign }}
 		>
 
 			<header>

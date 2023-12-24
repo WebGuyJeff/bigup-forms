@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
-import { InputWrapper } from '../../components/InputWrapper'
+import { InputWrap } from '../../components/InputWrap'
 import { definition } from './definition'
 import { makeNameAttributeSafe } from '../../js/_util'
 
@@ -13,7 +13,7 @@ import { makeNameAttributeSafe } from '../../js/_util'
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit( { attributes, setAttributes }  ) {
+export default function Edit( { attributes, setAttributes } ) {
 
 	const {
 		type,
@@ -35,9 +35,7 @@ export default function Edit( { attributes, setAttributes }  ) {
 		visibilityPermissions
 	} = attributes
 
-	const blockProps = useBlockProps( {
-		className: 'bigup__form_inputWrap'
-	} )
+	const blockProps = useBlockProps()
 
 	// Set new values on input type select change.
 	const typeChangeHandler = ( newType ) => {
@@ -99,7 +97,7 @@ export default function Edit( { attributes, setAttributes }  ) {
 					<SelectControl
 						label="Type"
 						labelPosition="Left"
-						title="fieldType"
+						title="Field Type"
 						value={ type }
 						options={ typeOptions }
 						onChange={ ( newValue ) => typeChangeHandler( newValue ) }
@@ -217,7 +215,7 @@ export default function Edit( { attributes, setAttributes }  ) {
 						placeholder={ __( 'Add a label to this input' ) }
 					/>
 				}
-				<InputWrapper>
+				<InputWrap>
 					<InputTagName
 						name={ name }
 						className={ 'bigup__form_input' }
@@ -232,7 +230,7 @@ export default function Edit( { attributes, setAttributes }  ) {
 						autocomplete={ autocomplete }
 						{ ...conditionalAttributes }
 					/>
-				</InputWrapper>
+				</InputWrap>
 			</div>
 		</>
 	)
