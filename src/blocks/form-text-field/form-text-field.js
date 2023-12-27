@@ -8,9 +8,16 @@ import metadata from './block.json'
 console.log( metadata.name + ' BLOCK LOADED' )
 // RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
 
-/**
- * Register the block.
- */
+
+// Regular expressions for client-side validation.
+
+// Email. @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
+const regexEmail = new RegExp( /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ )
+// Phone.
+const regexPhone = new RegExp( /^(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$/ )
+
+console.log( regexEmail, regexPhone )
+
 registerBlockType(
 	metadata.name,
 	{
@@ -34,7 +41,7 @@ registerBlockType(
 					"maxlength": "70",
 					"variation": "name"
 				},
-				isActive: ( blockAttributes, variationAttributes ) => { 
+				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === "name"
 				}
 			},
@@ -53,14 +60,10 @@ registerBlockType(
 					"placeholder": "Enter your email",
 					"minlength": "6",
 					"maxlength": "320",
-					/*
-					 * @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
-					 * Unescaped regex: ^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$
-					 */
-					"pattern": '^(([^<>()[\\]\\\\.,;:\\s@\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\"]+)*)|.(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$',
+					"pattern": regexEmail,
 					"variation": "email"
 				},
-				isActive: ( blockAttributes, variationAttributes ) => { 
+				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === "email"
 				}
 			},
@@ -79,11 +82,10 @@ registerBlockType(
 					"placeholder": "Enter your phone number",
 					"minlength": "6",
 					"maxlength": "29",
-					// Unescaped regex: ^(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$
-					"pattern": '^(\\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$',
+					"pattern": regexPhone,
 					"variation": "phone"
 				},
-				isActive: ( blockAttributes, variationAttributes ) => { 
+				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === "phone"
 				}
 			}

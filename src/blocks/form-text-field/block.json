@@ -21,10 +21,9 @@
 		},
 		"label": {
 			"type": "rich-text",
-			"default": "Label",
+			"default": "",
 			"selector": "label",
-			"source": "attribute",
-			"attribute": "value"
+			"source": "text"
 		},
 		"labelID": {
 			"type": "string",
