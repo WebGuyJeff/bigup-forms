@@ -87,20 +87,20 @@ registerBlockType(
 				}
 			},
 			{
-				name: 'text-large',
-				title: 'Large Text',
+				name: 'message',
+				title: 'Message',
 				icon: Logo,
-				description: __( 'Large text input field.' ),
-				keywords: [ "form", "input", "text-large" ],
+				description: __( 'Message input field.' ),
+				keywords: [ "form", "input", "message" ],
 				attributes: {
 					"type": "textarea",
-					"name": "text-large",
-					"label": "Phone",
+					"name": "message",
+					"label": "Message",
 					"autocomplete": "off",
 					"placeholder": "Type your message...",
 					"minlength": "10",
 					"maxlength": "3000",
-					"variation": "text-large",
+					"variation": "message",
 					"required": true
 				},
 				isActive: ( blockAttributes ) => { 
