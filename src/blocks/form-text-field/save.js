@@ -66,13 +66,12 @@ export default function save( { attributes } ) {
 						id={ labelID }
 						title={ label }
 						aria-label={ label }
-						required={ required }
-						size={ size }
 						placeholder={ placeholder }
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autocomplete={ autocomplete }
 						{ ...conditionalAttributes }
+						required={ required }
 					/>
 				</InputWrap>
 			</div>

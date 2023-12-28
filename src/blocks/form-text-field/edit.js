@@ -221,14 +221,13 @@ export default function Edit( { attributes, setAttributes } ) {
 						className={ 'bigup__form_input' }
 						title={ label }
 						aria-label={ label }
-						required={ required }
-						size={ size }
 						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
 						placeholder={ editPlaceholder }
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
 						autocomplete={ autocomplete }
 						{ ...conditionalAttributes }
+						required={ required }
 					/>
 				</InputWrap>
 			</div>

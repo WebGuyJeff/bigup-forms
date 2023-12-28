@@ -8,15 +8,12 @@ import metadata from './block.json'
 console.log( metadata.name + ' BLOCK LOADED' )
 // RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
 
-
-// Regular expressions for client-side validation.
-
-// Email. @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
-const regexEmail = new RegExp( /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/ )
-// Phone.
-const regexPhone = new RegExp( /^(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$/ )
-
-console.log( regexEmail, regexPhone )
+/**
+ * Regular expressions for client-side validation.
+ * @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
+ */
+const regexEmail = `^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`
+const regexPhone = `^(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$`
 
 registerBlockType(
 	metadata.name,
@@ -34,12 +31,12 @@ registerBlockType(
 					"type": "text",
 					"name": "name",
 					"label": "Name",
-					"required": true,
 					"autocomplete": "on",
 					"placeholder": "Enter your name",
 					"minlength": "2",
 					"maxlength": "70",
-					"variation": "name"
+					"variation": "name",
+					"required": true
 				},
 				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === "name"
@@ -55,13 +52,13 @@ registerBlockType(
 					"type": "email",
 					"name": "email",
 					"label": "Email",
-					"required": true,
 					"autocomplete": "on",
 					"placeholder": "Enter your email",
 					"minlength": "6",
 					"maxlength": "320",
 					"pattern": regexEmail,
-					"variation": "email"
+					"variation": "email",
+					"required": true
 				},
 				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === "email"
@@ -77,16 +74,37 @@ registerBlockType(
 					"type": "tel",
 					"name": "phone",
 					"label": "Phone",
-					"required": true,
 					"autocomplete": "on",
 					"placeholder": "Enter your phone number",
 					"minlength": "6",
 					"maxlength": "29",
 					"pattern": regexPhone,
-					"variation": "phone"
+					"variation": "phone",
+					"required": true
 				},
 				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === "phone"
+				}
+			},
+			{
+				name: 'text-large',
+				title: 'Large Text',
+				icon: Logo,
+				description: __( 'Large text input field.' ),
+				keywords: [ "form", "input", "text-large" ],
+				attributes: {
+					"type": "textarea",
+					"name": "text-large",
+					"label": "Phone",
+					"autocomplete": "off",
+					"placeholder": "Type your message...",
+					"minlength": "10",
+					"maxlength": "3000",
+					"variation": "text-large",
+					"required": true
+				},
+				isActive: ( blockAttributes ) => { 
+					return blockAttributes.variation === "text-large"
 				}
 			}
 		],

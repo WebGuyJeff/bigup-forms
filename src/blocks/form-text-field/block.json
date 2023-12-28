@@ -21,13 +21,11 @@
 		},
 		"label": {
 			"type": "rich-text",
-			"default": "",
 			"selector": "label",
 			"source": "text"
 		},
 		"labelID": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "id"
@@ -58,49 +56,42 @@
 		},
 		"minlength": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "minlength"
 		},
 		"maxlength": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "maxlength"
 		},
 		"min": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "min"
 		},
 		"max": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "max"
 		},
 		"step": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "step"
 		},
 		"pattern": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "pattern"
 		},
 		"size": {
 			"type": "string",
-			"default": "",
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "size"
@@ -117,8 +108,7 @@
 			"default": "all"
 		},
 		"variation": {
-			"type": "string",
-			"default": ""
+			"type": "string"
 		}
 	}
 }
