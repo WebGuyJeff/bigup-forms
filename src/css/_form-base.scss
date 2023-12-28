@@ -11,7 +11,10 @@
 	--bigup_blue: var( --wp--preset--color--vivid-cyan-blue, #70d3e5 );
     --bigup_lightGrey: #eee;
 
+	box-sizing: border-box;
+	display: flex;
     position: relative;
+	flex-flow: column;
 	max-width: 100%;
 
 	// Hide the anti-bot honeypot.
@@ -30,19 +33,5 @@
 	button:disabled {
 		.bigup__form_submitLabel-notReady { display: inline;}
 		.bigup__form_submitLabel-ready { display: none;}
-	}
-}
-
-/* Widget overrides - keep specificity 0 */
-:where( .widget ) {
-
-	:where( .bigup__form_message  ) {
-		margin: 1em 0;
-		font-size: 0.8em;
-	}
-
-	:where( .bigup__form_inputWrap ) {
-		margin: 0.5em auto 0 0;
-		width: 100%;
 	}
 }

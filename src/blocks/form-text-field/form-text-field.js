@@ -12,8 +12,8 @@ console.log( metadata.name + ' BLOCK LOADED' )
  * Regular expressions for client-side validation.
  * @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
  */
-const regexEmail = `^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`
-const regexPhone = `^(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$`
+const regexEmail = `^(([^<>()[\\]\\.,;:\\s@"]+(\\.[^<>()[\\]\\.,;:\\s@"]+)*)|.(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$`
+const regexPhone = `^(\\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})$`
 
 registerBlockType(
 	metadata.name,

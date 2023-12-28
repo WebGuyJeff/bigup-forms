@@ -5,11 +5,14 @@ import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 
 const ALLOWED_BLOCKS = [
-	'bigup-forms/form-name',
-	'bigup-forms/form-email',
-	'bigup-forms/form-message',
 	'bigup-forms/form-files',
-	'bigup-forms/form-text-field'
+	'bigup-forms/form-text-field',
+	'core/buttons',
+	'core/columns',
+	'core/cover',
+	'core/group',
+	'core/heading',
+	'core/spacer'
 ];
 
 export default function Edit( { attributes, setAttributes } ) {

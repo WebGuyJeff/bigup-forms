@@ -18,5 +18,21 @@
 			"enum": [ "start", "center", "end" ],
 			"default": "text"
 		}
+	},
+	"supports": {
+		"html": false,
+		"color": {
+			"text": true,
+			"background": true,
+			"gradients": true
+		},
+		"spacing": {
+			"margin": [ "top", "bottom" ],
+			"padding": true,
+			"blockGap": true
+		},
+		"position": {
+			"sticky": true
+		}
 	}
 }
