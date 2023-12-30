@@ -31,21 +31,21 @@ export default function save( { attributes } ) {
 	const blockProps = useBlockProps.save()
 
 	// Set the HTML tag to either input or textarea.
-	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
+	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
 	// Get limit attributes from definition and get any saved values from block attributes.
-	const availableLimits = definition[type].limits
+	const availableLimits = definition[ type ].limits
 	const savedLimits = {}
 	availableLimits.forEach( attr => {
-		if ( attributes[attr] ) {
-			savedLimits[attr] = attributes[attr]
+		if ( attributes[ attr ] ) {
+			savedLimits[ attr ] = attributes[ attr ]
 		}
 	} )
 	// Build attributes to apply to the component.
     const conditionalAttributes = {
 		...savedLimits
     }
-	if ( 'textarea' !== type ) conditionalAttributes.type = type
+	if ( type !== 'textarea' ) conditionalAttributes.type = type
 
 	return (
 
@@ -53,7 +53,7 @@ export default function save( { attributes } ) {
 			<div { ...blockProps }>
 				{ label && ! labelIsHidden &&
 					<label
-						for={ labelID }
+						htmlFor={ labelID }
 						className="bigup__form_inputLabel"
 					>
 						{ label }
@@ -69,7 +69,7 @@ export default function save( { attributes } ) {
 						placeholder={ placeholder }
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
-						autocomplete={ autocomplete }
+						autoComplete={ autocomplete }
 						{ ...conditionalAttributes }
 						required={ required }
 					/>

@@ -11,15 +11,36 @@
 	--bigup_blue: var( --wp--preset--color--vivid-cyan-blue, #70d3e5 );
     --bigup_lightGrey: #eee;
 
+	--experimentalBaseGap: 1em;
+
+	gap: var(--experimentalBaseGap);
 	box-sizing: border-box;
 	display: flex;
     position: relative;
 	flex-flow: column;
 	max-width: 100%;
 
+	.bigup__form_section {
+		gap: inherit;
+		display: inherit;
+		flex-flow: inherit;
+	}
+
 	// Hide the anti-bot honeypot.
 	.saveTheBees {
 		display: none;
+	}
+
+	.bigup__form_controls {
+
+		.bigup__form_buttonWrap {
+
+			display: inline-block;
+
+			&:not( :last-child ) {
+				margin-inline-end: var(--experimentalBaseGap);
+			}
+		}
 	}
 
 	&.bigup__form-locked * {

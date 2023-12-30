@@ -2,13 +2,15 @@ import { __ } from '@wordpress/i18n'
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
+import { ResetButton } from '../../components/ResetButton'
 
 export default function save( { attributes } ) {
 
-	const { textAlign } = attributes
+	const { textAlign, showResetButton } = attributes
 
 	const blockProps = useBlockProps.save( {
-		className: 'bigup__form'
+		className: 'bigup__form',
+		style: { textAlign: textAlign }
 	} )
 
 	return (
@@ -16,8 +18,7 @@ export default function save( { attributes } ) {
 			{ ...blockProps }
 			method='post'
 			acceptCharset='utf-8'
-			autocomplete='on'
-			style={{ textAlign: textAlign }}
+			autoComplete='on'
 		>
 
 			<header>
@@ -30,7 +31,12 @@ export default function save( { attributes } ) {
 
 				<InnerBlocks.Content />
 
-				<SubmitButton />
+				<div className='bigup__form_controls'>
+					<SubmitButton />
+					{ showResetButton &&
+						<ResetButton />
+					}
+				</div>
 
 			</div>
 

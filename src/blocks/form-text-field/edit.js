@@ -55,14 +55,14 @@ export default function Edit( { attributes, setAttributes } ) {
 	}
 
 	// Set the HTML tag when switching between input[type='text']/textarea.
-	const InputTagName = ( 'textarea' === type ) ? 'textarea' : 'input'
+	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
 	// Get limit attributes from definition and get any saved values from block attributes.
-	const availableLimits = definition[type].limits
+	const availableLimits = definition[ type ].limits
 	const savedLimits = {}
 	availableLimits.forEach( attr => {
-		if ( attributes[attr] ) {
-			savedLimits[attr] = attributes[attr]
+		if ( attributes[ attr ] ) {
+			savedLimits[ attr ] = attributes[ attr ]
 		}
 	} )
 	// Build attributes to apply to the component.
@@ -70,16 +70,16 @@ export default function Edit( { attributes, setAttributes } ) {
 		...savedLimits
     }
 	// In edit, only display type="text" to allow editing of placeholder even for number inputs.
-	if ( 'textarea' !== type ) conditionalAttributes.type = 'text'
+	if ( type !== 'textarea' ) conditionalAttributes.type = 'text'
 
-	const editPlaceholder = placeholder ? placeholder : definition[type].placeholder
+	const editPlaceholder = placeholder ? placeholder : definition[ type ].placeholder
 
 	return (
 
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings') }
+					title={ __( 'Settings' ) }
 					initialOpen={ true } 
 				>
 					<TextControl
@@ -109,7 +109,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<CheckboxControl
 						label={ __( 'Autocomplete' ) }
-						checked={ ( "on" === autocomplete ) ? true : false }
+						checked={ ( autocomplete === "on" ) ? true : false }
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
 						help={ __( 'Allow browser-assisted form-filling.' ) }
 					/>
@@ -225,7 +225,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						placeholder={ editPlaceholder }
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
-						autocomplete={ autocomplete }
+						autoComplete={ autocomplete }
 						{ ...conditionalAttributes }
 						required={ required }
 					/>

@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n'
 import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls } from '@wordpress/block-editor'
-import { PanelBody, SelectControl } from '@wordpress/components'
+import { PanelBody, SelectControl, CheckboxControl } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
+import { ResetButton } from '../../components/ResetButton'
 
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-files',
@@ -13,43 +14,47 @@ const ALLOWED_BLOCKS = [
 	'core/group',
 	'core/heading',
 	'core/spacer'
-];
+]
 
 export default function Edit( { attributes, setAttributes } ) {
 
-	const { textAlign } = attributes
+	const { textAlign, formVariation, showResetButton } = attributes
 
 	const blockProps = useBlockProps( {
-		className: 'bigup__form'
+		className: 'bigup__form',
+		style: { textAlign: textAlign }
 	} )
 
 	// Select control values.
-	const textAlignOptions = [
-		{ label: __( 'Left', 'bigup-forms' ), value: 'start' },
-		{ label: __( 'Centre', 'bigup-forms' ), value: 'center' },
-		{ label: __( 'Right', 'bigup-forms' ), value: 'end' }
+	const formVariationOptions = [
+		{ label: __( 'Contact', 'bigup-forms' ), value: 'contact' },
+		{ label: __( 'Sign-up', 'bigup-forms' ), value: 'signup' },
+		{ label: __( 'Login', 'bigup-forms' ), value: 'login' }
 	]
 
 	return (
 		<>
 
-			{ false &&
-				<InspectorControls>
-					<PanelBody
-						title={ __( 'Settings') }
-						initialOpen={ true } 
-					>
-						<SelectControl
-							label="Text Align"
-							labelPosition="Left"
-							title="Text Align"
-							value={ textAlign }
-							options={ textAlignOptions }
-							onChange={ ( newValue ) => { setAttributes( { textAlign: newValue, } ) } }
-						/>
-					</PanelBody>
-				</InspectorControls>
-			}
+			<InspectorControls>
+				<PanelBody
+					title={ __( 'Settings' ) }
+					initialOpen={ true } 
+				>
+					<SelectControl
+						label="Form Variation"
+						labelPosition="Left"
+						title="Form Variation"
+						value={ formVariation }
+						options={ formVariationOptions }
+						onChange={ ( newValue ) => { setAttributes( { formVariation: newValue, } ) } }
+					/>
+					<CheckboxControl
+						label={ __( 'Show reset button' ) }
+						checked={ showResetButton }
+						onChange={ ( newValue ) => { setAttributes( { showResetButton: newValue, } ) } }
+					/>
+				</PanelBody>
+			</InspectorControls>
 
 			{
 				<BlockControls>
@@ -64,8 +69,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				{ ...blockProps }
 				method='post'
 				acceptCharset='utf-8'
-				autocomplete='on'
-				style={{ textAlign: textAlign }}
+				autoComplete='on'
 			>
 
 				<header>
@@ -78,7 +82,12 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
 
-					<SubmitButton />
+					<div className='bigup__form_controls'>
+						<SubmitButton />
+						{ showResetButton &&
+							<ResetButton />
+						}
+					</div>
 
 				</div>
 

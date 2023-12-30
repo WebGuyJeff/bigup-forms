@@ -14,9 +14,14 @@
 	"style": "file:./form.css",
 	"attributes": {
 		"textAlign": {
-			"type": "string",
-			"enum": [ "start", "center", "end" ],
-			"default": "text"
+			"type": "string"
+		},
+		"formVariation": {
+			"type": "string"
+		},
+		"showResetButton": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"supports": {
@@ -28,8 +33,7 @@
 		},
 		"spacing": {
 			"margin": [ "top", "bottom" ],
-			"padding": true,
-			"blockGap": true
+			"padding": true
 		},
 		"position": {
 			"sticky": true

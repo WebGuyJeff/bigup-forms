@@ -5,7 +5,7 @@ const Honeypot = () => {
 			className='bigup__form_input saveTheBees'
 			name='required_field'
 			type='text'
-			autocomplete='off'
+			autoComplete='off'
 		/>
 	)
 }
