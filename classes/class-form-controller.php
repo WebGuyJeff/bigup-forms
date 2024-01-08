@@ -11,7 +11,7 @@ namespace Bigup\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
- * @copyright Copyright (c) 2023, Jefferson Real
+ * @copyright Copyright (c) 2024, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
  */
@@ -104,23 +104,37 @@ class Form_Controller {
 
 	/**
 	 * Sanitise user input.
+	 * 
+	 * - Performed BEFORE validation.
+	 * - Returns an array with cleaned values.
+	 * - Does not validate values and will return empty array keys in cases where all characters are
+	 *   invalid.
+	 * - Returned array is a clone of input array, plus a $modified sub-array containing an error
+	 *   message, original value and sanitized value for public-safe error message output.
+	 * 
+	 * Example output array structure:
+	 * 
+	 * $form_data_sanitized[
+	 * 		'name' => 'value',
+	 *		...
+	 * 		$modified[
+	 * 			$field[
+	 * 				'error' => <Public friendly message indicating removed characters>;
+	 *				'old'   => <original submitted value>;
+	 *				'new'   => <sanitized value>;
+	 *		]
+	 * ]
 	 *
-	 * Returns the array with cleaned values and data indicating invalid
-	 * input. Does not validate values and will return empty array keys in
-	 * cases where all characters are invalid. The array will be returned
-	 * with a sub-array bearing key 'modified_by_sanitise' containing error
-	 * messages and the before/after values for use on the front end.
-	 *
-	 * @param array $form_data_array: Associative array of form input data.
-	 * @return array $form_data_array: Contains cleaned values and sanitisation info.
+	 * @param array $form_data: Associative array of form input data.
+	 * @return array $form_data: Contains cleaned values and sanitisation info.
 	 */
-	public function sanitise_user_input( $form_data_array ) {
+	public function sanitise_user_input( $form_data ) {
 
 		$modified = array();
 
-		foreach ( $form_data_array['fields'] as $field => $value ) {
+		foreach ( $form_data['fields'] as $field => $value ) {
 
-			$old = trim( $form_data_array['fields'][ $field ] );
+			$old = trim( $form_data['fields'][ $field ] );
 			$new = '';
 
 			switch ( $field ) {
@@ -167,28 +181,42 @@ class Form_Controller {
 			$form_values[ $field ] = $new;
 		}
 
+		// Include passed data.
+		$form_data_sanitized = $form_data;
+
 		if ( $modified ) {
-			$form_data_array['modified_by_sanitise'] = $modified;
+			$form_data_sanitized['modified'] = $modified;
 		} else {
-			$form_data_array['modified_by_sanitise'] = false;
+			$form_data_sanitized['modified'] = false;
 		}
 
-		return $form_data_array;
+		return $form_data_sanitized;
 	}
 
 
 	/**
 	 * Validate user input.
-	 *
-	 * Should be performed AFTER any sanitisation as a final pre-flight check.
-	 * Returns true on success, otherwise false.
+	 * 
+	 * Performed AFTER sanitization.
 	 * Note: Never modifies or returns values.
+	 * 
+	 * Example output array structure:
+	 * 
+	 * $form_data_validated[
+	 * 		'name' => 'value',
+	 *		...
+	 * 		$validation_errors[
+	 * 			<first Public-friendly validation error message>,
+	 * 			<second Public-friendly validation error message>,
+	 * 			...
+	 *		]
+	 * ]
 	 *
 	 * @param array $form_values: An associative array of form field values.
 	 */
-	public function validate_user_input( $form_data_array ) {
+	public function validate_user_input( $form_data ) {
 
-		foreach ( $form_data_array['fields'] as $field => $value ) {
+		foreach ( $form_data['fields'] as $field => $value ) {
 			switch ( $field ) {
 
 				case 'name':
@@ -210,12 +238,16 @@ class Form_Controller {
 					continue 2;
 			}
 		}
+
+		// Include passed data.
+		$form_data_validated = $form_data;
+
 		if ( ! empty( $results[0] ) ) {
-			$form_data_array['validation_errors'] = $results;
+			$form_data_validated['validation_errors'] = $results;
 		} else {
-			$form_data_array['validation_errors'] = false;
+			$form_data_validated['validation_errors'] = false;
 		}
-		return $form_data_array;
+		return $form_data_validated;
 	}
 
 

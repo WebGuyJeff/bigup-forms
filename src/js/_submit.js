@@ -50,7 +50,14 @@ async function submit( event ) {
 	const fileInput  = form.querySelector( '.bigup__customFileUpload_input' )
 
 	textInputs.forEach( input => {
-		formData.append( input.name, input.value )
+		formData.append(
+			input.name,
+			JSON.stringify( {
+				'value': input.value,
+				// Type used to select suitable sanitization in back end.
+				'type': input.type
+			} )
+		)
 	} )
 
 	// Handle attachments if file input present.

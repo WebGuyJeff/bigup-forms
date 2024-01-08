@@ -12,7 +12,7 @@ namespace Bigup\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
- * @copyright Copyright (c) 2023, Jefferson Real
+ * @copyright Copyright (c) 2024, Jefferson Real
  * @license GPL2+
  * @link https://jeffersonreal.uk
  */
