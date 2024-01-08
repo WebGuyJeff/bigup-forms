@@ -20,7 +20,7 @@ use function add_action;
 use function wp_insert_post;
 use function is_wp_error;
 use function get_error_message;
-use function sanitize_title;
+use function sanitise_title;
 
 class Store_Submissions {
 
@@ -53,7 +53,13 @@ class Store_Submissions {
 			'name'        => '_email',
 			'title'       => 'Email',
 			'description' => '',
-			'type'        => 'text',
+			'type'        => 'email',
+		),
+		array(
+			'name'        => '_phone',
+			'title'       => 'Phone',
+			'description' => '',
+			'type'        => 'tel',
 		),
 		array(
 			'name'        => '_message',
@@ -146,11 +152,17 @@ class Store_Submissions {
 				<div class="form-field form-required">
 					<?php
 					switch ( $field['type'] ) {
-						case 'text': {
+						case 'text':
+						case 'email':
+						case 'tel':
+						case 'url':
+						case 'number':
+						case 'time':
+						case 'date':
 							echo '<label for="' . $this->prefix . $field['name'] . '"><b>' . $field['title'] . '</b></label>';
-							echo '<input type="text" name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" value="' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '" />';
+							echo '<input type="' . $field['type'] . '" name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" value="' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '" />';
 							break;
-						}
+
 						case 'textarea': {
 							echo '<label for="' . $this->prefix . $field['name'] . '"><b>' . $field['title'] . '</b></label>';
 							echo '<textarea name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" columns="30" rows="3">' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '</textarea>';
@@ -212,6 +224,8 @@ class Store_Submissions {
 	 */
 	public static function log_form_entry( $data, $result ) {
 
+		$fields = $data['fields'];
+
 		$file_info = '';
 		if ( array_key_exists( 'files', $data ) ) {
 			$number_of_files = count( $data['files'] ) - 1;
@@ -224,11 +238,12 @@ class Store_Submissions {
 			array(
 				'post_type'   => 'bigup_form_entry',
 				'post_status' => 'publish',
-				'post_title'  => date( 'd-m-Y_' ) . sanitize_title( $data['fields']['name'] ),
+				'post_title'  => date( 'd-m-Y_' ) . sanitise_title( $fields['name'] ),
 				'meta_input'  => array(
-					'_bufe__name'        => $data['fields']['name'],
-					'_bufe__email'       => $data['fields']['email'],
-					'_bufe__message'     => $data['fields']['message'],
+					'_bufe__name'        => isset( $fields['name'] ) ? $fields['name'] : 'Anonymous',
+					'_bufe__email'       => isset( $fields['email'] ) ? $fields['email'] : '[Not provided]',
+					'_bufe__phone'       => isset( $fields['phone'] ) ? $fields['phone'] : '[Not provided]',
+					'_bufe__message'     => isset( $fields['message'] ) ? $fields['message'] : '[Not provided]',
 					'_bufe__files'       => $file_info,
 					'_bufe__send-result' => implode( ' | ', $result ),
 				),

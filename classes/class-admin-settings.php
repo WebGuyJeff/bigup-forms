@@ -136,7 +136,7 @@ class Admin_Settings {
 	 *
 	 * add_settings_section( $id, $title, $callback, $page )
 	 * add_settings_field( $id, $title, $callback, $page, $section, $args )
-	 * register_setting( $option_group, $option_name, $sanitize_callback )
+	 * register_setting( $option_group, $option_name, $sanitise_callback )
 	 */
 	public function register_settings() {
 
@@ -147,7 +147,7 @@ class Admin_Settings {
 		register_setting(
 			$group,                        // option_group
 			'bigup_forms_settings', // option_name
-			array( $this, 'sanitize' )     // sanitize_callback
+			array( $this, 'sanitise' )     // sanitise_callback
 		);
 
 		// SMTP Account.
@@ -349,55 +349,55 @@ class Admin_Settings {
 	}
 
 
-	public function sanitize( $input ) {
+	public function sanitise( $input ) {
 
-		$sanitized = array();
+		$sanitised = array();
 
 		if ( isset( $input['username'] ) ) {
-			$sanitized['username'] = sanitize_text_field( $input['username'] );
+			$sanitised['username'] = sanitise_text_field( $input['username'] );
 		}
 
 		if ( isset( $input['password'] ) ) {
-			$sanitized['password'] = $this->sanitize_password( $input['password'] );
+			$sanitised['password'] = $this->sanitise_password( $input['password'] );
 		}
 
 		if ( isset( $input['host'] ) ) {
-			$sanitized['host'] = $this->validate_domain( $input['host'] );
+			$sanitised['host'] = $this->validate_domain( $input['host'] );
 		}
 
 		if ( isset( $input['port'] ) ) {
-			$sanitized['port'] = $this->sanitise_smtp_port( $input['port'] );
+			$sanitised['port'] = $this->sanitise_smtp_port( $input['port'] );
 		}
 
 		if ( isset( $input['auth'] ) ) {
-			$sanitized['auth'] = $this->sanitise_checkbox( $input['auth'] );
+			$sanitised['auth'] = $this->sanitise_checkbox( $input['auth'] );
 		}
 
 		if ( isset( $input['use_local_mail_server'] ) ) {
-			$sanitized['use_local_mail_server'] = $this->sanitise_checkbox( $input['use_local_mail_server'] );
+			$sanitised['use_local_mail_server'] = $this->sanitise_checkbox( $input['use_local_mail_server'] );
 		}
 
 		if ( isset( $input['to_email'] ) ) {
-			$sanitized['to_email'] = sanitize_email( $input['to_email'] );
+			$sanitised['to_email'] = sanitise_email( $input['to_email'] );
 		}
 
 		if ( isset( $input['from_email'] ) ) {
-			$sanitized['from_email'] = sanitize_email( $input['from_email'] );
+			$sanitised['from_email'] = sanitise_email( $input['from_email'] );
 		}
 
 		if ( isset( $input['styles'] ) ) {
-			$sanitized['styles'] = $this->sanitise_checkbox( $input['styles'] );
+			$sanitised['styles'] = $this->sanitise_checkbox( $input['styles'] );
 		}
 
 		if ( isset( $input['nostyles'] ) ) {
-			$sanitized['nostyles'] = $this->sanitise_checkbox( $input['nostyles'] );
+			$sanitised['nostyles'] = $this->sanitise_checkbox( $input['nostyles'] );
 		}
 
 		if ( isset( $input['files'] ) ) {
-			$sanitized['files'] = $this->sanitise_checkbox( $input['files'] );
+			$sanitised['files'] = $this->sanitise_checkbox( $input['files'] );
 		}
 
-		return $sanitized;
+		return $sanitised;
 	}
 
 
@@ -442,7 +442,7 @@ class Admin_Settings {
 	/**
 	 * Validate a checkbox.
 	 */
-	private function sanitize_password( $password ) {
+	private function sanitise_password( $password ) {
 		$trimmed_password = trim( $password );
 		return $trimmed_password;
 	}

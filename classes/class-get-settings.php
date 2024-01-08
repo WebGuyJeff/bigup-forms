@@ -31,7 +31,7 @@ class Get_Settings {
 	 */
 	public static function smtp() {
 
-		$option_names = array(
+		$option_names = [
 			'username',
 			'password',
 			'host',
@@ -40,7 +40,7 @@ class Get_Settings {
 			'use_local_mail_server',
 			'from_email',
 			'to_email',
-		);
+		];
 
 		$smtp_settings = self::get_options_from_database( $option_names );
 

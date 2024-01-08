@@ -57,65 +57,63 @@ class Send_SMTP {
 		// Check settings are ready.
 		if ( false === ! ! $this->smtp_settings || true === $this->smtp_settings['use_local_mail_server'] ) {
 			error_log( 'Bigup_Forms: Invalid SMTP settings retrieved from database.' );
-			return array( 500, 'Sending your message failed due to a bad local mailserver configuration.' );
+			return [ 500, 'Sending your message failed due to a bad local mailserver configuration.' ];
 		}
 
-		$mail = new PHPMailer( true );
+		$fields = $form_data['fields'];
 
-		extract( $this->smtp_settings );
-		extract( $form_data['fields'] );
+		$username              = $this->smtp_settings['username'];
+		$password              = $this->smtp_settings['password'];
+		$host                  = $this->smtp_settings['host'];
+		$port                  = $this->smtp_settings['port'];
+		$auth                  = $this->smtp_settings['auth'];
+		$use_local_mail_server = $this->smtp_settings['use_local_mail_server'];
+		$from_email            = $this->smtp_settings['from_email'];
+		$to_email              = $this->smtp_settings['to_email'];
 
 		$site_url  = html_entity_decode( get_bloginfo( 'url' ) );
 		$domain    = parse_url( $site_url, PHP_URL_HOST );
 		$site_name = html_entity_decode( get_bloginfo( 'name' ) );
 		$from_name = $site_name ? $site_name : 'Bigup Forms';
 		$subject   = 'New website message from ' . $domain;
+		$name      = isset( $fields['fields']['name'] ) ? $fields['fields']['name'] : 'Anonymous user';
+		$email     = isset( $fields['fields']['email'] ) ? $fields['fields']['email'] : null;
 
-		// Build plaintext email body
-		$plaintext         = <<<PLAIN
-This message was sent via the contact form at $site_url.
+		// Build plaintext email body.
+		$plaintext_fields_output = "\n\n";
+		foreach ( $fields as $name => $data ) {
+			$plaintext_fields_output .= ucfirst( $name ) . ': ' . $data['value'] . "\n";
+		}
+		$plaintext_fields_output .= "\n\n";
+		$plaintext                = <<<PLAIN
+			This message was sent via the contact form at $site_url.
+			{$plaintext_fields_output}
+			You are viewing the plaintext version of this email because you have
+			disallowed HTML content in your email client. To view this and any future
+			messages from this sender in complete HTML formatting, try adding the sender
+			domain to your spam filter whitelist.
+		PLAIN;
+		$plaintext_cleaned        = wp_strip_all_tags( $plaintext );
 
-From: $name
-E-mail: $email
-Message:
-
-$message
-
-You are viewing the plaintext version of this email because you have
-disallowed HTML content in your email client. To view this and any future
-messages from this sender in complete HTML formatting, try adding the sender
-domain to your spam filter whitelist.
-PLAIN;
-		$plaintext_cleaned = wp_strip_all_tags( $plaintext );
-
-		// Build html email body
+		// Build html email body.
+		$html_fields_output = "\n";
+		foreach ( $fields as $name => $data ) {
+			$html_fields_output .= '<tr><td><b>' . ucfirst( $name ) . ': </b></td><td>' . $data['value'] . "</td></tr>\n";
+		}
 		$html = <<<HTML
-<table>
-    <tr>
-        <td height="60px">
-            <i>This message was sent via the contact form at $site_url</i>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>Name: </b>$name
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>Email: </b>$email
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <br>
-            <b>Message: </b>
-            <br>
-            <br>$message
-        </td>
-    </tr>
-</table>
-HTML;
+			<table>
+				<tr>
+					<td height="60px">
+						<i>This message was sent via the contact form at $site_url</i>
+					</td>
+				</tr>
+				<tr>
+					<th>Form Field</th>
+					<th>Entered Value</th>
+				</tr>
+				{$html_fields_output}
+			</table>
+		HTML;
 
 		// Make sure PHP server script limit is higher than mailer timeout!
 		set_time_limit( 60 );
@@ -124,29 +122,30 @@ HTML;
 
 		try {
 
-			// Server settings.
-
+			$mail = new PHPMailer( true );
+			$mail->isSMTP();
 			$port = (int) $port;
 			// SMTPS/STARTTLS (ssl/tls).
 			if ( $port !== 25 && $port !== 2525 ) {
 				$mail->SMTPSecure = ( $port === 465 ) ? 'ssl' : 'tls';
 			}
-			$mail->SMTPDebug   = SMTP::DEBUG_OFF;   // Debug level: DEBUG_[OFF/SERVER/CONNECTION]
-			$mail->Debugoutput = 'error_log';       // How to handle debug output
-			$mail->Helo        = get_site_url();    // Sender's FQDN to identify as
-			$mail->isSMTP();                         // Use SMTP
-			$mail->Host                         = $host;             // SMTP server to send through
-			$mail->SMTPAuth                     = (bool) $auth;       // Enable SMTP authentication
-			$mail->Username                     = $username;         // SMTP username
-			$mail->Password                     = $password;         // SMTP password
-			$mail->Port                         = $port;             // TCP port
-			$mail->Timeout                      = 6;                 // Connection timeout (secs)
-			$mail->getSMTPInstance()->Timelimit = 8; // Time allowed for each SMTP command response
+			$mail->SMTPDebug                    = SMTP::DEBUG_OFF; // Debug level: DEBUG_[OFF/SERVER/CONNECTION]
+			$mail->Debugoutput                  = 'error_log';     // How to handle debug output
+			$mail->Helo                         = get_site_url();  // Sender's FQDN to identify as
+			$mail->Host                         = $host;           // SMTP server to send through
+			$mail->SMTPAuth                     = (bool) $auth;    // Enable SMTP authentication
+			$mail->Username                     = $username;       // SMTP username
+			$mail->Password                     = $password;       // SMTP password
+			$mail->Port                         = $port;           // TCP port
+			$mail->Timeout                      = 6;               // Connection timeout (secs)
+			$mail->getSMTPInstance()->Timelimit = 8;               // Time allowed for each SMTP command response
 
 			// Recipients.
 			$mail->setFrom( $from_email, $from_name ); // Use fixed and owned SMTP account address to pass SPF checks.
 			$mail->addAddress( $to_email, );
-			$mail->addReplyTo( $email, $name );
+			if ( isset( $name ) && isset( $email ) ) {
+				$mail->addReplyTo( $email, $name );
+			}
 
 			// Content.
 			$mail->isHTML( true );
@@ -156,13 +155,13 @@ HTML;
 			$mail->AltBody = $plaintext_cleaned;
 
 			// File attachments.
-			if ( array_key_exists( 'files', $form_data ) ) {
+			if ( isset( $form_data['files'] ) ) {
 				foreach ( $form_data['files'] as $file ) {
 					$mail->AddAttachment( $file['tmp_name'], $file['name'] );
 				}
 			}
 
-			// Gotime.
+			// Send mail.
 			$sent = $mail->send();
 			if ( $sent ) {
 				return array( 200, 'Message sent successfully.' );

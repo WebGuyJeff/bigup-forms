@@ -2,12 +2,10 @@
 namespace Bigup\Forms;
 
 /**
- * Bigup Forms - POST handler.
+ * Bigup Forms - Submission handler.
  *
- * Handle backend form data validation, sanitization and response
- * messaging before passing to mail handler.
- *
- * Note: Rest api handles nonces automatically.
+ * Handle form submissions by data validation, sanitization and response messaging before passing to
+ * the mail handler.
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
@@ -16,15 +14,15 @@ namespace Bigup\Forms;
  * @link https://jeffersonreal.uk
  */
 
-// Import PHPMailer classes into the global namespace
+// Import PHPMailer classes into the global namespace.
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-// Load Composer's autoloader
+// Load Composer's autoloader.
 require BIGUPFORMS_PATH . 'vendor/autoload.php';
 
-// WordPress Dependencies
+// WordPress Dependencies.
 use WP_REST_Request;
 use get_option;
 
@@ -37,217 +35,210 @@ class Form_Controller {
 
 		// Check header is multipart/form-data.
 		if ( ! str_contains( $request->get_header( 'Content-Type' ), 'multipart/form-data' ) ) {
-			$this->send_json_response( array( 405, 'Sending your message failed due to a malformed request from your browser' ) );
-			exit; // request handlers should exit() when done
+			$this->send_json_response( [ 405, 'Sending your message failed due to a malformed request from your browser' ] );
+
+			// Request handlers should exit() when done.
+			exit;
 		}
 
-		$data = array();
+		// Get form text data.
+		$form_fields = $request->get_body_params();
+		$fields      = [];
+		foreach ( $form_fields as $name => $json_field ) {
+			$field                   = json_decode( $json_field );
+			$data['fields'][ $name ] = array(
+				'type'  => $field['type'],
+				'value' => $field['value'],
+			);
+		}
 
-		// Get the form file data.
-		$file_data = $request->get_file_params();
-		if ( array_key_exists( 'files', $file_data ) ) {
-			$number_of_files = count( $file_data['files']['name'] ) - 1;
+		// Get form file data.
+		$form_files = $request->get_file_params();
+		if ( array_key_exists( 'files', $form_files ) ) {
+			$number_of_files = count( $form_files['files']['name'] ) - 1;
+			$files           = [];
 			for ( $n = 0; $n <= $number_of_files; $n++ ) {
-				$data['files'][ $n ] = array(
-					'name'     => $file_data['files']['name'][ $n ],
-					'tmp_name' => $file_data['files']['tmp_name'][ $n ],
-				);
+				$files[ $n ] = [
+					'name'     => $form_files['files']['name'][ $n ],
+					'tmp_name' => $form_files['files']['tmp_name'][ $n ],
+				];
 			}
 		}
 
-		// Get the form text data.
-		$text_data      = $request->get_body_params();
-		$data['fields'] = array(
-			'email'   => $text_data['email'],
-			'name'    => $text_data['name'],
-			'message' => $text_data['message'],
-		);
-		$data_sanitised = $this->sanitise_user_input( $data );
-		$data_validated = $this->validate_user_input( $data );
-		$form_values_ok = true;
-		$errors         = array();
+		$form_data = [
+			'fields' => $fields,
+			'files'  => $files,
+		];
 
-		// Collect sanitise errors.
-		if ( $data_sanitised['modified_by_sanitise'] ) {
-			foreach ( $data_sanitised['modified_by_sanitise'] as $field ) {
-				$errors[] = $field['error'];
-			}
-			$form_values_ok = false;
+		/*
+		 * Test values are sanitary and valid.
+		 *
+		 * No modified values are returned to front end. Only errors are returned so the user can
+		 * update their entries before resubmission. This functionality was chosen to ensure all
+		 * submitted data is verified by the user.
+		 */
+		$sanitised_data = $this->sanitise( $form_data );
+		$validated_data = $this->validate( $sanitised_data );
+		if ( $validated_data['has_errors'] ) {
+			$this->send_json_response( [ 400, __( 'Please correct errors and resubmit', 'bigup-forms' ) ], $validated_data['fields'] );
+
+			// Request handlers should exit() when done.
+			exit;
 		}
 
-		// Collect validation errors.
-		if ( $data_validated['validation_errors'] ) {
-			foreach ( $data_validated['validation_errors'] as $error ) {
-				$errors[] = $error;
-			}
-			$form_values_ok = false;
-		}
-
-		// Return data to client if there are errors.
-		if ( false === ! ! $form_values_ok ) {
-			$this->send_json_response( array( 400, $errors ) );
-			exit; // request handlers should exit() when done
-		}
-
+		// Mail the form entry to the site owner.
 		$saved_settings   = get_option( 'bigup_forms_settings' );
 		$use_local_mailer = ( ! empty( $saved_settings['use_local_mail_server'] ) && true === $saved_settings['use_local_mail_server'] );
 		$mail_handler     = ( isset( $use_local_mailer ) && true === $use_local_mailer ) ? new Send_Local() : new Send_SMTP();
-		$result           = $mail_handler->compose_and_send_email( $data );
+		$result           = $mail_handler->compose_and_send_email( $form_data );
 		$this->send_json_response( $result );
 
-		// Log form entry post.
-		Store_Submissions::log_form_entry( $data, $result );
+		// Save the form entry to the database.
+		Store_Submissions::log_form_entry( $form_data, $result );
 
-		exit; // Request handlers should exit() when done.
+		// Request handlers should exit() when done.
+		exit;
 	}
 
 
 	/**
 	 * Sanitise user input.
-	 * 
+	 *
 	 * - Performed BEFORE validation.
 	 * - Returns an array with cleaned values.
 	 * - Does not validate values and will return empty array keys in cases where all characters are
 	 *   invalid.
 	 * - Returned array is a clone of input array, plus a $modified sub-array containing an error
-	 *   message, original value and sanitized value for public-safe error message output.
-	 * 
-	 * Example output array structure:
-	 * 
-	 * $form_data_sanitized[
-	 * 		'name' => 'value',
-	 *		...
-	 * 		$modified[
-	 * 			$field[
-	 * 				'error' => <Public friendly message indicating removed characters>;
-	 *				'old'   => <original submitted value>;
-	 *				'new'   => <sanitized value>;
-	 *		]
+	 *   message, original value and sanitised value for public-safe error message output.
+	 *
+	 * **Input array structure**
+	 *
+	 * $form_data = [
+	 *     'fields' => [
+	 *         $name => [
+	 *             'value' => <field value>,
+	 *             'type'  => <html input type or 'textarea'>,
+	 *         ]
+	 *         ...
+	 * ];
+	 *
+	 * **Output array structure**
+	 *
+	 * $form_data = [
+	 *     'fields' => [
+	 *         $name => [
+	 *             'value'  => <sanitised field value>,
+	 *             'type'   => <html input type or 'textarea'>,
+	 *             'errors' => [ <Public friendly message indicating removed characters> ],
+	 *         ],
+	 *         ...
+	 *     ]
+	 *     ...
 	 * ]
 	 *
-	 * @param array $form_data: Associative array of form input data.
-	 * @return array $form_data: Contains cleaned values and sanitisation info.
+	 * @param array $form_data Submitted form data.
+	 * @return array $form_data_sanitised Form data with cleaned values and errors.
 	 */
-	public function sanitise_user_input( $form_data ) {
+	public function sanitise( $form_data ) {
 
-		$modified = array();
+		$sanitised_fields = [];
+		$has_errors       = false;
 
-		foreach ( $form_data['fields'] as $field => $value ) {
+		foreach ( $form_data['fields'] as $field => $data ) {
 
-			$old = trim( $form_data['fields'][ $field ] );
-			$new = '';
+			$type = $data['type'];
+			$old  = trim( $data['value'] );
+			$new  = Sanitise::by_type( $type, $old );
 
-			switch ( $field ) {
-				case 'name':
-					// Remove tags and non-unicode language chars.
-					$pattern       = '/<[^>]*>|[^ \p{L}\p{N}\p{M}\p{P}]/u';
-					$invalid_chars = '';
-					if ( preg_match_all( $pattern, $old, $matches ) ) {
-						foreach ( $matches[0] as $match ) {
-							$invalid_chars .= $match;
-						}
-						$new = preg_filter( $pattern, '', $old );
-					} else {
-						$new = $old;
-					}
-					break;
-
-				case 'email':
-					// Email sanitisation is futile.
-					$new = $old;
-					break;
-
-				case 'message':
-					// Remove tags apart from these.
-					$pattern       = '/(?:(?!(<(\/*)(a|b|br|code|div|h[1-6]|img|li|p|pre|q|span|small|strong|u|ul|ol)(>| [^>]*?>))))(<.*?>)/';
-					$invalid_chars = '';
-					if ( preg_match_all( $pattern, $old, $matches ) ) {
-						foreach ( $matches[0] as $match ) {
-							$invalid_chars .= $match;
-						}
-						$new = preg_filter( $pattern, '', $old );
-					} else {
-						$new = $old;
-					}
-					break;
+			$form_data['fields'][ $field ]['value']    = $new;
+			$form_data['fields'][ $field ]['errors'][] = ( $new !== $old ) ? __( 'Disallowed characters removed', 'bigup-forms' ) : '';
+			if ( $new !== $old ) {
+				$has_errors = true;
 			}
-
-			// Store disallowed input errors.
-			if ( $old !== $new ) {
-				$modified[ $field ]['error'] = ucfirst( $field ) . ' contains invalid input (' . $invalid_chars . ')';
-				$modified[ $field ]['old']   = $old;
-				$modified[ $field ]['new']   = $new;
-			}
-			$form_values[ $field ] = $new;
 		}
 
-		// Include passed data.
-		$form_data_sanitized = $form_data;
+		$form_data['has_errors'] = $has_errors;
 
-		if ( $modified ) {
-			$form_data_sanitized['modified'] = $modified;
-		} else {
-			$form_data_sanitized['modified'] = false;
-		}
-
-		return $form_data_sanitized;
+		return $form_data;
 	}
 
 
 	/**
 	 * Validate user input.
-	 * 
+	 *
 	 * Performed AFTER sanitization.
 	 * Note: Never modifies or returns values.
-	 * 
-	 * Example output array structure:
-	 * 
-	 * $form_data_validated[
-	 * 		'name' => 'value',
-	 *		...
-	 * 		$validation_errors[
-	 * 			<first Public-friendly validation error message>,
-	 * 			<second Public-friendly validation error message>,
-	 * 			...
-	 *		]
+	 *
+	 * **Input array structure**
+	 *
+	 * $form_data = [
+	 *     'fields' => [
+	 *         $name => [
+	 *             'value'  => <sanitised field value>,
+	 *             'type'   => <html input type or 'textarea'>,
+	 *             'errors' => [ <Public friendly message indicating removed characters> ],
+	 *         ],
+	 *         ...
+	 *     ]
+	 *     ...
 	 * ]
 	 *
-	 * @param array $form_values: An associative array of form field values.
+	 * **Output array structure**
+	 *
+	 * $form_data = [
+	 *     'fields' => [
+	 *         $name => [
+	 *             'value'  => <sanitised field value>,
+	 *             'type'   => <html input type or 'textarea'>,
+	 *             'errors' => [
+	 *                 <sanitisation error message>,
+	 *                 <validation error message>,
+	 *             ],
+	 *         ],
+	 *         ...
+	 *     ]
+	 *     ...
+	 * ]
+	 *
+	 * @param array $form_data Sanitised form data.
+	 * @return array $form_data_sanitised Sanitised form data including validation errors.
 	 */
-	public function validate_user_input( $form_data ) {
+	public function validate( $form_data ) {
 
-		foreach ( $form_data['fields'] as $field => $value ) {
-			switch ( $field ) {
+		foreach ( $form_data['fields'] as $field => $data ) {
+			$type  = $data['type'];
+			$error = false;
 
-				case 'name':
-					if ( strlen( $value ) < 2 || strlen( $value ) > 50 ) {
-						$results[] = 'Name should be 2-50 characters.';
+			switch ( $type ) {
+
+				case 'text':
+					if ( 'name' === $field && ( strlen( $value ) < 2 || strlen( $value ) > 50 ) ) {
+						$error = __( '2-50 characters allowed.', 'bigup-forms' );
+					} elseif ( strlen( $value ) < 2 || strlen( $value ) > 100 ) {
+						$error = __( '2-100 characters allowed.', 'bigup-forms' );
 					}
-					continue 2; // returns parsing to the loop.
+					continue 2;
 
 				case 'email':
 					if ( ! PHPMailer::validateAddress( $value ) ) {
-						$results[] = 'Email address is invalid.';
+						$error = __( 'Invalid email address.', 'bigup-forms' );
 					}
 					continue 2;
 
-				case 'message':
+				case 'textarea':
 					if ( strlen( $value ) < 10 || strlen( $value ) > 3000 ) {
-						$results[] = 'Message body should be 10-3000 characters.';
+						$error = __( '10-3000 characters allowed.', 'bigup-forms' );
 					}
 					continue 2;
 			}
+
+			if ( $error ) {
+				$form_data['fields'][ $field ]['errors'][] = $error;
+				$form_data['has_errors']                   = true;
+			}
 		}
 
-		// Include passed data.
-		$form_data_validated = $form_data;
-
-		if ( ! empty( $results[0] ) ) {
-			$form_data_validated['validation_errors'] = $results;
-		} else {
-			$form_data_validated['validation_errors'] = false;
-		}
-		return $form_data_validated;
+		return $form_data;
 	}
 
 
@@ -260,28 +251,27 @@ class Form_Controller {
 	 *
 	 * @param array $info: [ int(http-code), str(human readable message) ].
 	 */
-	private function send_json_response( $public_status ) {
+	private function send_json_response( $status, $fields = [] ) {
 
-		if ( ! is_array( $public_status ) ) {
-			error_log( 'Bigup_Forms: send_json_response expects array but ' . gettype( $public_status ) . ' received.' );
-			$public_status    = null;
-			$public_status[0] = 500;
-			$public_status[1] = 'Sending your message failed due to an unexpected error.';
+		if ( ! is_array( $status ) ) {
+			error_log( 'Bigup_Forms: send_json_response expects array but ' . gettype( $status ) . ' received.' );
+			$status = [ 500, 'Sending your message failed due to an unexpected error.' ];
 		}
 
 		// Ensure response headers haven't already sent to browser.
 		if ( ! headers_sent() ) {
 			header( 'Content-Type: application/json; charset=utf-8' );
-			status_header( $public_status[0] );
+			status_header( $status[0] );
 		}
 
 		// Create response body.
-		$public_output['ok']     = ( $public_status[0] < 300 ) ? true : false;
-		$public_output['output'] = $public_status[1];
+		$response['ok']     = ( $status[0] < 300 ) ? true : false;
+		$response['output'] = $status[1];
+		$response['fields'] = $fields;
 
 		// PHPMailer debug ($mail->SMTPDebug) gets dumped to output buffer
 		// and breaks JSON response. Using ob_clean() before output prevents this.
 		ob_clean();
-		echo json_encode( $public_output );
+		echo json_encode( $response );
 	}
-}//end class
+}

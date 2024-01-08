@@ -46,8 +46,12 @@ async function submit( event ) {
 	}
 
 	const formData   = new FormData()
-	const textInputs = form.querySelectorAll( ':is( input, textarea )' )
+	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( [name="required_field" ] )' )
 	const fileInput  = form.querySelector( '.bigup__customFileUpload_input' )
+
+
+console.log( 'textInputs',textInputs )
+
 
 	textInputs.forEach( input => {
 		formData.append(
@@ -103,6 +107,22 @@ async function submit( event ) {
 			fetchHttpRequest( url, fetchOptions ),
 			alertsShow( form, preFetchAlerts )
 		] )
+
+		// Update form fields with values and errors returned from server.
+		if ( result.fields ) {
+			textInputs.forEach( input => {
+
+				input.value = result.fields[ input.name ].value
+
+				let div = document.createElement( 'div' )
+				result.fields[ input.name ].errors.forEach( error => {
+					let span = document.createElement( 'span' )
+					span.innerHTML = error
+					div.appendChild( span )
+				} )
+				input.after( div )
+			} )
+		}
 
 		// Display post-fetch alerts.
 		const postFetchAlerts = []

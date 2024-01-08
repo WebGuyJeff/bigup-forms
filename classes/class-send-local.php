@@ -62,84 +62,79 @@ class Send_Local {
 	 */
 	public function compose_and_send_email( $form_data ) {
 
-		$mail = new PHPMailer( true );
+		// Check mail() exists (does not gaurantee an MTA is configured!)
+		if ( ! function_exists( 'mail' ) ) {
+			throw new Exception( 'Function "mail" is not available on this server.' );
+		}
 
-		extract( $this->settings );
-		extract( $form_data['fields'] );
+		$fields = $form_data['fields'];
+
+		$use_local_mail_server = $this->smtp_settings['use_local_mail_server'];
+		$from_email            = $this->smtp_settings['from_email'];
+		$to_email              = $this->smtp_settings['to_email'];
 
 		$site_url  = html_entity_decode( get_bloginfo( 'url' ) );
 		$domain    = parse_url( $site_url, PHP_URL_HOST );
 		$site_name = html_entity_decode( get_bloginfo( 'name' ) );
 		$from_name = $site_name ? $site_name : 'Bigup Forms';
 		$subject   = 'New website message from ' . $domain;
+		$name      = isset( $fields['fields']['name'] ) ? $fields['fields']['name'] : 'Anonymous user';
+		$email     = isset( $fields['fields']['email'] ) ? $fields['fields']['email'] : null;
 
-		// Build plaintext email body
-		$plaintext         = <<<PLAIN
-This message was sent via the contact form at $site_url.
+		// Build plaintext email body.
+		$plaintext_fields_output = "\n\n";
+		foreach ( $fields as $name => $data ) {
+			$plaintext_fields_output .= ucfirst( $name ) . ': ' . $data['value'] . "\n";
+		}
+		$plaintext_fields_output .= "\n\n";
+		$plaintext                = <<<PLAIN
+			This message was sent via the contact form at $site_url.
+			{$plaintext_fields_output}
+			You are viewing the plaintext version of this email because you have
+			disallowed HTML content in your email client. To view this and any future
+			messages from this sender in complete HTML formatting, try adding the sender
+			domain to your spam filter whitelist.
+		PLAIN;
+		$plaintext_cleaned        = wp_strip_all_tags( $plaintext );
 
-From: $name
-E-mail: $email
-Message:
-
-$message
-
-You are viewing the plaintext version of this email because you have
-disallowed HTML content in your email client. To view this and any future
-messages from this sender in complete HTML formatting, try adding the sender
-domain to your spam filter whitelist.
-PLAIN;
-		$plaintext_cleaned = wp_strip_all_tags( $plaintext );
-
-		// Build html email body
+		// Build html email body.
+		$html_fields_output = "\n";
+		foreach ( $fields as $name => $data ) {
+			$html_fields_output .= '<tr><td><b>' . ucfirst( $name ) . ': </b></td><td>' . $data['value'] . "</td></tr>\n";
+		}
 		$html = <<<HTML
-<table>
-    <tr>
-        <td height="60px">
-            <i>This message was sent via the contact form at $site_url</i>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>Name: </b>$name
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <b>Email: </b>$email
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <br>
-            <b>Message: </b>
-            <br>
-            <br>$message
-        </td>
-    </tr>
-</table>
-HTML;
+			<table>
+				<tr>
+					<td height="60px">
+						<i>This message was sent via the contact form at $site_url</i>
+					</td>
+				</tr>
+				<tr>
+					<th>Form Field</th>
+					<th>Entered Value</th>
+				</tr>
+				{$html_fields_output}
+			</table>
+		HTML;
 
 		// Make sure PHP server script limit is higher than mailer timeout!
 		set_time_limit( 60 );
 
 		try {
 
-			// Check mail() exists (does not gaurantee an MTA is configured!)
-			if ( ! function_exists( 'mail' ) ) {
-				throw new Exception( 'Function "mail" is not available on this server.' );
-			}
-
-			// Server settings.
+			$mail              = new PHPMailer( true );
 			$mail->Debugoutput = 'error_log'; // How to handle debug output
-			// $mail->IsSendmail();             // Use the sendmail MTA.
-			$mail->isMail();                   // *May work on Linux and Windows servers.
+			// $mail->IsSendmail();           // Use the sendmail MTA.
+			$mail->isMail();                  // *May work on Linux and Windows servers.
 
-			// * see https://www.php.net/manual/en/function.mail.php
+			// *See https://www.php.net/manual/en/function.mail.php
 
 			// Recipients.
 			$mail->setFrom( $from_email, $from_name ); // Use fixed and owned address to pass SPF checks.
 			$mail->addAddress( $to_email, );
-			$mail->addReplyTo( $email, $name );
+			if ( isset( $name ) && isset( $email ) ) {
+				$mail->addReplyTo( $email, $name );
+			}
 
 			// Content.
 			$mail->isHTML( true );
@@ -155,7 +150,7 @@ HTML;
 				}
 			}
 
-			// Send it!
+			// Send mail.
 			$sent = $mail->send();
 			if ( $sent ) {
 				return array( 200, 'Message sent successfully.' );
