@@ -81,7 +81,7 @@ class Sanitise {
 	 */
 	public static function text( $text ) {
 
-		$clean_text = sanitise_text_field( $text );
+		$clean_text = sanitize_text_field( $text );
 		return $clean_text;
 	}
 
@@ -102,7 +102,7 @@ class Sanitise {
 	 */
 	public static function url( $url ) {
 
-		$clean_url = filter_var( $url, FILTER_SANITISE_URL );
+		$clean_url = filter_var( $url, FILTER_SANITIZE_URL );
 		return $clean_url;
 	}
 
@@ -112,7 +112,7 @@ class Sanitise {
 	 */
 	public static function email( $email ) {
 
-		$clean_email = sanitise_email( $email );
+		$clean_email = sanitize_email( $email );
 		return $clean_email;
 	}
 

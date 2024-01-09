@@ -354,7 +354,7 @@ class Admin_Settings {
 		$sanitised = array();
 
 		if ( isset( $input['username'] ) ) {
-			$sanitised['username'] = sanitise_text_field( $input['username'] );
+			$sanitised['username'] = sanitize_text_field( $input['username'] );
 		}
 
 		if ( isset( $input['password'] ) ) {
@@ -378,11 +378,11 @@ class Admin_Settings {
 		}
 
 		if ( isset( $input['to_email'] ) ) {
-			$sanitised['to_email'] = sanitise_email( $input['to_email'] );
+			$sanitised['to_email'] = sanitize_email( $input['to_email'] );
 		}
 
 		if ( isset( $input['from_email'] ) ) {
-			$sanitised['from_email'] = sanitise_email( $input['from_email'] );
+			$sanitised['from_email'] = sanitize_email( $input['from_email'] );
 		}
 
 		if ( isset( $input['styles'] ) ) {

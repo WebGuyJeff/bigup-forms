@@ -45,7 +45,7 @@ class Form_Controller {
 		$form_fields = $request->get_body_params();
 		$fields      = [];
 		foreach ( $form_fields as $name => $json_field ) {
-			$field                   = json_decode( $json_field );
+			$field = json_decode( $json_field, true );
 			$data['fields'][ $name ] = array(
 				'type'  => $field['type'],
 				'value' => $field['value'],
@@ -54,9 +54,9 @@ class Form_Controller {
 
 		// Get form file data.
 		$form_files = $request->get_file_params();
+		$files      = [];
 		if ( array_key_exists( 'files', $form_files ) ) {
 			$number_of_files = count( $form_files['files']['name'] ) - 1;
-			$files           = [];
 			for ( $n = 0; $n <= $number_of_files; $n++ ) {
 				$files[ $n ] = [
 					'name'     => $form_files['files']['name'][ $n ],

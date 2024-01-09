@@ -49,16 +49,12 @@ async function submit( event ) {
 	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( [name="required_field" ] )' )
 	const fileInput  = form.querySelector( '.bigup__customFileUpload_input' )
 
-
-console.log( 'textInputs',textInputs )
-
-
 	textInputs.forEach( input => {
 		formData.append(
 			input.name,
 			JSON.stringify( {
 				'value': input.value,
-				// Type used to select suitable sanitization in back end.
+				// Type used to select suitable sanitisation in back end.
 				'type': input.type
 			} )
 		)
@@ -111,6 +107,13 @@ console.log( 'textInputs',textInputs )
 		// Update form fields with values and errors returned from server.
 		if ( result.fields ) {
 			textInputs.forEach( input => {
+
+
+console.log( 'result.fields[ input.name ].value', result.fields[ input.name ].value )
+console.log( 'result.fields[ input.name ]', result.fields[ input.name ] )
+console.log( 'result.fields', result.fields )
+console.log( 'result', result )
+
 
 				input.value = result.fields[ input.name ].value
 

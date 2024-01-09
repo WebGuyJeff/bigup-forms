@@ -20,7 +20,7 @@ use function add_action;
 use function wp_insert_post;
 use function is_wp_error;
 use function get_error_message;
-use function sanitise_title;
+use function sanitize_title;
 
 class Store_Submissions {
 
@@ -234,13 +234,15 @@ class Store_Submissions {
 			}
 		}
 
+		$name = isset( $fields['name'] ) ? $fields['name'] : 'Anonymous';
+
 		$result = wp_insert_post(
 			array(
 				'post_type'   => 'bigup_form_entry',
 				'post_status' => 'publish',
-				'post_title'  => date( 'd-m-Y_' ) . sanitise_title( $fields['name'] ),
+				'post_title'  => date( 'd-m-Y_' ) . sanitize_title( strtolower( $name ) ),
 				'meta_input'  => array(
-					'_bufe__name'        => isset( $fields['name'] ) ? $fields['name'] : 'Anonymous',
+					'_bufe__name'        => $name,
 					'_bufe__email'       => isset( $fields['email'] ) ? $fields['email'] : '[Not provided]',
 					'_bufe__phone'       => isset( $fields['phone'] ) ? $fields['phone'] : '[Not provided]',
 					'_bufe__message'     => isset( $fields['message'] ) ? $fields['message'] : '[Not provided]',

@@ -69,9 +69,9 @@ class Send_Local {
 
 		$fields = $form_data['fields'];
 
-		$use_local_mail_server = $this->smtp_settings['use_local_mail_server'];
-		$from_email            = $this->smtp_settings['from_email'];
-		$to_email              = $this->smtp_settings['to_email'];
+		$use_local_mail_server = $this->settings['use_local_mail_server'];
+		$from_email            = $this->settings['from_email'];
+		$to_email              = $this->settings['to_email'];
 
 		$site_url  = html_entity_decode( get_bloginfo( 'url' ) );
 		$domain    = parse_url( $site_url, PHP_URL_HOST );
