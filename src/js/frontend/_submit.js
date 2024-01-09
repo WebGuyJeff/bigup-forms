@@ -1,8 +1,8 @@
-import { debug, start, stopwatch } from './_debug'
-import { fetchHttpRequest } from './_fetch'
+import { debug, start, stopwatch } from '../common/_debug'
+import { fetchHttpRequest } from '../common/_fetch'
 import { disallowedTypes } from './_file-upload'
-import { removeChildren } from './_util'
-import { alertsShowWaitHide, alertsShow } from './_alert'
+import { removeChildren } from '../common/_util'
+import { alertsShowWaitHide, alertsShow } from '../common/_alert'
 
 
 /**
@@ -104,26 +104,27 @@ async function submit( event ) {
 			alertsShow( form, preFetchAlerts )
 		] )
 
-		// Update form fields with values and errors returned from server.
-		if ( result.fields ) {
+		// Update form fields with values and errors returned from server if present.
+		if ( result.fields && result.fields.length > 0 ) {
 			textInputs.forEach( input => {
 
+				const valueFromServer = result?.fields[ input.name ]?.value
+				if ( valueFromServer && valueFromServer !== input.value ) {
 
-console.log( 'result.fields[ input.name ].value', result.fields[ input.name ].value )
-console.log( 'result.fields[ input.name ]', result.fields[ input.name ] )
-console.log( 'result.fields', result.fields )
-console.log( 'result', result )
+					// Set input value.
+					input.value = valueFromServer
 
+					// Attach errors to input.
+					let div = document.createElement( 'div' )
+					result.fields[ input.name ].errors.forEach( error => {
+						let span = document.createElement( 'span' )
+						span.innerHTML = error
+						div.appendChild( span )
+					} )
+					input.after( div )
 
-				input.value = result.fields[ input.name ].value
+				}
 
-				let div = document.createElement( 'div' )
-				result.fields[ input.name ].errors.forEach( error => {
-					let span = document.createElement( 'span' )
-					span.innerHTML = error
-					div.appendChild( span )
-				} )
-				input.after( div )
 			} )
 		}
 

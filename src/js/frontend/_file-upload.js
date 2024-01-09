@@ -1,5 +1,5 @@
-import { alertsShowWaitHide } from './_alert'
-import { removeChildren } from './_util'
+import { alertsShowWaitHide } from '../common/_alert'
+import { removeChildren } from '../common/_util'
 
 
 /**

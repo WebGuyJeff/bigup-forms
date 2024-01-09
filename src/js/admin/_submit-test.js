@@ -1,6 +1,6 @@
-import { debug, start, stopwatch } from './_debug'
-import { fetchHttpRequest } from './_fetch'
-import { alertsShowWaitHide, alertsShow } from './_alert'
+import { debug, start, stopwatch } from '../common/_debug'
+import { fetchHttpRequest } from '../common/_fetch'
+import { alertsShowWaitHide, alertsShow } from '../common/_alert'
 
 
 /**

@@ -4,6 +4,16 @@ namespace BigupWeb\Forms;
 /**
  * Sanitization methods.
  *
+ * TLDR; Validation enforces a data format, sanitisation makes data safe for a process.
+ *
+ * - Sanitisation should be performed as late as possible i.e. just before processing such as saving
+ *   to a database or outputting on the front end.
+ * - Sanitisation makes the data safe for the process it's being sanitised for and doesn't care what
+ *   the data type is.
+ * - Validation differs in that it happens at the point of data input and forces the user to submit
+ *   data conforming to the expected form. Validation is unaware of the data's future use and
+ *   therefore cannot be responsible for sanitisation.
+ *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
  * @copyright Copyright (c) 2024, Jefferson Real
@@ -47,52 +57,57 @@ class Sanitise {
 	/**
 	 * Sanitise by Passed Type
 	 *
-	 * Automatically selects the right method using passed type.
+	 * Automatically selects the right method using a passed sanitisation type.
 	 */
-	public static function by_type( $type, $value ) {
+	public static function by_type( $type, $data ) {
 		switch ( $type ) {
 
 			case 'text':
-				return $self::text( $value );
+				return self::text( $data );
 
 			case 'textarea':
-				return $self::textarea( $value );
+				return self::textarea( $data );
 
 			case 'url':
-				return $self::url( $value );
+				return self::url( $data );
 
 			case 'email':
-				return $self::email( $value );
+				return self::email( $data );
 
 			case 'number':
-				return $self::number( $value );
+				return self::number( $data );
 
 			case 'checkbox':
-				return $self::checkbox( $value );
+				return self::checkbox( $data );
 
 			default:
-				error_log( "Unknown sanitise type '{$type}' passed." );
+				error_log( 'Bigup Forms: Unknown sanitisation type "' . $type . '" passed with data' );
 		}
 	}
 
 
 	/**
-	 * Sanitise a text string.
+	 * Sanitise a text field.
 	 */
-	public static function text( $text ) {
+	public static function text( $data ) {
 
-		$clean_text = sanitize_text_field( $text );
+		$clean_text = sanitize_text_field( $data );
+
+		// DEBUG.
+		$clean_text = preg_replace( '/a/g', '', $clean_text ); // Remove 'a' from the string.
+		error_log( $clean_text );
+
 		return $clean_text;
 	}
 
 
 	/**
-	 * Sanitise a textarea string.
+	 * Sanitise a textarea field.
 	 */
-	public static function textarea( $textarea ) {
+	public static function textarea( $data ) {
 
 		$allowed_tags   = '/(?:(?!(<(\/*)(a|b|br|code|div|h[1-6]|img|li|p|pre|q|span|small|strong|u|ul|ol)(>| [^>]*?>))))(<.*?>)/';
-		$clean_textarea = preg_filter( $allowed_tags, '', $textarea );
+		$clean_textarea = preg_filter( $allowed_tags, '', $data );
 		return $clean_textarea;
 	}
 
@@ -100,9 +115,9 @@ class Sanitise {
 	/**
 	 * Sanitise a URL.
 	 */
-	public static function url( $url ) {
+	public static function url( $data ) {
 
-		$clean_url = filter_var( $url, FILTER_SANITIZE_URL );
+		$clean_url = filter_var( $data, FILTER_SANITIZE_URL );
 		return $clean_url;
 	}
 
@@ -110,9 +125,9 @@ class Sanitise {
 	/**
 	 * Sanitise an email.
 	 */
-	public static function email( $email ) {
+	public static function email( $data ) {
 
-		$clean_email = sanitize_email( $email );
+		$clean_email = sanitize_email( $data );
 		return $clean_email;
 	}
 
@@ -120,9 +135,9 @@ class Sanitise {
 	/**
 	 * Sanitise a number.
 	 */
-	public static function number( $number ) {
+	public static function number( $data ) {
 
-		$clean_number = (float) $number;
+		$clean_number = (float) $data;
 		return $clean_number;
 	}
 
@@ -130,10 +145,31 @@ class Sanitise {
 	/**
 	 * Sanitise a checkbox.
 	 */
-	public static function checkbox( $checkbox ) {
+	public static function checkbox( $data ) {
 
-		$bool_checkbox = (bool) $checkbox;
+		$bool_checkbox = (bool) $data;
 		$bool_checkbox = $bool_checkbox ? 1 : 0;
 		return $bool_checkbox;
+	}
+
+
+	/**
+	 * Sanitize a WP post type key.
+	 */
+	public static function wp_post_key( $data ) {
+
+		$sanitized         = sanitize_key( $data );
+		$clean_wp_post_key = substr( $sanitized, 0, 20 );
+		return $clean_wp_post_key;
+	}
+
+
+	/**
+	 * Sanitize a WP key.
+	 */
+	public static function key( $data ) {
+
+		$clean_key = sanitize_key( $data );
+		return $clean_key;
 	}
 }

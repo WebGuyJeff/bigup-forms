@@ -103,6 +103,8 @@ class Form_Controller {
 
 	/**
 	 * Sanitise user input.
+	 * 
+	 * TO BE REFACTORED - SANITISATION SHOULD NOT OCCUR ON USER INPUT!!!
 	 *
 	 * - Performed BEFORE validation.
 	 * - Returns an array with cleaned values.

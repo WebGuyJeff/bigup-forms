@@ -3,7 +3,7 @@ import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpre
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
 import { definition } from './definition'
-import { makeNameAttributeSafe } from '../../js/_util'
+import { makeNameAttributeSafe } from '../../js/common/_util'
 
 /**
  * The edit function describes the structure of your block in the context of the
