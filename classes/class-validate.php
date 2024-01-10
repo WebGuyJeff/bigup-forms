@@ -22,6 +22,9 @@ namespace BigupWeb\Forms;
  *     PASS: true
  *     FAIL: Array of public-friendly error message strings indicating changes required.
  *
+ * Here is a great resource for clear validation feedback:
+ * [Gov.UK Components - Errors](https://design-system.service.gov.uk/components/error-message/)
+ *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
  * @copyright Copyright (c) 2024, Jefferson Real
@@ -29,6 +32,22 @@ namespace BigupWeb\Forms;
  * @link https://jeffersonreal.uk
  */
 class Validate {
+
+	const VALIDATION_DEFINITIONS_PATH = BIGUPFORMS_PATH . 'data/validation-definitions.json';
+
+	/**
+	 * Validation definitions imported from json file.
+	 */
+	private $validation_definitions;
+
+
+	/**
+	 * Setup the class.
+	 */
+	public function __construct() {
+		$this->validation_definitions = Util::get_contents( VALIDATION_DEFINITIONS_PATH )
+	}
+
 
 	/**
 	 * Validate by Format
@@ -86,7 +105,7 @@ class Validate {
 			return true;
 		}
 
-		$errors = [ __( '2-50 characters allowed.', 'bigup-forms' ) ];
+		$errors = array( __( '2-50 characters allowed.', 'bigup-forms' ) );
 		return $errors;
 	}
 
@@ -100,7 +119,7 @@ class Validate {
 			return true;
 		}
 
-		$errors = [ __( 'Not a valid email address.', 'bigup-forms' ) ];
+		$errors = array( __( 'Not a valid email address.', 'bigup-forms' ) );
 		return $errors;
 	}
 
