@@ -1,8 +1,9 @@
 import { __ } from '@wordpress/i18n'
+import { PropTypes } from 'prop-types'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { definition } from './definition'
+import { typeDefinitions } from './type-definitions'
 import { makeNameAttributeSafe } from '../../js/common/_util'
 
 /**
@@ -24,6 +25,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		required,
 		autocomplete,
 		placeholder,
+		format,
 		minlength,
 		maxlength,
 		min,
@@ -41,8 +43,8 @@ export default function Edit( { attributes, setAttributes } ) {
 	const typeChangeHandler = ( newType ) => {
 		setAttributes( {
 			type: newType,
-			name: makeNameAttributeSafe( definition[ newType ].label ),
-			label: definition[ newType ].label 
+			name: makeNameAttributeSafe( typeDefinitions[ newType ].label ),
+			label: typeDefinitions[ newType ].label 
 		} )
 	}
 
@@ -50,15 +52,15 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	// Select control values.
 	const typeOptions = []
-	for ( const [ key, value ] of Object.entries( definition ) ) {
-		typeOptions.push( { label: definition[ key ].label, value: key } )
+	for ( const [ key, value ] of Object.entries( typeDefinitions ) ) {
+		typeOptions.push( { label: typeDefinitions[ key ].label, value: key } )
 	}
 
 	// Set the HTML tag when switching between input[type='text']/textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	// Get limit attributes from definition and get any saved values from block attributes.
-	const availableLimits = definition[ type ].limits
+	// Get limit attributes from typeDefinitions and get any saved values from block attributes.
+	const availableLimits = typeDefinitions[ type ].limits
 	const savedLimits = {}
 	availableLimits.forEach( attr => {
 		if ( attributes[ attr ] ) {
@@ -72,7 +74,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	// In edit, only display type="text" to allow editing of placeholder even for number inputs.
 	if ( type !== 'textarea' ) conditionalAttributes.type = 'text'
 
-	const editPlaceholder = placeholder ? placeholder : definition[ type ].placeholder
+	const editPlaceholder = placeholder ? placeholder : typeDefinitions[ type ].placeholder
 
 	return (
 
@@ -115,6 +117,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 			</InspectorControls>
+
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Validation' ) }
@@ -186,13 +189,14 @@ export default function Edit( { attributes, setAttributes } ) {
 					}
 				</PanelBody>
 			</InspectorControls>
+
 			<InspectorControls group="advanced">
 				<TextControl
 					autoComplete="off"
 					label={ __( 'Name' ) }
 					value={ name }
 					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ), } ) } }
-					help={ __( 'Name of the field in the submitted results. Must consist of letters, numbers, hyphens, underscores and begin with a letter.' ) }
+					help={ __( 'Identity of the field which must be unique on this form. Must consist of lowercase letters, numbers, hyphens, underscores and begin with a letter.' ) }
 				/>
 				{ availableLimits.includes( 'pattern' ) &&
 					<TextControl
@@ -200,6 +204,14 @@ export default function Edit( { attributes, setAttributes } ) {
 						value={ pattern }
 						onChange={ ( newValue ) => { setAttributes( { pattern: newValue, } ) } }
 						help={ __( 'A regular expression pattern to validate the input against.' ) }
+					/>
+				}
+				{ availableLimits.includes( 'format' ) &&
+					<TextControl
+						label={ __( 'Format' ) }
+						value={ format }
+						onChange={ ( newValue ) => { setAttributes( { format: newValue, } ) } }
+						help={ __( 'The format you want the user input to conform to.' ) }
 					/>
 				}
 			</InspectorControls>
@@ -226,6 +238,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
 						autoComplete={ autocomplete }
+						dataFormat={ format }
 						{ ...conditionalAttributes }
 						required={ required }
 					/>
@@ -233,4 +246,9 @@ export default function Edit( { attributes, setAttributes } ) {
 			</div>
 		</>
 	)
+}
+
+Edit.propTypes = {
+	attributes: PropTypes.object,
+	setAttributes: PropTypes.func,
 }

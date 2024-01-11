@@ -1,21 +1,12 @@
 import { debug, start, stopwatch } from '../common/_debug'
 import { fetchHttpRequest } from '../common/_fetch'
 import { alertsShowWaitHide, alertsShow } from '../common/_alert'
+import { wpInlinedVars } from '../common/_wp-inlined-script'
 
 
 /**
  * Perform a test submission in the admin area.
  */
-
-
-/**
- * Grab WP localize vars.
- * 
- * wp_localize_bigup_forms_vars.rest_url
- * wp_localize_bigup_forms_vars.rest_nonce
- * 
- */
-const wpLocalized = bigupContactFormWpInlinedAdmin
 
 
 /**
@@ -54,11 +45,11 @@ async function submitTest( event ) {
 	}
 
 	// Fetch params.
-	const url = wpLocalized.rest_url
+	const { restURL, restNonce } = wpInlinedVars
 	const fetchOptions = {
 		method: "POST",
 		headers: {
-			"X-WP-Nonce" : wpLocalized.rest_nonce,
+			"X-WP-Nonce" : restNonce,
 			"Accept"     : "application/json"
 		},
 		body: formData,
@@ -69,7 +60,7 @@ async function submitTest( event ) {
 		// Display pre-fetch alerts in parrallel with fetch.
 		const preFetchAlerts = [ { 'text': 'Connecting...', 'type': 'info' } ]
 		let [ result, ] = await Promise.all( [
-			fetchHttpRequest( url, fetchOptions ),
+			fetchHttpRequest( restURL, fetchOptions ),
 			alertsShow( form, preFetchAlerts )
 		] )
 
@@ -87,4 +78,4 @@ async function submitTest( event ) {
 }
 
 
-export { submitTest, wpLocalized }
+export { submitTest }

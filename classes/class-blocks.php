@@ -55,12 +55,7 @@ class Blocks {
 	public function form_block_add_inline_script() {
 		wp_add_inline_script(
 			'bigup-forms-form-view-script', // Name from block.json with a '-' instead of '/'.
-			'const bigupContactFormWpInlinedPublic = ' . wp_json_encode(
-				array(
-					'rest_url'   => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
-					'rest_nonce' => wp_create_nonce( 'wp_rest' ),
-				)
-			),
+			Inline_Script::get_frontend_form_variables(),
 			'before'
 		);
 	}
@@ -73,7 +68,7 @@ class Blocks {
 	 *
 	 * @return string The content of the block being rendered.
 	 */
-	function render_block_serverside( $attributes, $content ) {
+	public function render_block_serverside( $attributes, $content ) {
 		return $content;
 	}
 }

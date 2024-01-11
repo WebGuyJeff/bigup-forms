@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 
-const definition = {
+const typeDefinitions = {
 	'text': {
 		'label': __( 'Text', 'bigup-forms' ),
 		'placeholder': __( 'Type placeholder text', 'bigup-forms' ),
@@ -90,4 +90,4 @@ const definition = {
 	},
 }
 
- export { definition }
+ export { typeDefinitions }

@@ -1,7 +1,9 @@
+import { wpInlinedVars } from '../common/_wp-inlined-script'
+
 /**
  * Set 'debug = true' and output will be sent to the console.
  */
-let debug = false
+let debug = wpInlinedVars.debug
 
 /**
  * Holds the start time of the script.

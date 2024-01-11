@@ -73,7 +73,7 @@ function makeHumanReadable( string ) {
  */
 function makeNameAttributeSafe( string ) {
 	// Regex patterns.
-	const badChars         = /[^A-Za-z0-9_-]/g
+	const badChars         = /[^a-z0-9_-]/g
 	const extraSpaces      = /^\s*|\s(?=\s)|\s*$/g
 	const spaces           = /\s/g
 	const extraHyphens     = /-{2,}/g
@@ -89,6 +89,17 @@ function makeNameAttributeSafe( string ) {
 	// Apply prefix if first char isn't a letter.
 	const cleanName = firsCharIsLetter.test( goodUnderscores ) ? goodUnderscores : type + '-' + goodUnderscores
 	return cleanName
+}
+
+
+/**
+ * Escape a regex string.
+ * 
+ * @param	string	The string to escape.
+ * @returns	string	Regex string with special chars escaped.
+ */
+const escapeRegex = ( string ) => {
+	return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string.
 }
 
 

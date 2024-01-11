@@ -12,59 +12,16 @@ namespace Bigup\Forms;
  * @license GPL2+
  * @link https://jeffersonreal.uk
  */
-
-// WordPress dependencies.
-use function get_bloginfo;
-use function wp_localize_script;
-use function wp_create_nonce;
-use function add_action;
-use function add_shortcode;
-use function register_rest_route;
-use function is_admin;
-
 class Init {
 
 	// Store view (admin || notAdmin).
 	private string $view;
-
-	// Store mail settings check result.
-	private bool $mail_settings_are_set;
 
 	/**
 	 * Setup the class.
 	 */
 	public function __construct() {
 		$this->view = ( is_admin() ) ? 'admin' : 'notAdmin';
-		// Check if settings have been configured ready to test email sending.
-		$settings                    = get_option( 'bigup_forms_settings' );
-		$required_smtp               = array(
-			'username',
-			'password',
-			'host',
-			'port',
-		);
-		$required_headers            = array(
-			'to_email',
-			'from_email',
-		);
-		$smtp_ok                     = $this->are_all_set( $settings, $required_smtp );
-		$headers_ok                  = $this->are_all_set( $settings, $required_headers );
-		$local_mailer_selected       = ( ! empty( $settings['use_local_mail_server'] ) && true === $settings['use_local_mail_server'] );
-		$this->mail_settings_are_set = ( $smtp_ok && $headers_ok || $local_mailer_selected && $headers_ok );
-	}
-
-
-	/**
-	 * Check all test items exist as populated keys in data.
-	 */
-	public function are_all_set( $data, $testItems ) {
-		$all_set = true;
-		foreach ( $testItems as $item ) {
-			if ( empty( $data[ $item ] ) ) {
-				$all_set = false;
-			}
-		}
-		return $all_set;
 	}
 
 
@@ -95,7 +52,7 @@ class Init {
 	/**
 	 * Initialise scripts, styles and localize vars to pass to front end.
 	 *
-	 * wp_localize_script() passes variables to front end script by dumping global
+	 * wp_add_inline_script() passes variables to front end script by dumping global
 	 * js vars inline with the front end html.
 	 *
 	 * WARNING - extensionless php may break form submission
@@ -106,12 +63,7 @@ class Init {
 		wp_register_script( 'bigup_forms_public_js', BIGUPFORMS_URL . 'build/js/bigup-forms-public.js', array(), filemtime( BIGUPFORMS_PATH . 'build/js/bigup-forms-public.js' ), false );
 		wp_add_inline_script(
 			'bigup_forms_public_js',
-			'const bigupContactFormWpInlinedPublic = ' . json_encode(
-				array(
-					'rest_url'   => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
-					'rest_nonce' => wp_create_nonce( 'wp_rest' ),
-				)
-			),
+			Inline_Script::get_frontend_form_variables(),
 			'before'
 		);
 	}
@@ -125,13 +77,7 @@ class Init {
 		wp_register_script( 'bigup_forms_admin_js', BIGUPFORMS_URL . 'build/js/bigup-forms-admin.js', array(), filemtime( BIGUPFORMS_PATH . 'build/js/bigup-forms-admin.js' ), false );
 		wp_add_inline_script(
 			'bigup_forms_admin_js',
-			'const bigupContactFormWpInlinedAdmin = ' . json_encode(
-				array(
-					'settings_ok' => $this->mail_settings_are_set,
-					'rest_url'    => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
-					'rest_nonce'  => wp_create_nonce( 'wp_rest' ),
-				)
-			),
+			Inline_Script::get_frontend_form_variables(),
 			'before'
 		);
 		if ( ! wp_script_is( 'bigup_icons', 'registered' ) ) {

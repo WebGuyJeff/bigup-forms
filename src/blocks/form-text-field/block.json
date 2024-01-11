@@ -13,7 +13,6 @@
 	"attributes": {
 		"type": {
 			"type": "string",
-			"enum": [ "text", "text-large", "password", "email", "number", "phone", "url", "date", "time" ],
 			"default": "text"
 		},
 		"name": {
@@ -53,6 +52,19 @@
 			"selector": "input",
 			"source": "attribute",
 			"attribute": "placeholder"
+		},
+		"format": {
+			"type": "string",
+			"enum": [
+				"human_name_international",
+				"phone_number_international",
+				"email_non_rfc",
+				"domain_non_rfc",
+				"port_number"
+			],
+			"selector": "input",
+			"source": "attribute",
+			"attribute": "data-format"
 		},
 		"minlength": {
 			"type": "string",

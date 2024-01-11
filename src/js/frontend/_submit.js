@@ -3,21 +3,11 @@ import { fetchHttpRequest } from '../common/_fetch'
 import { disallowedTypes } from './_file-upload'
 import { removeChildren } from '../common/_util'
 import { alertsShowWaitHide, alertsShow } from '../common/_alert'
-
+import { wpInlinedVars } from '../common/_wp-inlined-script'
 
 /**
  * Handle frontend form submissions.
  */
-
-
-/**
- * Grab WP localize vars.
- * 
- * wp_localize_bigup_forms_vars.rest_url
- * wp_localize_bigup_forms_vars.rest_nonce
- * 
- */
-const wpLocalized = bigupContactFormWpInlinedPublic
 
 
 /**
@@ -33,6 +23,7 @@ const wpLocalized = bigupContactFormWpInlinedPublic
 async function submit( event ) {
 
 	event.preventDefault()
+
 	if( debug ) start()
 	if( debug ) console.log( 'Time | Start/Finish | Function | Target' )
 	if( debug ) console.log( stopwatch() + ' |START| handleSubmit' )
@@ -84,11 +75,11 @@ async function submit( event ) {
 	}
 
 	// Fetch params.
-	const url = wpLocalized.rest_url
+	const { restURL, restNonce } = wpInlinedVars
 	const fetchOptions = {
 		method: "POST",
 		headers: {
-			"X-WP-Nonce" : wpLocalized.rest_nonce,
+			"X-WP-Nonce" : restNonce,
 			"Accept"     : "application/json"
 		},
 		body: formData,
@@ -100,7 +91,7 @@ async function submit( event ) {
 		// Display pre-fetch alerts in parrallel with fetch.
 		const preFetchAlerts = [ { 'text': 'Connecting...', 'type': 'info' } ]
 		let [ result, ] = await Promise.all( [
-			fetchHttpRequest( url, fetchOptions ),
+			fetchHttpRequest( restURL, fetchOptions ),
 			alertsShow( form, preFetchAlerts )
 		] )
 

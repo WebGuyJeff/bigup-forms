@@ -1,4 +1,5 @@
-import { submitTest, wpLocalized } from './_submit-test'
+import { submitTest } from './_submit-test'
+import { wpInlinedVars } from '../common/_wp-inlined-script'
 
 /**
  * Initialise the email test button.
@@ -12,7 +13,7 @@ const init = () => {
 		button.addEventListener( 'click', submitTest )
 
 		// Enable the submit button now js is ready (disabled by default).
-		if ( wpLocalized.settings_ok ) {
+		if ( wpInlinedVars.settingsOK ) {
 			button.disabled = false
 		}
 	}

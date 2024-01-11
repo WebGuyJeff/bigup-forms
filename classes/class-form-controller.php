@@ -45,7 +45,7 @@ class Form_Controller {
 		$form_fields = $request->get_body_params();
 		$fields      = [];
 		foreach ( $form_fields as $name => $json_field ) {
-			$field = json_decode( $json_field, true );
+			$field           = json_decode( $json_field, true );
 			$fields[ $name ] = array(
 				'type'   => $field['type'],
 				'value'  => $field['value'],
@@ -78,7 +78,7 @@ class Form_Controller {
 		 * update their entries before resubmission. This functionality was chosen to ensure all
 		 * submitted data is verified by the user.
 		 */
-		$Validate = new Validate();
+		$Validate            = new Validate();
 		$validated_form_data = $Validate->form_data( $form_data );
 		if ( $validated_data['has_errors'] ) {
 			$this->send_json_response( [ 400, __( 'Correct errors and resubmit', 'bigup-forms' ) ], $validated_form_data );
@@ -276,6 +276,6 @@ class Form_Controller {
 		// PHPMailer debug ($mail->SMTPDebug) gets dumped to output buffer
 		// and breaks JSON response. Using ob_clean() before output prevents this.
 		ob_clean();
-		echo json_encode( $response );
+		echo wp_json_encode( $response );
 	}
 }

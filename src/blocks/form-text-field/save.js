@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { definition } from './definition'
+import { typeDefinitions } from './type-definitions'
 
 
 /**
@@ -24,6 +24,7 @@ export default function save( { attributes } ) {
 		required,
 		autocomplete,
 		placeholder,
+		format,
 		size,
 		visibilityPermissions
 	} = attributes
@@ -34,7 +35,7 @@ export default function save( { attributes } ) {
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
 	// Get limit attributes from definition and get any saved values from block attributes.
-	const availableLimits = definition[ type ].limits
+	const availableLimits = typeDefinitions[ type ].limits
 	const savedLimits = {}
 	availableLimits.forEach( attr => {
 		if ( attributes[ attr ] ) {
@@ -70,6 +71,7 @@ export default function save( { attributes } ) {
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autoComplete={ autocomplete }
+						dataFormat={ format }
 						{ ...conditionalAttributes }
 						required={ required }
 					/>

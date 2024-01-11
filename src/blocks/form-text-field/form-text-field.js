@@ -6,25 +6,7 @@ import save from './save'
 import metadata from './block.json'
 
 console.log( metadata.name + ' BLOCK LOADED' )
-// RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
-
-
-
-const escapeRegex = ( string ) => {
-    return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string.
-}
-
-
-
-
-/**
- * Regular expressions for client-side validation.
- * @link https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
- */
-const regexEmail = "(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|.(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$\/^(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})"
-// Unescaped: (([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))
-const regexPhone = "(\+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})"
-// Unescaped: (+[1-9]{1}[0-9]{3,14})?([0-9]{9,14})
+// RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes()
 
 registerBlockType(
 	metadata.name,
@@ -36,86 +18,76 @@ registerBlockType(
 				name: 'name',
 				title: 'Name',
 				icon: Logo,
-				description: __( 'Name input field.' ),
-				keywords: [ "form", "input", "name" ],
+				description: __( 'Name input field.', 'bigup-forms' ),
+				keywords: [ 'form', 'input', 'name' ],
 				attributes: {
-					"type": "text",
-					"name": "name",
-					"label": "Name",
-					"autocomplete": "on",
-					"placeholder": "Enter your name",
-					"minlength": "2",
-					"maxlength": "70",
-					"variation": "name",
-					"required": true
+					'type': 'text',
+					'name': 'name',
+					'label': __( 'Name', 'bigup-forms' ),
+					'autocomplete': 'on',
+					'placeholder': __( 'Enter your name', 'bigup-forms' ),
+					'variation': 'name',
+					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
-					return blockAttributes.variation === "name"
+					return blockAttributes.variation === 'name'
 				}
 			},
 			{
 				name: 'email',
 				title: 'Email',
 				icon: Logo,
-				description: __( 'Email address input field.' ),
-				keywords: [ "form", "input", "email" ],
+				description: __( 'Email address input field.', 'bigup-forms' ),
+				keywords: [ 'form', 'input', 'email' ],
 				attributes: {
-					"type": "email",
-					"name": "email",
-					"label": "Email",
-					"autocomplete": "on",
-					"placeholder": "Enter your email",
-					"minlength": "6",
-					"maxlength": "320",
-					"pattern": regexEmail,
-					"variation": "email",
-					"required": true
+					'type': 'email',
+					'name': 'email',
+					'label': __( 'Email', 'bigup-forms' ),
+					'autocomplete': 'on',
+					'placeholder': __( 'Enter your email', 'bigup-forms' ),
+					'variation': 'email',
+					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
-					return blockAttributes.variation === "email"
+					return blockAttributes.variation === 'email'
 				}
 			},
 			{
 				name: 'phone',
 				title: 'Phone',
 				icon: Logo,
-				description: __( 'Phone number input field.' ),
-				keywords: [ "form", "input", "phone" ],
+				description: __( 'Phone number input field.', 'bigup-forms' ),
+				keywords: [ 'form', 'input', 'phone' ],
 				attributes: {
-					"type": "tel",
-					"name": "phone",
-					"label": "Phone",
-					"autocomplete": "on",
-					"placeholder": "Enter your phone number",
-					"minlength": "6",
-					"maxlength": "29",
-					"pattern": regexPhone,
-					"variation": "phone",
-					"required": true
+					'type': 'tel',
+					'name': 'phone',
+					'label': __( 'Phone', 'bigup-forms' ),
+					'autocomplete': 'on',
+					'placeholder': __( 'Enter your phone number', 'bigup-forms' ),
+					'variation': 'phone',
+					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
-					return blockAttributes.variation === "phone"
+					return blockAttributes.variation === 'phone'
 				}
 			},
 			{
 				name: 'message',
 				title: 'Message',
 				icon: Logo,
-				description: __( 'Message input field.' ),
-				keywords: [ "form", "input", "message" ],
+				description: __( 'Message input field.', 'bigup-forms' ),
+				keywords: [ 'form', 'input', 'message' ],
 				attributes: {
-					"type": "textarea",
-					"name": "message",
-					"label": "Message",
-					"autocomplete": "off",
-					"placeholder": "Type your message...",
-					"minlength": "10",
-					"maxlength": "3000",
-					"variation": "message",
-					"required": true
+					'type': 'textarea',
+					'name': 'message',
+					'label': __( 'Message', 'bigup-forms' ),
+					'autocomplete': 'off',
+					'placeholder': __( 'Type your message...', 'bigup-forms' ),
+					'variation': 'message',
+					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
-					return blockAttributes.variation === "text-large"
+					return blockAttributes.variation === 'text-large'
 				}
 			}
 		],
