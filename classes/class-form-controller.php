@@ -46,9 +46,10 @@ class Form_Controller {
 		$fields      = [];
 		foreach ( $form_fields as $name => $json_field ) {
 			$field = json_decode( $json_field, true );
-			$data['fields'][ $name ] = array(
-				'type'  => $field['type'],
-				'value' => $field['value'],
+			$fields[ $name ] = array(
+				'type'   => $field['type'],
+				'value'  => $field['value'],
+				'format' => $field['format'],
 			);
 		}
 
@@ -71,16 +72,16 @@ class Form_Controller {
 		];
 
 		/*
-		 * Test values are sanitary and valid.
+		 * Validate data.
 		 *
 		 * No modified values are returned to front end. Only errors are returned so the user can
 		 * update their entries before resubmission. This functionality was chosen to ensure all
 		 * submitted data is verified by the user.
 		 */
-		$sanitised_data = $this->sanitise( $form_data );
-		$validated_data = $this->validate( $sanitised_data );
+		$Validate = new Validate();
+		$validated_form_data = $Validate->form_data( $form_data );
 		if ( $validated_data['has_errors'] ) {
-			$this->send_json_response( [ 400, __( 'Please correct errors and resubmit', 'bigup-forms' ) ], $validated_data['fields'] );
+			$this->send_json_response( [ 400, __( 'Correct errors and resubmit', 'bigup-forms' ) ], $validated_form_data );
 
 			// Request handlers should exit() when done.
 			exit;
@@ -209,6 +210,7 @@ class Form_Controller {
 
 		foreach ( $form_data['fields'] as $field => $data ) {
 			$type  = $data['type'];
+			$value = $data['value'];
 			$error = false;
 
 			switch ( $type ) {

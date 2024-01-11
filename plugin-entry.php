@@ -28,3 +28,6 @@ require_once BIGUPFORMS_PATH . 'classes/autoload.php';
 // Setup the plugin.
 $Init = new Init();
 $Init->setup();
+
+
+new Validate();

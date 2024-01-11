@@ -1,5 +1,5 @@
 <?php
-namespace BigupWeb\Forms;
+namespace Bigup\Forms;
 
 /**
  * Validation methods.
@@ -45,7 +45,23 @@ class Validate {
 	 * Setup the class.
 	 */
 	public function __construct() {
-		$this->validation_definitions = Util::get_contents( VALIDATION_DEFINITIONS_PATH )
+		$this->validation_definitions = Util::get_contents( self::VALIDATION_DEFINITIONS_PATH );
+		var_dump( $this->validation_definitions );
+	}
+
+
+	/**
+	 * Validate form data.
+	 *
+	 * Validate input data from a submitted form. Requires input data and data format to determine
+	 * validation method..
+	 */
+	public function form_data( $data ) {
+		foreach( $fields as $field => $data ) {
+			$field['errors'] = self::by_format( $field['data'], $field['format'] );
+		}
+
+		return $fields;
 	}
 
 
@@ -55,7 +71,7 @@ class Validate {
 	 * Automatically selects the right method indicated by passed format. Helpful for writing
 	 * dynamic functions.
 	 */
-	public static function by_format( $format, $data ) {
+	public static function by_format( $data, $format ) {
 		switch ( $format ) {
 
 			case 'alphanumeric':
