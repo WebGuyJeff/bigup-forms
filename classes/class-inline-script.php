@@ -29,7 +29,7 @@ class Inline_Script {
 				'restURL'           => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
 				'restNonce'         => wp_create_nonce( 'wp_rest' ),
 				'debug'             => BIGUPFORMS_DEBUG,
-				'validationFormats' => ( ! is_admin() ) ? Validate::get_formats() : false,
+				'validationFormats' => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_formats() : false,
 			)
 		);
 	}

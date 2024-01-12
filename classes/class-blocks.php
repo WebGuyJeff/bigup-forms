@@ -51,11 +51,11 @@ class Blocks {
 
 
 	/**
-	 * Add inline script to frontend js for the form block.
+	 * Add inline script to form block frontend JS.
 	 */
 	public function form_block_add_inline_script_frontend() {
 		wp_add_inline_script(
-			'bigup-forms-form-view-script', // Name from block.json with a '-' instead of '/'.
+			'bigup-forms-form-view-script', // WP generated handle: 'plugin-name-file-name-script'.
 			Inline_Script::get_frontend_form_variables(),
 			'before'
 		);
@@ -63,11 +63,11 @@ class Blocks {
 
 
 	/**
-	 * dd inline script to block editor js for the form block.
+	 * Add inline script to form block editor JS.
 	 */
 	public function form_block_add_inline_script_editor() {
 		wp_add_inline_script(
-			'bigup-forms-form-script', // Name from block.json with a '-' instead of '/'.
+			'bigup-forms-form-editor-script', // WP generated handle: 'plugin-name-file-name-script'.
 			Inline_Script::get_frontend_form_variables(),
 			'before'
 		);
@@ -77,8 +77,8 @@ class Blocks {
 	/**
 	 * Renders a block on the server.
 	 *
+	 * @param object $attributes The saved attributes.
 	 * @param string $content The saved content.
-	 *
 	 * @return string The content of the block being rendered.
 	 */
 	public function render_block_serverside( $attributes, $content ) {

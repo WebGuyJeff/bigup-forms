@@ -31,4 +31,24 @@ class Util {
 		$string        = $wp_filesystem->get_contents( $path );
 		return $string;
 	}
+
+
+	/**
+	 * Test if we are in the Gutenberg editor.
+	 *
+	 * WP_Screen::is_block_editor() = WP built-in function since WordPress 5.0.
+	 * is_gutenberg_page() = Guternberg plugin function.
+	 */
+	public static function is_gutenberg_editor() {
+		if ( function_exists( 'is_gutenberg_page' ) && is_gutenberg_page() ) {
+			return true;
+		}
+
+		$current_screen = get_current_screen();
+		if ( method_exists( $current_screen, 'is_block_editor' ) && $current_screen->is_block_editor() ) {
+			return true;
+		}
+
+		return false;
+	}
 }

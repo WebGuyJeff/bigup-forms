@@ -16,13 +16,16 @@
 		"textAlign": {
 			"type": "string"
 		},
-		"formVariation": {
-			"type": "string"
-		},
 		"showResetButton": {
 			"type": "boolean",
 			"default": true
+		},
+		"variation": {
+			"type": "string"
 		}
+	},
+	"providesContext": {
+		"form/variation": "variation"
 	},
 	"supports": {
 		"html": false,

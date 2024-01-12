@@ -11,11 +11,13 @@
 	"viewScript": "file:./form-text-field-view.js",
 	"ancestor": [ "bigup-forms/form" ],
 	"attributes": {
-		"type": {
-			"type": "string",
-			"default": "text"
+		"variation": {
+			"type": "string"
 		},
-		"name": {
+		"format": {
+			"type": "string"
+		},
+		"pattern": {
 			"type": "string"
 		},
 		"label": {
@@ -23,104 +25,70 @@
 			"selector": "label",
 			"source": "text"
 		},
-		"labelID": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "id"
-		},
 		"labelIsHidden": {
 			"type": "boolean",
 			"default": false
 		},
+		"name": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "name"
+		},
+		"labelID": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "id"
+		},
+		"type": {
+			"type": "string",
+			"default": "text",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "type"
+		},
 		"required": {
 			"type": "boolean",
 			"default": false,
-			"selector": "input",
 			"source": "attribute",
+			"selector": "input",
 			"attribute": "required"
 		},
 		"autocomplete": {
 			"type": "string",
 			"default": "off",
-			"selector": "input",
 			"source": "attribute",
+			"selector": "input",
 			"attribute": "autocomplete"
 		},
 		"placeholder": {
 			"type": "string",
-			"selector": "input",
 			"source": "attribute",
+			"selector": "input",
 			"attribute": "placeholder"
-		},
-		"format": {
-			"type": "string",
-			"enum": [
-				"human_name_international",
-				"phone_number_international",
-				"email_non_rfc",
-				"domain_non_rfc",
-				"port_number"
-			],
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "data-format"
-		},
-		"minlength": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "minlength"
-		},
-		"maxlength": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "maxlength"
-		},
-		"min": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "min"
-		},
-		"max": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "max"
-		},
-		"step": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "step"
-		},
-		"pattern": {
-			"type": "string",
-			"selector": "input",
-			"source": "attribute",
-			"attribute": "pattern"
 		},
 		"size": {
 			"type": "string",
-			"selector": "input",
 			"source": "attribute",
+			"selector": "input",
 			"attribute": "size"
 		},
+		"minlength": { "type": "number" },
+		"maxlength": { "type": "number" },
+		"min": { "type": "number" },
+		"max": { "type": "number" },
+		"step": { "type": "number" },
 		"rows": {
 			"type": "string",
 			"default": "8",
-			"selector": "input",
 			"source": "attribute",
+			"selector": "input",
 			"attribute": "rows"
 		},
 		"visibilityPermissions": {
 			"type": "string",
 			"default": "all"
-		},
-		"variation": {
-			"type": "string"
 		}
 	}
 }

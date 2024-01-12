@@ -55,6 +55,14 @@ class Validate {
 	 */
 	public static function get_formats() {
 		return array(
+			'none'       => array(
+				'label'               => __( 'None', 'bigup-forms' ),
+				'description'         => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
+				'regex_format'        => '/^.*$/u',
+				'regex_allowed_chars' => '/[.]/u',
+				'max_length'          => 99999,
+				'min_length'          => 0,
+			),
 			'human_name'       => array(
 				'label'               => __( 'Name', 'bigup-forms' ),
 				'description'         => __( 'Any-case international alphanumeric characters, non-consecutive " -\',.", and an infinite number of words.', 'bigup-forms' ),

@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { typeDefinitions } from './type-definitions'
+import { inputTypeConditionals } from './input-type-conditionals'
 
 
 /**
@@ -16,17 +16,14 @@ import { typeDefinitions } from './type-definitions'
 export default function save( { attributes } ) {
 
 	const {
-		type,
-		name,
 		label,
-		labelID,
 		labelIsHidden,
+		name,
+		labelID,
+		type,
 		required,
 		autocomplete,
 		placeholder,
-		format,
-		size,
-		visibilityPermissions
 	} = attributes
 
 	const blockProps = useBlockProps.save()
@@ -35,17 +32,18 @@ export default function save( { attributes } ) {
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
 	// Get limit attributes from definition and get any saved values from block attributes.
-	const availableLimits = typeDefinitions[ type ].limits
-	const savedLimits = {}
-	availableLimits.forEach( attr => {
+	const savedConditionals = {}
+	const validConditionals = inputTypeConditionals[ type ]
+	validConditionals.forEach( attr => {
 		if ( attributes[ attr ] ) {
-			savedLimits[ attr ] = attributes[ attr ]
+			savedConditionals[ attr ] = attributes[ attr ]
 		}
 	} )
 	// Build attributes to apply to the component.
     const conditionalAttributes = {
-		...savedLimits
+		...savedConditionals
     }
+	// Add the type attr only if it's not a textarea.
 	if ( type !== 'textarea' ) conditionalAttributes.type = type
 
 	return (
@@ -71,7 +69,6 @@ export default function save( { attributes } ) {
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autoComplete={ autocomplete }
-						dataFormat={ format }
 						{ ...conditionalAttributes }
 						required={ required }
 					/>

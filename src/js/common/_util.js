@@ -1,6 +1,3 @@
-import { debug, stopwatch } from './_debug'
-
-
 /**
  * Remove all child nodes from a dom node.
  * 
@@ -8,8 +5,6 @@ import { debug, stopwatch } from './_debug'
  * 
  */
 function removeChildren( parent ) {
-
-	if( debug ) console.log( `${stopwatch()} |START| removeChildren | ${parent.classList}` )
 	return new Promise( ( resolve, reject ) => {
 		try {
 			while ( parent.firstChild ) {
@@ -18,8 +13,6 @@ function removeChildren( parent ) {
 			resolve( 'Child nodes removed successfully.' )
 		} catch ( error ) {
 			reject( error )
-		} finally {
-			if( debug ) console.log( `${stopwatch()} | END | removeChildren | ${parent.classList}` )
 		}
 	} )
 }

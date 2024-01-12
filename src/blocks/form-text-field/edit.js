@@ -3,8 +3,9 @@ import { PropTypes } from 'prop-types'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { typeDefinitions } from './type-definitions'
+import { inputTypeConditionals } from './input-type-conditionals'
 import { makeNameAttributeSafe } from '../../js/common/_util'
+import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -14,67 +15,78 @@ import { makeNameAttributeSafe } from '../../js/common/_util'
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( props ) {
 
+	// Avoiding clash between props.name and input name.
+	const blockName     = props.name
+	const attributes    = props.attributes
+	const setAttributes = props.setAttributes
 	const {
-		type,
-		name,
+		variation,
+		format,
+		pattern,
 		label,
-		labelID,
 		labelIsHidden,
+		name,
+		labelID,
+		type,
 		required,
 		autocomplete,
 		placeholder,
-		format,
+		size,
 		minlength,
 		maxlength,
 		min,
 		max,
 		step,
-		pattern,
-		size,
 		rows,
 		visibilityPermissions
 	} = attributes
 
 	const blockProps = useBlockProps()
 
-	// Set new values on input type select change.
-	const typeChangeHandler = ( newType ) => {
-		setAttributes( {
-			type: newType,
-			name: makeNameAttributeSafe( typeDefinitions[ newType ].label ),
-			label: typeDefinitions[ newType ].label 
-		} )
-	}
-
+	// Generate ID to associate the input/label elements.
 	if ( ! labelID ) setAttributes( { labelID: 'inner-' + blockProps.id } )
 
-	// Select control values.
+	// Variation select control values.
+	const blockVariations  = wp.blocks.getBlockType( blockName ).variations
+	const variationOptions = []
+	Object.values( blockVariations ).forEach( variation => {
+		variationOptions.push( { label: variation.title, value: variation.name } )
+	} )
+
+	// Validation format select control values.
+	const { validationFormats } = wpInlinedVars
+	const formatOptions = []
+	Object.entries( validationFormats ).forEach( ( [ key, value ] ) => {
+		formatOptions.push( { label: value.label, value: key } )
+	} )
+
+	// Input type select control values.
 	const typeOptions = []
-	for ( const [ key, value ] of Object.entries( typeDefinitions ) ) {
-		typeOptions.push( { label: typeDefinitions[ key ].label, value: key } )
-	}
+	Object.keys( inputTypeConditionals ).forEach( type => {
+		typeOptions.push( { label: type, value: type } )
+	} )
 
 	// Set the HTML tag when switching between input[type='text']/textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	// Get limit attributes from typeDefinitions and get any saved values from block attributes.
-	const availableLimits = typeDefinitions[ type ].limits
-	const savedLimits = {}
-	availableLimits.forEach( attr => {
+	// Get conditional attributes from inputTypeConditionals and get any corresponding saved values.
+	const savedConditionals = {}
+	const validConditionals = inputTypeConditionals[ type ]
+	validConditionals.forEach( attr => {
 		if ( attributes[ attr ] ) {
-			savedLimits[ attr ] = attributes[ attr ]
+			savedConditionals[ attr ] = attributes[ attr ]
 		}
 	} )
 	// Build attributes to apply to the component.
-    const conditionalAttributes = {
-		...savedLimits
+    const conditionalAttrs = {
+		...savedConditionals
     }
-	// In edit, only display type="text" to allow editing of placeholder even for number inputs.
-	if ( type !== 'textarea' ) conditionalAttributes.type = 'text'
+	// If not a textarea, add type="text" to allow editing of placeholder for all input types.
+	if ( type !== 'textarea' ) conditionalAttrs.type = 'text'
 
-	const editPlaceholder = placeholder ? placeholder : typeDefinitions[ type ].placeholder
+	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
 
 	return (
 
@@ -84,6 +96,14 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Settings' ) }
 					initialOpen={ true } 
 				>
+					<SelectControl
+						label="Form Variation"
+						labelPosition="Left"
+						title="Form Variation"
+						value={ variation }
+						options={ variationOptions }
+						onChange={ ( newValue ) => { setAttributes( { variation: newValue, } ) } }
+					/>
 					<TextControl
 						type="text"
 						label={ __( 'Label' ) }
@@ -97,12 +117,12 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( newValue ) => { setAttributes( { labelIsHidden: newValue, } ) } }
 					/>
 					<SelectControl
-						label="Type"
+						label={ __( 'HTML Markup Type' ) }
 						labelPosition="Left"
-						title="Field Type"
+						title={ __( 'HTML Markup Type' ) }
 						value={ type }
 						options={ typeOptions }
-						onChange={ ( newValue ) => typeChangeHandler( newValue ) }
+						onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
 					/>
 					<CheckboxControl
 						label={ __( 'Required' ) }
@@ -123,8 +143,16 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ __( 'Validation' ) }
 					initialOpen={ true }
 				>
-
-					{ availableLimits.includes( 'minlength' ) &&
+					<SelectControl
+						label={ __( 'Data Format' ) }
+						labelPosition="Left"
+						title={ __( 'Data Format' ) }
+						options={ formatOptions }
+						value={ format }
+						onChange={ ( newValue ) => { setAttributes( { format: newValue, } ) } }
+						help={ __( 'The format you want the user input to conform to.' ) }
+					/>
+					{ validConditionals.includes( 'minlength' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Minimum length' ) }
@@ -133,7 +161,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							help={ __( 'Minimum length of the text.' ) }
 						/>
 					}
-					{ availableLimits.includes( 'maxlength' ) &&
+					{ validConditionals.includes( 'maxlength' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Maximum length' ) }
@@ -142,7 +170,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							help={ __( 'Maximum length of the text.' ) }
 						/>
 					}
-					{ availableLimits.includes( 'min' ) &&
+					{ validConditionals.includes( 'min' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Minimum' ) }
@@ -151,7 +179,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							help={ __( 'Minimum value.' ) }
 						/>
 					}
-					{ availableLimits.includes( 'max' ) &&
+					{ validConditionals.includes( 'max' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Maximum' ) }
@@ -160,7 +188,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							help={ __( 'Maximum value.' ) }
 						/>
 					}
-					{ availableLimits.includes( 'step' ) &&
+					{ validConditionals.includes( 'step' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Step' ) }
@@ -169,7 +197,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
 						/>
 					}
-					{ availableLimits.includes( 'size' ) &&
+					{ validConditionals.includes( 'size' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Size' ) }
@@ -178,7 +206,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							help={ __( 'The number of characters visible while editing.' ) }
 						/>
 					}
-					{ availableLimits.includes( 'rows' ) &&
+					{ validConditionals.includes( 'rows' ) &&
 						<TextControl
 							type="number"
 							label={ __( 'Line rows' ) }
@@ -198,20 +226,12 @@ export default function Edit( { attributes, setAttributes } ) {
 					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ), } ) } }
 					help={ __( 'Identity of the field which must be unique on this form. Must consist of lowercase letters, numbers, hyphens, underscores and begin with a letter.' ) }
 				/>
-				{ availableLimits.includes( 'pattern' ) &&
+				{ validConditionals.includes( 'pattern' ) &&
 					<TextControl
 						label={ __( 'Pattern' ) }
 						value={ pattern }
 						onChange={ ( newValue ) => { setAttributes( { pattern: newValue, } ) } }
 						help={ __( 'A regular expression pattern to validate the input against.' ) }
-					/>
-				}
-				{ availableLimits.includes( 'format' ) &&
-					<TextControl
-						label={ __( 'Format' ) }
-						value={ format }
-						onChange={ ( newValue ) => { setAttributes( { format: newValue, } ) } }
-						help={ __( 'The format you want the user input to conform to.' ) }
 					/>
 				}
 			</InspectorControls>
@@ -238,8 +258,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
 						autoComplete={ autocomplete }
-						dataFormat={ format }
-						{ ...conditionalAttributes }
+						{ ...conditionalAttrs }
 						required={ required }
 					/>
 				</InputWrap>
@@ -249,6 +268,7 @@ export default function Edit( { attributes, setAttributes } ) {
 }
 
 Edit.propTypes = {
+	name: PropTypes.string,
 	attributes: PropTypes.object,
 	setAttributes: PropTypes.func,
 }

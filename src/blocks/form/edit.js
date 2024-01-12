@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n'
+import { PropTypes } from 'prop-types'
 import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls } from '@wordpress/block-editor'
 import { PanelBody, SelectControl, CheckboxControl } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
-import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-files',
@@ -17,18 +17,9 @@ const ALLOWED_BLOCKS = [
 	'core/spacer'
 ]
 
-export default function Edit( { attributes, setAttributes } ) {
+export default function Edit( { name, attributes, setAttributes } ) {
 
-
-
-
-// DEBUG.
-console.log( wpInlinedVars )
-
-
-
-
-	const { textAlign, formVariation, showResetButton } = attributes
+	const { textAlign, variation, showResetButton } = attributes
 
 	const blockProps = useBlockProps( {
 		className: 'bigup__form',
@@ -36,11 +27,11 @@ console.log( wpInlinedVars )
 	} )
 
 	// Select control values.
-	const formVariationOptions = [
-		{ label: __( 'Contact', 'bigup-forms' ), value: 'contact' },
-		{ label: __( 'Sign-up', 'bigup-forms' ), value: 'signup' },
-		{ label: __( 'Login', 'bigup-forms' ), value: 'login' }
-	]
+	const blockVariations  = wp.blocks.getBlockType( name ).variations
+	const variationOptions = []
+	Object.values( blockVariations ).forEach( variation => {
+		variationOptions.push( { label: variation.title, value: variation.name } )
+	} )
 
 	return (
 		<>
@@ -54,9 +45,9 @@ console.log( wpInlinedVars )
 						label="Form Variation"
 						labelPosition="Left"
 						title="Form Variation"
-						value={ formVariation }
-						options={ formVariationOptions }
-						onChange={ ( newValue ) => { setAttributes( { formVariation: newValue, } ) } }
+						value={ variation }
+						options={ variationOptions }
+						onChange={ ( newValue ) => { setAttributes( { variation: newValue, } ) } }
 					/>
 					<CheckboxControl
 						label={ __( 'Show reset button' ) }
@@ -91,7 +82,7 @@ console.log( wpInlinedVars )
 					<Honeypot />
 
 					<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
-
+					Edit
 					<div className='bigup__form_controls'>
 						<SubmitButton />
 						{ showResetButton &&
@@ -108,4 +99,10 @@ console.log( wpInlinedVars )
 			</form>
 		</>
 	)
+}
+
+Edit.propTypes = {
+	name: PropTypes.string,
+	attributes: PropTypes.object,
+	setAttributes: PropTypes.func,
 }

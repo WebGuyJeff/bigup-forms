@@ -27,8 +27,10 @@ registerBlockType(
 					'autocomplete': 'on',
 					'placeholder': __( 'Enter your name', 'bigup-forms' ),
 					'variation': 'name',
+					'format': 'human_name',
 					'required': true
 				},
+				// If isActive is not set, the Editor cannot distinguish between the original block and your variation, so the original block information will be displayed.
 				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === 'name'
 				}
@@ -46,6 +48,7 @@ registerBlockType(
 					'autocomplete': 'on',
 					'placeholder': __( 'Enter your email', 'bigup-forms' ),
 					'variation': 'email',
+					'format': 'email_non_rfc',
 					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
@@ -65,6 +68,7 @@ registerBlockType(
 					'autocomplete': 'on',
 					'placeholder': __( 'Enter your phone number', 'bigup-forms' ),
 					'variation': 'phone',
+					'format': 'phone_number',
 					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
@@ -84,10 +88,31 @@ registerBlockType(
 					'autocomplete': 'off',
 					'placeholder': __( 'Type your message...', 'bigup-forms' ),
 					'variation': 'message',
+					'format': 'none',
 					'required': true
 				},
 				isActive: ( blockAttributes ) => { 
 					return blockAttributes.variation === 'text-large'
+				}
+			},
+			{
+				name: 'custom',
+				title: 'Custom',
+				icon: Logo,
+				description: __( 'Create a custom text input field.', 'bigup-forms' ),
+				keywords: [ 'form', 'input', 'custom' ],
+				attributes: {
+					'type': 'text',
+					'name': 'custom',
+					'label': __( 'Custom', 'bigup-forms' ),
+					'autocomplete': 'off',
+					'placeholder': __( 'Type here', 'bigup-forms' ),
+					'variation': 'custom',
+					'format': 'none',
+					'required': true
+				},
+				isActive: ( blockAttributes ) => { 
+					return blockAttributes.variation === 'custom'
 				}
 			}
 		],
