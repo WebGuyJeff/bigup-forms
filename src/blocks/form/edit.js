@@ -4,6 +4,7 @@ import { PanelBody, SelectControl, CheckboxControl } from '@wordpress/components
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
+import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-files',
@@ -17,6 +18,15 @@ const ALLOWED_BLOCKS = [
 ]
 
 export default function Edit( { attributes, setAttributes } ) {
+
+
+
+
+// DEBUG.
+console.log( wpInlinedVars )
+
+
+
 
 	const { textAlign, formVariation, showResetButton } = attributes
 

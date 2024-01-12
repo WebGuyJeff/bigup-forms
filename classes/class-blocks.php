@@ -43,18 +43,31 @@ class Blocks {
 
 			} elseif ( 'form' === $name ) {
 				// Enqueue script after register_block...() so script handle is valid.
-				add_action( 'wp_enqueue_scripts', array( &$this, 'form_block_add_inline_script' ) );
+				add_action( 'wp_enqueue_scripts', array( &$this, 'form_block_add_inline_script_frontend' ) );
+				add_action( 'enqueue_block_editor_assets', array( &$this, 'form_block_add_inline_script_editor' ) );
 			}
 		}
 	}
 
 
 	/**
-	 * Add inline vars to public js for the main form block.
+	 * Add inline script to frontend js for the form block.
 	 */
-	public function form_block_add_inline_script() {
+	public function form_block_add_inline_script_frontend() {
 		wp_add_inline_script(
 			'bigup-forms-form-view-script', // Name from block.json with a '-' instead of '/'.
+			Inline_Script::get_frontend_form_variables(),
+			'before'
+		);
+	}
+
+
+	/**
+	 * dd inline script to block editor js for the form block.
+	 */
+	public function form_block_add_inline_script_editor() {
+		wp_add_inline_script(
+			'bigup-forms-form-script', // Name from block.json with a '-' instead of '/'.
 			Inline_Script::get_frontend_form_variables(),
 			'before'
 		);
