@@ -30,20 +30,27 @@ export default function save( { attributes } ) {
 	// Set the HTML tag to either input or textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	// Get valid conditional input attributes and get any corresponding saved values.
-	const savedConditionals = {}
-	const validConditionals = inputTypeConditionals[ type ]
-	validConditionals.forEach( attr => {
+	/*
+	 * Get valid conditional properties for this input type, then get any corresponding saved values
+	 * and filter the required block props.
+	 */
+	const conditionalProps = {}
+	const conditionals     = inputTypeConditionals[ type ]
+	conditionals.forEach( attr => {
 		if ( attributes[ attr ] ) {
-			savedConditionals[ attr ] = attributes[ attr ]
+			switch ( attr ) {
+				case 'rows':
+				case 'step':
+					conditionalProps[ attr ] = attributes[ attr ]
+					break
+
+				default:
+					// We don't need that attribute.
+			}
 		}
 	} )
-	// Build attributes to apply to the component.
-    const conditionalAttributes = {
-		...savedConditionals
-    }
 	// Add the type attr only if it's not a textarea.
-	if ( type !== 'textarea' ) conditionalAttributes.type = type
+	if ( type !== 'textarea' ) conditionalProps.type = type
 
 	return (
 
@@ -68,7 +75,7 @@ export default function save( { attributes } ) {
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autoComplete={ autocomplete }
-						{ ...conditionalAttributes }
+						{ ...conditionalProps }
 						required={ required }
 					/>
 				</InputWrap>

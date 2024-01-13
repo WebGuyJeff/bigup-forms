@@ -33,13 +33,13 @@ export default function Edit( props ) {
 		required,
 		autocomplete,
 		placeholder,
+		validation,
 		minlength,
 		maxlength,
 		min,
 		max,
 		step,
-		rows,
-		visibilityPermissions
+		rows
 	} = attributes
 
 	const blockProps = useBlockProps()
@@ -70,19 +70,19 @@ export default function Edit( props ) {
 	// Set the HTML tag when switching between input[type='text']/textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	// Get valid conditional input attributes and get any corresponding saved values.
-	const savedConditionals = {}
-	const conditionalAttrs = {}
-	const validation = {}
-
-	const validConditionals = inputTypeConditionals[ type ]
-	validConditionals.forEach( attr => {
+	/*
+	 * Get valid conditional properties for this input type, then get any corresponding saved values
+	 * and divide them into block props and validation rules.
+	 */
+	const conditionalProps = {}
+	const validationRules  = {}
+	const conditionals     = inputTypeConditionals[ type ]
+	conditionals.forEach( attr => {
 		if ( attributes[ attr ] ) {
-			savedConditionals[ attr ] = attributes[ attr ]
 			switch ( attr ) {
 				case 'rows':
 				case 'step':
-					conditionalAttrs[ attr ] = attributes[ attr ]
+					conditionalProps[ attr ] = attributes[ attr ]
 					break
 
 				case 'minlength':
@@ -90,17 +90,22 @@ export default function Edit( props ) {
 				case 'pattern':
 				case 'min':
 				case 'max':
-					validation[ attr ] = attributes[ attr ]
+					validationRules[ attr ] = attributes[ attr ]
 					break
+				default:
+					console.error( 'Unkown conditional attribute: ' + attr )
 			}
 		}
 	} )
 
-console.log( 'conditionalAttrs', conditionalAttrs )
-console.log( 'validation', validation )
+	if ( JSON.stringify( attributes.validation ) !== JSON.stringify( validationRules ) ) {
+		setAttributes( { validation: validationRules } )
+	}
+
+	console.log( validation )
 
 	// If not a textarea, add type="text" to allow editing of placeholder for all input types.
-	if ( type !== 'textarea' ) conditionalAttrs.type = 'text'
+	if ( type !== 'textarea' ) conditionalProps.type = 'text'
 
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
 
@@ -113,16 +118,16 @@ console.log( 'validation', validation )
 					initialOpen={ true } 
 				>
 					<SelectControl
-						label="Form Variation"
-						labelPosition="Left"
+						label={ __( 'Field Variation' ) }
+						labelPosition="top"
 						title="Form Variation"
 						value={ variation }
 						options={ variationOptions }
 						onChange={ ( newValue ) => { setAttributes( { variation: newValue, } ) } }
 					/>
 					<TextControl
-						type="text"
 						label={ __( 'Label' ) }
+						type="text"
 						value={ label }
 						onChange={ ( newValue ) => { setAttributes( { label: newValue, } ) } }
 						disabled={ labelIsHidden }
@@ -131,14 +136,6 @@ console.log( 'validation', validation )
 						label={ __( 'Hide Label' ) }
 						checked={ labelIsHidden }
 						onChange={ ( newValue ) => { setAttributes( { labelIsHidden: newValue, } ) } }
-					/>
-					<SelectControl
-						label={ __( 'HTML Markup Type' ) }
-						labelPosition="Left"
-						title={ __( 'HTML Markup Type' ) }
-						value={ type }
-						options={ typeOptions }
-						onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
 					/>
 					<CheckboxControl
 						label={ __( 'Required' ) }
@@ -151,6 +148,23 @@ console.log( 'validation', validation )
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
 						help={ __( 'Allow browser-assisted form-filling.' ) }
 					/>
+					{ conditionals.includes( 'rows' ) &&
+						<TextControl
+							label={ __( 'Line rows' ) }
+							type="number"
+							value={ rows }
+							onChange={ ( newValue ) => { setAttributes( { rows: newValue, } ) } }
+							help={ __( 'Height of the input in text rows.' ) }
+						/>
+					}
+					<SelectControl
+						label={ __( 'HTML Type' ) }
+						labelPosition="top"
+						title={ __( 'HTML Type' ) }
+						value={ type }
+						options={ typeOptions }
+						onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -161,65 +175,64 @@ console.log( 'validation', validation )
 				>
 					<SelectControl
 						label={ __( 'Data Format' ) }
-						labelPosition="Left"
+						labelPosition="top"
 						title={ __( 'Data Format' ) }
 						options={ formatOptions }
 						value={ format }
 						onChange={ ( newValue ) => { setAttributes( { format: newValue, } ) } }
-						help={ __( 'The format you want the user input to conform to.' ) }
+						help={ __( 'The format you want the input to conform to.' ) }
 					/>
-					{ validConditionals.includes( 'minlength' ) &&
+					{ conditionals.includes( 'minlength' ) &&
 						<TextControl
-							type="number"
 							label={ __( 'Minimum length' ) }
+							type="number"
 							value={ minlength }
 							onChange={ ( newValue ) => { setAttributes( { minlength: newValue, } ) } }
 							help={ __( 'Minimum length of the text.' ) }
 						/>
 					}
-					{ validConditionals.includes( 'maxlength' ) &&
+					{ conditionals.includes( 'maxlength' ) &&
 						<TextControl
-							type="number"
 							label={ __( 'Maximum length' ) }
+							type="number"
 							value={ maxlength }
 							onChange={ ( newValue ) => { setAttributes( { maxlength: newValue, } ) } }
 							help={ __( 'Maximum length of the text.' ) }
 						/>
 					}
-					{ validConditionals.includes( 'min' ) &&
+					{ conditionals.includes( 'min' ) &&
 						<TextControl
-							type="number"
 							label={ __( 'Minimum' ) }
+							type="number"
 							value={ min }
 							onChange={ ( newValue ) => { setAttributes( { min: newValue, } ) } }
 							help={ __( 'Minimum value.' ) }
 						/>
 					}
-					{ validConditionals.includes( 'max' ) &&
+					{ conditionals.includes( 'max' ) &&
 						<TextControl
-							type="number"
 							label={ __( 'Maximum' ) }
+							type="number"
 							value={ max }
 							onChange={ ( newValue ) => { setAttributes( { max: newValue, } ) } }
 							help={ __( 'Maximum value.' ) }
 						/>
 					}
-					{ validConditionals.includes( 'step' ) &&
+					{ conditionals.includes( 'step' ) &&
 						<TextControl
-							type="number"
 							label={ __( 'Step' ) }
+							type="number"
 							value={ step }
 							onChange={ ( newValue ) => { setAttributes( { step: newValue, } ) } }
 							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
 						/>
 					}
-					{ validConditionals.includes( 'rows' ) &&
+					{ conditionals.includes( 'pattern' ) &&
 						<TextControl
-							type="number"
-							label={ __( 'Line rows' ) }
-							value={ rows }
-							onChange={ ( newValue ) => { setAttributes( { rows: newValue, } ) } }
-							help={ __( 'The number of lines made visible by the input.' ) }
+							label={ __( 'Regex Pattern' ) }
+							value={ pattern }
+							onChange={ ( newValue ) => { setAttributes( { pattern: newValue, } ) } }
+							help={ __( 'A regular expression pattern to validate the input against.' ) }
 						/>
 					}
 				</PanelBody>
@@ -227,20 +240,12 @@ console.log( 'validation', validation )
 
 			<InspectorControls group="advanced">
 				<TextControl
+					label={ __( 'HTML Input Name' ) }
 					autoComplete="off"
-					label={ __( 'Name' ) }
 					value={ name }
 					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ), } ) } }
 					help={ __( 'Identity of the field which must be unique on this form. Must consist of lowercase letters, numbers, hyphens, underscores and begin with a letter.' ) }
 				/>
-				{ validConditionals.includes( 'pattern' ) &&
-					<TextControl
-						label={ __( 'Pattern' ) }
-						value={ pattern }
-						onChange={ ( newValue ) => { setAttributes( { pattern: newValue, } ) } }
-						help={ __( 'A regular expression pattern to validate the input against.' ) }
-					/>
-				}
 			</InspectorControls>
 
 			<div { ...blockProps } >
@@ -265,7 +270,7 @@ console.log( 'validation', validation )
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
 						autoComplete={ autocomplete }
-						{ ...conditionalAttrs }
+						{ ...conditionalProps }
 						required={ required }
 					/>
 				</InputWrap>
