@@ -33,7 +33,6 @@ export default function Edit( props ) {
 		required,
 		autocomplete,
 		placeholder,
-		size,
 		minlength,
 		maxlength,
 		min,
@@ -71,18 +70,35 @@ export default function Edit( props ) {
 	// Set the HTML tag when switching between input[type='text']/textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	// Get conditional attributes from inputTypeConditionals and get any corresponding saved values.
+	// Get valid conditional input attributes and get any corresponding saved values.
 	const savedConditionals = {}
+	const conditionalAttrs = {}
+	const validation = {}
+
 	const validConditionals = inputTypeConditionals[ type ]
 	validConditionals.forEach( attr => {
 		if ( attributes[ attr ] ) {
 			savedConditionals[ attr ] = attributes[ attr ]
+			switch ( attr ) {
+				case 'rows':
+				case 'step':
+					conditionalAttrs[ attr ] = attributes[ attr ]
+					break
+
+				case 'minlength':
+				case 'maxlength':
+				case 'pattern':
+				case 'min':
+				case 'max':
+					validation[ attr ] = attributes[ attr ]
+					break
+			}
 		}
 	} )
-	// Build attributes to apply to the component.
-    const conditionalAttrs = {
-		...savedConditionals
-    }
+
+console.log( 'conditionalAttrs', conditionalAttrs )
+console.log( 'validation', validation )
+
 	// If not a textarea, add type="text" to allow editing of placeholder for all input types.
 	if ( type !== 'textarea' ) conditionalAttrs.type = 'text'
 
@@ -195,15 +211,6 @@ export default function Edit( props ) {
 							value={ step }
 							onChange={ ( newValue ) => { setAttributes( { step: newValue, } ) } }
 							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
-						/>
-					}
-					{ validConditionals.includes( 'size' ) &&
-						<TextControl
-							type="number"
-							label={ __( 'Size' ) }
-							value={ size }
-							onChange={ ( newValue ) => { setAttributes( { size: newValue, } ) } }
-							help={ __( 'The number of characters visible while editing.' ) }
 						/>
 					}
 					{ validConditionals.includes( 'rows' ) &&

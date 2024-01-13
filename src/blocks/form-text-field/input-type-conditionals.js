@@ -1,42 +1,34 @@
-import { __ } from '@wordpress/i18n'
-
 const inputTypeConditionals = {
-	'text': [
-		'minlength',
-		'maxlength',
-		'pattern',
-		'size'
-	],
 	'textarea': [
 		'minlength',
 		'maxlength',
 		'pattern',
-		'size',
 		'rows'
+	],
+	'text': [
+		'minlength',
+		'maxlength',
+		'pattern'
 	],
 	'email': [
 		'minlength',
 		'maxlength',
-		'pattern',
-		'size'
+		'pattern'
 	],
 	'tel': [
 		'minlength',
 		'maxlength',
-		'pattern',
-		'size'
+		'pattern'
 	],
 	'password': [
 		'minlength',
 		'maxlength',
-		'pattern',
-		'size'
+		'pattern'
 	],
 	'url': [
 		'minlength',
 		'maxlength',
-		'pattern',
-		'size'
+		'pattern'
 	],
 	'number': [
 		'min',
@@ -54,4 +46,4 @@ const inputTypeConditionals = {
 	]
 }
 
- export { inputTypeConditionals }
+export { inputTypeConditionals }

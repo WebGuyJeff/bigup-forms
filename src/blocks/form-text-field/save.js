@@ -3,7 +3,6 @@ import { useBlockProps } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
 import { inputTypeConditionals } from './input-type-conditionals'
 
-
 /**
  * The save function defines the way in which the different attributes should
  * be combined into the final markup, which is then serialized by the block
@@ -31,7 +30,7 @@ export default function save( { attributes } ) {
 	// Set the HTML tag to either input or textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	// Get limit attributes from definition and get any saved values from block attributes.
+	// Get valid conditional input attributes and get any corresponding saved values.
 	const savedConditionals = {}
 	const validConditionals = inputTypeConditionals[ type ]
 	validConditionals.forEach( attr => {

@@ -68,12 +68,7 @@
 			"selector": "input",
 			"attribute": "placeholder"
 		},
-		"size": {
-			"type": "string",
-			"source": "attribute",
-			"selector": "input",
-			"attribute": "size"
-		},
+		"validation": { "type": "object" },
 		"minlength": { "type": "number" },
 		"maxlength": { "type": "number" },
 		"min": { "type": "number" },
