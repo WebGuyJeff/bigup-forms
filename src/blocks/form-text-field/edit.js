@@ -48,6 +48,19 @@ export default function Edit( props ) {
 	// Generate ID to associate the input/label elements.
 	if ( ! labelID ) setAttributes( { labelID: 'inner-' + blockProps.id } )
 
+	const formatChangeHandler = ( newFormat ) => {
+		const newFormatDefaults = validationFormats[ newFormat ]
+
+		inputTypeConditionals[ type ].forEach( attr => {
+			
+		}
+
+		setAttributes( {
+			
+			format: newFormat
+		} )
+	}
+
 	// Variation select control values.
 	const variationOptions = []
 	Object.values( blockVariations ).forEach( variation => {
@@ -188,7 +201,7 @@ export default function Edit( props ) {
 						title={ __( 'Data Format' ) }
 						options={ formatOptions }
 						value={ format }
-						onChange={ ( newValue ) => { setAttributes( { format: newValue, } ) } }
+						onChange={ formatChangeHandler( newFormat ) }
 						help={ __( 'The format you want the input to conform to.' ) }
 					/>
 					{ conditionals.includes( 'minlength' ) &&
