@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { inputTypeConditionals } from './input-type-conditionals'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -15,10 +14,12 @@ import { inputTypeConditionals } from './input-type-conditionals'
 export default function save( { attributes } ) {
 
 	const {
+		validation,
 		label,
 		labelIsHidden,
 		required,
 		autocomplete,
+		rows,
 		type,
 		name,
 		labelID,
@@ -30,27 +31,14 @@ export default function save( { attributes } ) {
 	// Set the HTML tag to either input or textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
-	/*
-	 * Get valid conditional properties for this input type, then get any corresponding saved values
-	 * and filter the required block props.
-	 */
 	const conditionalProps = {}
-	const conditionals     = inputTypeConditionals[ type ]
-	conditionals.forEach( attr => {
-		if ( attributes[ attr ] ) {
-			switch ( attr ) {
-				case 'rows':
-				case 'step':
-					conditionalProps[ attr ] = attributes[ attr ]
-					break
-
-				default:
-					// We don't need that attribute.
-			}
-		}
-	} )
-	// Add the type attr only if it's not a textarea.
-	if ( type !== 'textarea' ) conditionalProps.type = type
+	if ( type === 'textarea' ) {
+		conditionalProps.rows = rows
+	} else if ( validation?.step !== undefined && validation.step !== null ) {
+		conditionalProps.step = validation.step
+	} else {
+		conditionalProps.type = type
+	}
 
 	return (
 

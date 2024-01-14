@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { inputTypeConditionals } from './input-type-conditionals'
 import { makeNameAttributeSafe } from '../../js/common/_util'
 import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
@@ -22,10 +21,11 @@ export default function Edit( props ) {
 	const attributes            = props.attributes
 	const setAttributes         = props.setAttributes
 	const blockProps            = useBlockProps()
-	const blockVariations       = wp.blocks.getBlockType( blockName ).variations
-	const { validationFormats } = wpInlinedVars
+	const blockVariations       = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {
 		variation,
+		validation,
+		format,
 		label,
 		labelIsHidden,
 		required,
@@ -34,100 +34,97 @@ export default function Edit( props ) {
 		type,
 		name,
 		labelID,
-		validation,
-		format,
-		minlength,
-		maxlength,
-		min,
-		max,
-		step,
-		pattern,
 		placeholder
-	} = attributes
+	}                           = attributes
+	const { validationFormats } = wpInlinedVars
+	let validationFormat        = validationFormats[ format ].props
+
+	const inputTypes = {
+		'textarea': [
+			'minlength',
+			'maxlength',
+			'pattern',
+		],
+		'text': [
+			'minlength',
+			'maxlength',
+			'pattern'
+		],
+		'email': [
+			'minlength',
+			'maxlength',
+			'pattern'
+		],
+		'tel': [
+			'minlength',
+			'maxlength',
+			'pattern'
+		],
+		'password': [
+			'minlength',
+			'maxlength',
+			'pattern'
+		],
+		'url': [
+			'minlength',
+			'maxlength',
+			'pattern'
+		],
+		'number': [
+			'min',
+			'max',
+			'step',
+			'pattern'
+		],
+		'date': [
+			'min',
+			'max'
+		],
+		'time': [
+			'min',
+			'max',
+			'step'
+		]
+	}
 
 	// Generate ID to associate the input/label elements.
 	if ( ! labelID ) setAttributes( { labelID: 'inner-' + blockProps.id } )
 
-	const formatChangeHandler = ( newFormat ) => {
-		const newFormatDefaults = validationFormats[ newFormat ]
-
-		inputTypeConditionals[ type ].forEach( attr => {
-			
-		}
-
-		setAttributes( {
-			
-			format: newFormat
-		} )
+	// Get validation properties for this input type, then get any corresponding saved values.
+	const newValidation = {}
+	inputTypes[ type ].forEach( attr => {
+		newValidation[ attr ] = ( validationFormat[ attr ] ) || ''
+	} )
+	if ( JSON.stringify( validation ) !== JSON.stringify( newValidation ) ) {
+		setAttributes( { validation: newValidation } )
 	}
 
 	// Variation select control values.
 	const variationOptions = []
-	Object.values( blockVariations ).forEach( variation => {
-		variationOptions.push( { label: variation.title, value: variation.name } )
-	} )
-
-	// Validation format select control values.
-	const formatOptions = []
-	Object.entries( validationFormats ).forEach( ( [ key, value ] ) => {
-		if ( value.types.includes( type ) ) {
-			formatOptions.push( { label: value.label, value: key } )
-		}
-	} )
+	blockVariations.forEach( variation => variationOptions.push( { value: variation.name, label: variation.title } ) )
 
 	// Input type select control values.
 	const typeOptions = []
-	Object.keys( inputTypeConditionals ).forEach( type => {
-		typeOptions.push( { label: type, value: type } )
-	} )
+	Object.keys( inputTypes ).forEach( type => typeOptions.push( { value: type, label: type } ) )
 
-	// Set the HTML tag when switching between input[type='text']/textarea.
-	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
-
-	/*
-	 * Get valid conditional properties for this input type, then get any corresponding saved values
-	 * and divide them into block props and validation rules.
-	 */
-	const conditionalProps = {}
-	const validationRules  = {}
-	const conditionals     = inputTypeConditionals[ type ]
-	const formatDefaults   = validationFormats[ format ]
-	conditionals.forEach( attr => {
-
-		// If saved value exists, get it. Empty string treated as a value so user can unset props.
-		if ( attributes[ attr ] !== null ) {
-			switch ( attr ) {
-				case 'rows':
-				case 'step':
-					conditionalProps[ attr ] = attributes[ attr ]
-					break
-
-				case 'minlength':
-				case 'maxlength':
-				case 'pattern':
-				case 'min':
-				case 'max':
-					validationRules[ attr ] = attributes[ attr ]
-					break
-
-				default:
-					console.error( 'Unkown conditional attribute: ' + attr )
-			}
-
-		// Else if it's a validation attribute, check for and use the format default.
-		} else if ( formatDefaults[ attr ] ) {
-			validationRules[ attr ] = formatDefaults[ attr ]
+	// Validation format select control values.
+	const formatOptions = []
+	Object.entries( validationFormats ).forEach( ( [ key, val ] ) => {
+		if ( val.types.includes( type ) ) {
+			formatOptions.push( { value: key, label: val.label } )
 		}
 	} )
 
-	if ( JSON.stringify( attributes.validation ) !== JSON.stringify( validationRules ) ) {
-		setAttributes( { validation: validationRules } )
+	const conditionalProps = {}
+	if ( type === 'textarea' ) {
+		conditionalProps.rows = rows
+	} else {
+		// All <input> elements set to type="text" to allow inline placeholder editing.
+		conditionalProps.type = 'text'
 	}
 
-	console.log( validation )
-
-	// If not a textarea, add type="text" to allow editing of placeholder for all input types.
-	if ( type !== 'textarea' ) conditionalProps.type = 'text'
+	// Set the HTML tag when switching between input[type='text']/textarea.
+	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
 
@@ -170,7 +167,17 @@ export default function Edit( props ) {
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
 						help={ __( 'Allow browser-assisted form-filling.' ) }
 					/>
-					{ conditionals.includes( 'rows' ) &&
+					{ variation === 'custom' &&
+						<SelectControl
+							label={ __( 'HTML Type' ) }
+							labelPosition="top"
+							title={ __( 'HTML Type' ) }
+							value={ type }
+							options={ typeOptions }
+							onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
+						/>
+					}
+					{ type === 'textarea' &&
 						<TextControl
 							label={ __( 'Line rows' ) }
 							type="number"
@@ -179,14 +186,6 @@ export default function Edit( props ) {
 							help={ __( 'Height of the input in text rows.' ) }
 						/>
 					}
-					<SelectControl
-						label={ __( 'HTML Type' ) }
-						labelPosition="top"
-						title={ __( 'HTML Type' ) }
-						value={ type }
-						options={ typeOptions }
-						onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
-					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -201,59 +200,59 @@ export default function Edit( props ) {
 						title={ __( 'Data Format' ) }
 						options={ formatOptions }
 						value={ format }
-						onChange={ formatChangeHandler( newFormat ) }
+						onChange={ ( newFormat ) => setAttributes( { format: newFormat } ) }
 						help={ __( 'The format you want the input to conform to.' ) }
 					/>
-					{ conditionals.includes( 'minlength' ) &&
+					{ 'minlength' in validation &&
 						<TextControl
 							label={ __( 'Minimum length' ) }
 							type="number"
-							value={ minlength }
-							onChange={ ( newValue ) => { setAttributes( { minlength: newValue, } ) } }
+							value={ validation.minlength }
+							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, minlength: newValue } } ) } }
 							help={ __( 'Minimum length of the text.' ) }
 						/>
 					}
-					{ conditionals.includes( 'maxlength' ) &&
+					{ 'maxlength' in validation &&
 						<TextControl
 							label={ __( 'Maximum length' ) }
 							type="number"
-							value={ maxlength }
-							onChange={ ( newValue ) => { setAttributes( { maxlength: newValue, } ) } }
+							value={ validation.maxlength }
+							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, maxlength: newValue } } ) } }
 							help={ __( 'Maximum length of the text.' ) }
 						/>
 					}
-					{ conditionals.includes( 'min' ) &&
+					{ 'min' in validation &&
 						<TextControl
 							label={ __( 'Minimum' ) }
 							type="number"
-							value={ min }
-							onChange={ ( newValue ) => { setAttributes( { min: newValue, } ) } }
+							value={ validation.min }
+							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, min: newValue } } ) } }
 							help={ __( 'Minimum value.' ) }
 						/>
 					}
-					{ conditionals.includes( 'max' ) &&
+					{ 'max' in validation &&
 						<TextControl
 							label={ __( 'Maximum' ) }
 							type="number"
-							value={ max }
-							onChange={ ( newValue ) => { setAttributes( { max: newValue, } ) } }
+							value={ validation.max }
+							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, max: newValue } } ) } }
 							help={ __( 'Maximum value.' ) }
 						/>
 					}
-					{ conditionals.includes( 'step' ) &&
+					{ 'step' in validation &&
 						<TextControl
 							label={ __( 'Step' ) }
 							type="number"
-							value={ step }
-							onChange={ ( newValue ) => { setAttributes( { step: newValue, } ) } }
+							value={ validation.step }
+							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, step: newValue } } ) } }
 							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
 						/>
 					}
-					{ conditionals.includes( 'pattern' ) &&
+					{ 'pattern' in validation &&
 						<TextControl
 							label={ __( 'Regex Pattern' ) }
-							value={ pattern }
-							onChange={ ( newValue ) => { setAttributes( { pattern: newValue, } ) } }
+							value={ validation.pattern }
+							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, pattern: newValue } } ) } }
 							help={ __( 'A regular expression pattern to validate the input against.' ) }
 						/>
 					}
