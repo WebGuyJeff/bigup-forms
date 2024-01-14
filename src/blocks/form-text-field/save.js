@@ -17,12 +17,12 @@ export default function save( { attributes } ) {
 	const {
 		label,
 		labelIsHidden,
-		name,
-		labelID,
-		type,
 		required,
 		autocomplete,
-		placeholder,
+		type,
+		name,
+		labelID,
+		placeholder
 	} = attributes
 
 	const blockProps = useBlockProps.save()

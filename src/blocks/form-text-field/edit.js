@@ -17,48 +17,49 @@ import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
  */
 export default function Edit( props ) {
 
-	// Avoiding clash between props.name and input name.
-	const blockName     = props.name
-	const attributes    = props.attributes
-	const setAttributes = props.setAttributes
+	// Don't destructure props to avoid clash between block name and inout name.
+	const blockName             = props.name
+	const attributes            = props.attributes
+	const setAttributes         = props.setAttributes
+	const blockProps            = useBlockProps()
+	const blockVariations       = wp.blocks.getBlockType( blockName ).variations
+	const { validationFormats } = wpInlinedVars
 	const {
 		variation,
-		format,
-		pattern,
 		label,
 		labelIsHidden,
-		name,
-		labelID,
-		type,
 		required,
 		autocomplete,
-		placeholder,
+		rows,
+		type,
+		name,
+		labelID,
 		validation,
+		format,
 		minlength,
 		maxlength,
 		min,
 		max,
 		step,
-		rows
+		pattern,
+		placeholder
 	} = attributes
-
-	const blockProps = useBlockProps()
 
 	// Generate ID to associate the input/label elements.
 	if ( ! labelID ) setAttributes( { labelID: 'inner-' + blockProps.id } )
 
 	// Variation select control values.
-	const blockVariations  = wp.blocks.getBlockType( blockName ).variations
 	const variationOptions = []
 	Object.values( blockVariations ).forEach( variation => {
 		variationOptions.push( { label: variation.title, value: variation.name } )
 	} )
 
 	// Validation format select control values.
-	const { validationFormats } = wpInlinedVars
 	const formatOptions = []
 	Object.entries( validationFormats ).forEach( ( [ key, value ] ) => {
-		formatOptions.push( { label: value.label, value: key } )
+		if ( value.types.includes( type ) ) {
+			formatOptions.push( { label: value.label, value: key } )
+		}
 	} )
 
 	// Input type select control values.
@@ -77,8 +78,11 @@ export default function Edit( props ) {
 	const conditionalProps = {}
 	const validationRules  = {}
 	const conditionals     = inputTypeConditionals[ type ]
+	const formatDefaults   = validationFormats[ format ]
 	conditionals.forEach( attr => {
-		if ( attributes[ attr ] ) {
+
+		// If saved value exists, get it. Empty string treated as a value so user can unset props.
+		if ( attributes[ attr ] !== null ) {
 			switch ( attr ) {
 				case 'rows':
 				case 'step':
@@ -92,9 +96,14 @@ export default function Edit( props ) {
 				case 'max':
 					validationRules[ attr ] = attributes[ attr ]
 					break
+
 				default:
 					console.error( 'Unkown conditional attribute: ' + attr )
 			}
+
+		// Else if it's a validation attribute, check for and use the format default.
+		} else if ( formatDefaults[ attr ] ) {
+			validationRules[ attr ] = formatDefaults[ attr ]
 		}
 	} )
 

@@ -12,3 +12,12 @@ customisable forms of any type built directly in the Gutenberg editor.
 - No input field configuration required.
 - Customisable text block to create custom input fields.
 - All input field blocks provide their own validation/sanitisation.
+
+
+
+ToDo's
+
+data format - select control should only show relevant formats.
+data format - validation props should be set to defaults on change.
+field variation - all defaults should be set on change.
+field variation - move to 'transform to' on block menu bar thing.

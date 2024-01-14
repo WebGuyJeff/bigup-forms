@@ -40,6 +40,11 @@
 			&:not( :last-child ) {
 				margin-inline-end: var(--experimentalBaseGap);
 			}
+
+			button:is( [ type="submit" ] ),
+			button {
+				font: inherit;
+			}
 		}
 	}
 

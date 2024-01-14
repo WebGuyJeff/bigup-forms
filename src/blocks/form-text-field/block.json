@@ -69,11 +69,26 @@
 			"attribute": "placeholder"
 		},
 		"validation": { "type": "object" },
-		"minlength": { "type": "number" },
-		"maxlength": { "type": "number" },
-		"min": { "type": "number" },
-		"max": { "type": "number" },
-		"step": { "type": "number" },
+		"minlength": {
+			"type": "number",
+			"default": null
+		},
+		"maxlength": {
+			"type": "number",
+			"default": null
+		},
+		"min": {
+			"type": "number",
+			"default": null
+		},
+		"max": {
+			"type": "number",
+			"default": null
+		},
+		"step": {
+			"type": "number",
+			"default": null
+		},
 		"rows": {
 			"type": "string",
 			"default": "8",

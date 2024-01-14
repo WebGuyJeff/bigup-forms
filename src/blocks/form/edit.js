@@ -35,7 +35,6 @@ export default function Edit( { name, attributes, setAttributes } ) {
 
 	return (
 		<>
-
 			<InspectorControls>
 				<PanelBody
 					title={ __( 'Settings' ) }
@@ -80,14 +79,10 @@ export default function Edit( { name, attributes, setAttributes } ) {
 				<div className='bigup__form_section'>
 
 					<Honeypot />
-
 					<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
-					Edit
 					<div className='bigup__form_controls'>
 						<SubmitButton />
-						{ showResetButton &&
-							<ResetButton />
-						}
+						{ showResetButton && <ResetButton /> }
 					</div>
 
 				</div>
