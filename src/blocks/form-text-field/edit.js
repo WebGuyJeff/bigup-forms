@@ -33,7 +33,6 @@ export default function Edit( props ) {
 		rows,
 		type,
 		name,
-		labelID,
 		placeholder
 	}                           = attributes
 	const { validationFormats } = wpInlinedVars
@@ -87,16 +86,32 @@ export default function Edit( props ) {
 		]
 	}
 
-	// Generate ID to associate the input/label elements.
-	if ( ! labelID ) setAttributes( { labelID: 'inner-' + blockProps.id } )
+	// Changing format sets all validation rules.
+	const onChangeFormat = ( newFormat ) => {
+		validationFormat = validationFormats[ newFormat ].props
+		setAttributes( {
+			format: newFormat,
+			validation: validationFormat
+		} )
+	}
 
-	// Get validation properties for this input type, then get any corresponding saved values.
-	const newValidation = {}
-	inputTypes[ type ].forEach( attr => {
-		newValidation[ attr ] = ( validationFormat[ attr ] ) || ''
-	} )
-	if ( JSON.stringify( validation ) !== JSON.stringify( newValidation ) ) {
-		setAttributes( { validation: newValidation } )
+
+
+console.log( blockVariations )
+
+
+
+	const onChangeVariation = ( newVariation ) => {
+		const variations = Object.values( wp.blocks.getBlockType( blockName ).variations )
+		variations.forEach( variation => {}
+
+
+
+		setAttributes( {
+			format: newFormat,
+			validation: validationFormat
+		} )
+
 	}
 
 	// Variation select control values.
@@ -142,7 +157,7 @@ export default function Edit( props ) {
 						title="Form Variation"
 						value={ variation }
 						options={ variationOptions }
-						onChange={ ( newValue ) => { setAttributes( { variation: newValue, } ) } }
+						onChange={ ( newValue ) => onChangeVariation( newValue ) }
 					/>
 					<TextControl
 						label={ __( 'Label' ) }
@@ -167,7 +182,7 @@ export default function Edit( props ) {
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
 						help={ __( 'Allow browser-assisted form-filling.' ) }
 					/>
-					{ variation === 'custom' &&
+					{ variation === 'any_text' || variation === 'any_number' &&
 						<SelectControl
 							label={ __( 'HTML Type' ) }
 							labelPosition="top"
@@ -200,7 +215,7 @@ export default function Edit( props ) {
 						title={ __( 'Data Format' ) }
 						options={ formatOptions }
 						value={ format }
-						onChange={ ( newFormat ) => setAttributes( { format: newFormat } ) }
+						onChange={ ( newValue ) => onChangeFormat( newValue ) }
 						help={ __( 'The format you want the input to conform to.' ) }
 					/>
 					{ 'minlength' in validation &&

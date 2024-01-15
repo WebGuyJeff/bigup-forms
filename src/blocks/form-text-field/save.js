@@ -22,11 +22,9 @@ export default function save( { attributes } ) {
 		rows,
 		type,
 		name,
-		labelID,
 		placeholder
-	} = attributes
-
-	const blockProps = useBlockProps.save()
+	}                           = attributes
+	const blockProps            = useBlockProps.save()
 
 	// Set the HTML tag to either input or textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
@@ -39,6 +37,9 @@ export default function save( { attributes } ) {
 	} else {
 		conditionalProps.type = type
 	}
+
+	// Generate ID to associate the input and label.
+	const labelID = 'inner-' + blockProps.id
 
 	return (
 

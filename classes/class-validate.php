@@ -55,17 +55,25 @@ class Validate {
 	 */
 	public static function get_formats() {
 		return array(
-			'any'              => array(
-				'label'       => __( 'Any (no format restriction)', 'bigup-forms' ),
+			'any_text'         => array(
+				'label'       => __( 'Any Text (free format)', 'bigup-forms' ),
 				'description' => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
-				'types'       => array( 'textarea', 'text', 'email', 'tel', 'password', 'url', 'number', 'date', 'time' ),
+				'types'       => array( 'textarea', 'text', 'email', 'tel', 'password', 'url' ),
 				'props'       => array(
-					'pattern'   => null,
-					'maxlength' => null,
-					'minlength' => null,
-					'max'       => null,
-					'min'       => null,
-					'step'      => null,
+					'pattern'   => '',
+					'maxlength' => '',
+					'minlength' => '',
+				),
+			),
+			'any_number'       => array(
+				'label'       => __( 'Any Number (free format)', 'bigup-forms' ),
+				'description' => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
+				'types'       => array( 'number', 'date', 'time' ),
+				'props'       => array(
+					'pattern' => '',
+					'max'     => '',
+					'min'     => '',
+					'step'    => '',
 				),
 			),
 			'human_name'       => array(

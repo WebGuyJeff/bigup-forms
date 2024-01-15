@@ -2,7 +2,7 @@
 	"apiVersion": 2,
 	"name": "bigup-forms/form-text-field",
 	"version": "0.0.1",
-	"title": "Form Text Field",
+	"title": "Text Field",
 	"category": "widgets",
 	"description": "Customisable input field for any text type",
 	"keywords": [ "form", "input", "text" ],
@@ -15,10 +15,16 @@
 			"type": "string"
 		},
 		"format": {
-			"type": "string"
+			"type": "string",
+			"default": "any_text"
 		},
 		"validation": {
-			"type": "object"
+			"type": "object",
+			"default": {
+				"minlength": "",
+				"maxlength": "",
+				"pattern": ""
+			}
 		},
 		"label": {
 			"type": "rich-text",
@@ -31,15 +37,10 @@
 		},
 		"name": {
 			"type": "string",
+			"default": "text",
 			"source": "attribute",
 			"selector": "input",
 			"attribute": "name"
-		},
-		"labelID": {
-			"type": "string",
-			"source": "attribute",
-			"selector": "input",
-			"attribute": "id"
 		},
 		"type": {
 			"type": "string",
@@ -74,10 +75,6 @@
 			"source": "attribute",
 			"selector": "input",
 			"attribute": "rows"
-		},
-		"visibilityPermissions": {
-			"type": "string",
-			"default": "all"
 		}
 	}
 }

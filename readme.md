@@ -17,6 +17,5 @@ customisable forms of any type built directly in the Gutenberg editor.
 
 ToDo's
 
-data format - validation props should be set to defaults on change.
 field variation - all defaults should be set on change.
 field variation - move to 'transform to' on block menu bar thing.
