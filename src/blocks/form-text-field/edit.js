@@ -16,102 +16,56 @@ import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
  */
 export default function Edit( props ) {
 
-	// Don't destructure props to avoid clash between block name and inout name.
-	const blockName             = props.name
-	const attributes            = props.attributes
-	const setAttributes         = props.setAttributes
-	const blockProps            = useBlockProps()
-	const blockVariations       = Object.values( wp.blocks.getBlockType( blockName ).variations )
+	// Don't destructure props to avoid clash between block name and input name.
+	const blockName       = props.name
+	const attributes      = props.attributes
+	const setAttributes   = props.setAttributes
+	const blockProps      = useBlockProps()
+	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {
-		variation,
-		validation,
-		format,
-		label,
-		labelIsHidden,
-		required,
-		autocomplete,
-		rows,
-		type,
-		name,
-		placeholder
-	}                           = attributes
-	const { validationFormats } = wpInlinedVars
-	let validationFormat        = validationFormats[ format ].props
+		variation, // The block variation name.
+		validation, // An object of validation rules used on front and back end for consistency.
+		format, // Name of the data format which determines the default validation rules.
+		label, // Text content for the field label element.
+		labelIsHidden, // Boolean flag to hide/show the label element.
+		required, // Boolean flag to enable/disable HTML 'required' attribute.
+		autocomplete, // Boolean flag to enable/disable HTML 'autocomplete' attribute.
+		rows, // Number of rows displayed in a textarea field.
+		type, // HTML 'type' attribute for <input> elements.
+		name, // HTML name attribute which is the unique field key for the submitted form.
+		placeholder // Text content of the field placeholder.
+	}                     = attributes
+	const { dataFormats } = wpInlinedVars // Predefined validation formats from the server.
+	const inputTypes      = [
+		'textarea',
+		'text',
+		'email',
+		'tel',
+		'password',
+		'url',
+		'number',
+		'date',
+		'time'
+	]
 
-	const inputTypes = {
-		'textarea': [
-			'minlength',
-			'maxlength',
-			'pattern',
-		],
-		'text': [
-			'minlength',
-			'maxlength',
-			'pattern'
-		],
-		'email': [
-			'minlength',
-			'maxlength',
-			'pattern'
-		],
-		'tel': [
-			'minlength',
-			'maxlength',
-			'pattern'
-		],
-		'password': [
-			'minlength',
-			'maxlength',
-			'pattern'
-		],
-		'url': [
-			'minlength',
-			'maxlength',
-			'pattern'
-		],
-		'number': [
-			'min',
-			'max',
-			'step',
-			'pattern'
-		],
-		'date': [
-			'min',
-			'max'
-		],
-		'time': [
-			'min',
-			'max',
-			'step'
-		]
-	}
-
-	// Changing format sets all validation rules.
+	// Changing (data) format sets validation rules.
 	const onChangeFormat = ( newFormat ) => {
-		validationFormat = validationFormats[ newFormat ].props
 		setAttributes( {
 			format: newFormat,
-			validation: validationFormat
+			validation: dataFormats[ newFormat ].props
 		} )
 	}
 
-
-
-console.log( 'blockVariations', blockVariations )
-
+	// Changing block variation sets default variation attributes.
 	const onChangeVariation = ( newVariation ) => {
-		const variations = Object.values( wp.blocks.getBlockType( blockName ).variations )
-
-
-		console.log( 'variations', variations )
-
-		variations.forEach( variation => {} )
-
-		setAttributes( {
-			variation: newVariation,
-			validation: validationFormat
+		blockVariations.forEach( variation => {
+			if ( newVariation === variation.name ) {
+				setAttributes( {
+					variation: newVariation,
+					...variation.attributes,
+				} )
+			}
 		} )
-
 	}
 
 	// Variation select control values.
@@ -120,11 +74,11 @@ console.log( 'blockVariations', blockVariations )
 
 	// Input type select control values.
 	const typeOptions = []
-	Object.keys( inputTypes ).forEach( type => typeOptions.push( { value: type, label: type } ) )
+	inputTypes.forEach( type => typeOptions.push( { value: type, label: type } ) )
 
 	// Validation format select control values.
 	const formatOptions = []
-	Object.entries( validationFormats ).forEach( ( [ key, val ] ) => {
+	Object.entries( dataFormats ).forEach( ( [ key, val ] ) => {
 		if ( val.types.includes( type ) ) {
 			formatOptions.push( { value: key, label: val.label } )
 		}
@@ -296,6 +250,7 @@ console.log( 'blockVariations', blockVariations )
 					/>
 				}
 				<InputWrap>
+					<pre>{ validation.pattern }</pre>
 					<InputTagName
 						name={ name }
 						className={ 'bigup__form_input' }

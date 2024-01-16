@@ -36,7 +36,7 @@ class Validate {
 	/**
 	 * Validation Formats.
 	 */
-	public array $formats = array();
+	public array $data_formats = array();
 
 
 	/**
@@ -44,7 +44,7 @@ class Validate {
 	 */
 	public function __construct() {
 
-		$this->formats = self::get_formats();
+		$this->formats = self::get_data_formats();
 	}
 
 
@@ -53,7 +53,7 @@ class Validate {
 	 *
 	 * Data format rules for use on front and back end for consistent validation.
 	 */
-	public static function get_formats() {
+	public static function get_data_formats() {
 		return array(
 			'any_text'         => array(
 				'label'       => __( 'Any Text (free format)', 'bigup-forms' ),
@@ -78,7 +78,7 @@ class Validate {
 			),
 			'human_name'       => array(
 				'label'       => __( 'Name', 'bigup-forms' ),
-				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',.", and an infinite number of words.', 'bigup-forms' ),
+				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',." and an infinite number of words.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'props'       => array(
 					'pattern'   => "/^[\p{L}](?:[\p{L}]|([- ',\.])(?!\1))*$/u",
@@ -111,7 +111,7 @@ class Validate {
 				'description' => __( 'Allow most valid domain names. May not match extremely obscure domain names which would likely never be submitted in a public form.', 'bigup-forms' ),
 				'types'       => array( 'url' ),
 				'props'       => array(
-					'pattern'   => '/^(?=.{4,253}$)((?!-))(xn--)?[\p{L}\p{N}][\p{L}\p{N}-]{0,61}[\p{L}\p{N}]{0,1}\.(xn--)?([\p{L}\p{N}\-]{1,61}|[\p{L}\p{N}-]{1,30}\.[\p{L}{2,})$/u',
+					'pattern'   => '/^(?=.{4,253}$)((?!-))(xn--)?[\p{L}\p{N}][\p{L}\p{N}-]{0,61}[\p{L}\p{N}]{0,1}\.(xn--)?([\p{L}\p{N}\-]{1,61}|[\p{L}\p{N}-]{1,30}\.[\p{L}]{2,})$/u',
 					'maxlength' => 253,
 					'minlength' => 4,
 				),

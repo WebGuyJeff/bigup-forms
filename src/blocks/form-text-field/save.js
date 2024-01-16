@@ -23,8 +23,8 @@ export default function save( { attributes } ) {
 		type,
 		name,
 		placeholder
-	}                           = attributes
-	const blockProps            = useBlockProps.save()
+	}                = attributes
+	const blockProps = useBlockProps.save()
 
 	// Set the HTML tag to either input or textarea.
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'

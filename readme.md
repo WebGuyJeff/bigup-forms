@@ -17,5 +17,5 @@ customisable forms of any type built directly in the Gutenberg editor.
 
 ToDo's
 
-field variation - all defaults should be set on change.
 field variation - move to 'transform to' on block menu bar thing.
+input name - enforce unique key within form

@@ -12,7 +12,8 @@
 	"ancestor": [ "bigup-forms/form" ],
 	"attributes": {
 		"variation": {
-			"type": "string"
+			"type": "string",
+			"default": "text"
 		},
 		"format": {
 			"type": "string",
@@ -29,7 +30,8 @@
 		"label": {
 			"type": "rich-text",
 			"selector": "label",
-			"source": "text"
+			"source": "text",
+			"default": "Text"
 		},
 		"labelIsHidden": {
 			"type": "boolean",
@@ -37,44 +39,45 @@
 		},
 		"name": {
 			"type": "string",
-			"default": "text",
 			"source": "attribute",
 			"selector": "input",
-			"attribute": "name"
+			"attribute": "name",
+			"default": "text"
 		},
 		"type": {
 			"type": "string",
-			"default": "text",
 			"source": "attribute",
 			"selector": "input",
-			"attribute": "type"
+			"attribute": "type",
+			"default": "text"
 		},
 		"required": {
 			"type": "boolean",
-			"default": false,
 			"source": "attribute",
 			"selector": "input",
-			"attribute": "required"
+			"attribute": "required",
+			"default": false
 		},
 		"autocomplete": {
 			"type": "string",
-			"default": "off",
 			"source": "attribute",
 			"selector": "input",
-			"attribute": "autocomplete"
+			"attribute": "autocomplete",
+			"default": "off"
 		},
 		"placeholder": {
 			"type": "string",
 			"source": "attribute",
 			"selector": "input",
-			"attribute": "placeholder"
+			"attribute": "placeholder",
+			"default": "Type here..."
 		},
 		"rows": {
 			"type": "string",
-			"default": "8",
 			"source": "attribute",
 			"selector": "input",
-			"attribute": "rows"
+			"attribute": "rows",
+			"default": "8"
 		}
 	}
 }

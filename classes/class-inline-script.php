@@ -25,11 +25,11 @@ class Inline_Script {
 	public static function get_frontend_form_variables() {
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
-				'settingsOK'        => self::mail_settings_are_set(),
-				'restURL'           => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
-				'restNonce'         => wp_create_nonce( 'wp_rest' ),
-				'debug'             => BIGUPFORMS_DEBUG,
-				'validationFormats' => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_formats() : false,
+				'settingsOK'  => self::mail_settings_are_set(),
+				'restURL'     => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
+				'restNonce'   => wp_create_nonce( 'wp_rest' ),
+				'debug'       => BIGUPFORMS_DEBUG,
+				'dataFormats' => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_data_formats() : false,
 			)
 		);
 	}
