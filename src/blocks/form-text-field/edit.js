@@ -97,18 +97,18 @@ export default function Edit( props ) {
 
 
 
-console.log( blockVariations )
-
-
+console.log( 'blockVariations', blockVariations )
 
 	const onChangeVariation = ( newVariation ) => {
 		const variations = Object.values( wp.blocks.getBlockType( blockName ).variations )
-		variations.forEach( variation => {}
 
 
+		console.log( 'variations', variations )
+
+		variations.forEach( variation => {} )
 
 		setAttributes( {
-			format: newFormat,
+			variation: newVariation,
 			validation: validationFormat
 		} )
 
