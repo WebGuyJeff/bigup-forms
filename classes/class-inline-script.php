@@ -30,7 +30,8 @@ class Inline_Script {
 				'restNonce'   => wp_create_nonce( 'wp_rest' ),
 				'debug'       => BIGUPFORMS_DEBUG,
 				'dataFormats' => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_data_formats() : false,
-			)
+			),
+			JSON_HEX_QUOT // All " are converted to \u0022.
 		);
 	}
 

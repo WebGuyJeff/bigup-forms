@@ -96,4 +96,15 @@ const escapeRegex = ( string ) => {
 }
 
 
-export { removeChildren, makeHumanReadable, makeNameAttributeSafe }
+/**
+ * Unescape a regex string.
+ * 
+ * @param	string	The string to escape.
+ * @returns	string	Regex string with special chars escaped.
+ */
+const unescapeRegex = ( string ) => {
+	return string.replace( '(\\' + [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\', '$', '^', '-' ].join( '|\\' ) + ')', 'g' )
+}
+
+
+export { removeChildren, makeHumanReadable, makeNameAttributeSafe, escapeRegex, unescapeRegex }

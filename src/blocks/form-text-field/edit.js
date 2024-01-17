@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { makeNameAttributeSafe } from '../../js/common/_util'
+import { makeNameAttributeSafe, escapeRegex, unescapeRegex } from '../../js/common/_util'
 import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
 /**
@@ -251,6 +251,8 @@ export default function Edit( props ) {
 				}
 				<InputWrap>
 					<pre>{ validation.pattern }</pre>
+					<pre>{ escapeRegex( validation.pattern ) }</pre>
+					<pre>{ unescapeRegex( validation.pattern ) } </pre>
 					<InputTagName
 						name={ name }
 						className={ 'bigup__form_input' }
