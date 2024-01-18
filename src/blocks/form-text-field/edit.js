@@ -108,6 +108,78 @@ export default function Edit( props ) {
 
 
 
+	const convertStringToRegex = ( string ) => {
+		const matches = string.match( /(?<pattern>.+)(?<=\/)(?<flags>[igsmyu]{1,6})$/ )
+		const pattern = matches?.groups?.pattern || ''
+		const flags   = matches?.groups?.flags || ''
+		const regex   = new RegExp( pattern, flags )
+		return regex
+	}
+
+	const regex = /\/([igsmyu]{1,6})$/
+	console.log( 'replceTest: ', '\/\\||\\:|\\-|\\#)/g'.replace( regex, '[replaced]' ) )
+
+
+	console.log( 'TESTESTESTESTESTEST ##############' )
+	convertStringToRegex( '//' )
+
+
+
+
+	// FIRST (?<delim_start>\/?)(?<pattern>(?:(?:(?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$))|(?:(?<=^[^\/]).*\/.*(?=[^\/]$)))|[^\/]+)(?<delim_end>\/?)(?<=\/)(?<flags>[igsmyu]{1,6})$
+
+
+	// THIS ONE IS WRONG, ITS DOESN@T MATCH A REGEX THAT STARTS *OR* ENDS IN /
+	
+	/*
+	 * This matches a regex pattern string capturing it's parts: (delimiter)(pattern)(delimiter)(flags).
+	 * 
+	 * Pattern breakdown:
+	 * 
+	 * ^(?<delim_start>\/?)                           // Match delimiter ('/') at line start 0 to 1 times.
+	 * (?<pattern>
+	 *     (?:
+	 *         (?:
+	 *             (?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$) // Match '/' when regex starts AND ends with delimiter ('/').
+	 *         )|(?:
+	 *             (?<=^[^\/]).*\/.*(?=[^\/]$)        // Match '/' when regex DOES NOT start OR end with delimiter ('/').
+	 *         )
+	 *     )
+	 *     |[^\/]+                                    // Or match anything but '/'.
+	 * )
+	 * (?<delim_end>\/?)                              // Match delimiter ('/') 0 to 1 times.
+	 * (?<=\/)(?<flags>[igsmyu]{1,6})$                // Match any regex flags at line end ( 'igsmyu' ) only if preceeded by '/'.
+	 */
+	
+	
+	
+	/*
+	 * NEW: ^(?<delim_start>\/(?=.*\/[igsmyu]{0,6}$)) - match / only when a final delim is present
+	 * (?:(?<=^\/).*(?<delim_end>\/)(?=[igsmyu]{0,6}$)?) - match / only when a first delim is present
+	 * 
+	 * THIS COULD BE THE ONE:
+	 * ^(?<delim_start>\/(?=.*\/[igsmyu]{0,6}$))(?<pattern>(?:(?:(?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$))|(?:(?<=^[^\/]).*\/.*(?=[^\/]$)))|[^\/]+)(?<delim_end>\/?)(?<=\/)(?<flags>[igsmyu]{1,6})$
+	 */
+	
+	/*
+	 * ^(?<delim_start>\/?)                           // Match delimiter ('/') at line start 0 to 1 times.
+	 * (?<pattern>
+	 *     (?:
+	 *         (?:
+	 *             (?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$) // Match '/' when regex starts AND ends with delimiter ('/').
+	 *         )|(?:
+	 *             (?<=^[^\/]).*\/.*(?=[^\/]$)        // Match '/' when regex DOES NOT start OR end with delimiter ('/').
+	 *         )
+	 *     )
+	 *     |[^\/]+                                    // Or match anything but '/'.
+	 * )
+	 * (?<delim_end>\/?)                              // Match delimiter ('/') 0 to 1 times.
+	 * (?<=\/)(?<flags>[igsmyu]{1,6})$                // Match any regex flags at line end ( 'igsmyu' ) only if preceeded by '/'.
+	 */
+
+
+
+
 	return (
 
 		<>

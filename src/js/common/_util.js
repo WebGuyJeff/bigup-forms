@@ -108,7 +108,7 @@ const escapeRegex = ( string ) => {
  */
 const unescapeRegex = ( string ) => {
 	// Special regex chars: . \ + * ? [ ^ ] $ ( ) { } = ! < > | : - #
-	const escapedSpecialChars = '/(\\\\\\' + [
+	const escapedSpecialChars = '/(\\\\' + [
 		'\\', // Escaped \
 		'+',
 		'*',
@@ -129,7 +129,7 @@ const unescapeRegex = ( string ) => {
 		':',
 		'-',
 		'#'
-	].join( '|\\\\\\' ) + ')/g'
+	].join( '|\\\\' ) + ')/g'
 
 	console.log( 'UNREG', escapedSpecialChars )
 
