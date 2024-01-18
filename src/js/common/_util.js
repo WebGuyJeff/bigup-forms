@@ -95,6 +95,12 @@ const escapeRegex = ( string ) => {
 	return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string.
 }
 
+/*
+ *   /^[\p{L}](?:[\p{L}]|([- ',\.])(?!))*$/u
+ *   /\^\[\\p\{L\}\]\(\?:\[\\p\{L\}\]\|\(\[- ',\\\.\]\)\(\?!\)\)\*\$/u
+ */
+
+
 
 /**
  * Unescape a regex string.
@@ -103,7 +109,27 @@ const escapeRegex = ( string ) => {
  * @returns	string	Regex string with special chars escaped.
  */
 const unescapeRegex = ( string ) => {
-	return string.replace( '(\\' + [ '/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\', '$', '^', '-' ].join( '|\\' ) + ')', 'g' )
+	const escapedSpecialChars = '/(\\' +
+		[
+			'/',
+			'.',
+			'*',
+			'+',
+			'?',
+			'|',
+			'(',
+			')',
+			'[',
+			']',
+			'{',
+			'}',
+			'\\',
+			'$',
+			'^',
+			'-'
+		].join( '|\\' ) + ')/g'
+
+	return string.replace( escapedSpecialChars, '' )
 }
 
 

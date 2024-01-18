@@ -97,6 +97,38 @@ export default function Edit( props ) {
 
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
 
+
+	const patt =      validation.pattern
+	// const pattEsc =   escapeRegex( patt )
+	const pattUnEsc = unescapeRegex( patt )
+
+	console.log( 'patt', patt )
+	console.log( 'pattUnEsc', pattUnEsc )
+
+	const escapedRegexChars = '(\\' +
+		[
+			'/',
+			'.',
+			'*',
+			'+',
+			'?',
+			'|',
+			'(',
+			')',
+			'[',
+			']',
+			'{',
+			'}',
+			'\\',
+			'$',
+			'^',
+			'-'
+		].join( '|\\' ) + ')'
+
+
+
+
+
 	return (
 
 		<>
@@ -250,9 +282,6 @@ export default function Edit( props ) {
 					/>
 				}
 				<InputWrap>
-					<pre>{ validation.pattern }</pre>
-					<pre>{ escapeRegex( validation.pattern ) }</pre>
-					<pre>{ unescapeRegex( validation.pattern ) } </pre>
 					<InputTagName
 						name={ name }
 						className={ 'bigup__form_input' }

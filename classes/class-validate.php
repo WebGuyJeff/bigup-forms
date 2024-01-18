@@ -81,7 +81,7 @@ class Validate {
 				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',." and an infinite number of words.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'props'       => array(
-					'pattern'   => "/^[\p{L}](?:[\p{L}]|([- ',\.])(?!\1))*$/u",
+					'pattern'   => preg_quote( "/^[\p{L}](?:[\p{L}]|([- ',\.])(?!\1))*$/u", '/' ),
 					'maxlength' => 50,
 					'minlength' => 2,
 				),
