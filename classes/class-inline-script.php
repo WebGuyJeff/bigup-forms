@@ -23,6 +23,10 @@ class Inline_Script {
 	 * This is how we pass backend variables to cient-side JS.
 	 */
 	public static function get_frontend_form_variables() {
+
+		$test = Validate::get_data_formats();
+		error_log( $test['human_name']['props']['pattern'] );
+
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
 				'settingsOK'  => self::mail_settings_are_set(),

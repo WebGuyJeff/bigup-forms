@@ -98,33 +98,13 @@ export default function Edit( props ) {
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
 
 
-	const patt =      validation.pattern
-	const pattUnEsc = unescapeRegex( patt )
+	const patt      = validation.pattern
+	const pattEsc   = escapeRegex( patt )
+	const pattUnEsc = unescapeRegex( pattEsc )
 
 	console.log( 'patt     : ', patt )
+	console.log( 'pattEsc  : ', pattEsc )
 	console.log( 'pattUnEsc: ', pattUnEsc )
-
-	const escapedRegexChars = '(\\' +
-		[
-			'/',
-			'.',
-			'*',
-			'+',
-			'?',
-			'|',
-			'(',
-			')',
-			'[',
-			']',
-			'{',
-			'}',
-			'\\',
-			'$',
-			'^',
-			'-'
-		].join( '|\\' ) + ')'
-
-
 
 
 

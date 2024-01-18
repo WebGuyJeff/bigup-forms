@@ -92,14 +92,12 @@ function makeNameAttributeSafe( string ) {
  * @returns	string	Regex string with special chars escaped.
  */
 const escapeRegex = ( string ) => {
-	return string.replace( /[.*+?^${}()|[\]\\]/g, '\\$&' ) // $& means the whole matched string.
+	// Backreferences written as \1 get mistaken for octals, so we convert to the safer \g1.
+	const prependG = ( str, group1 ) => "g" + group1
+	const safeBackrefs   = string.replace( /\\(\d+)/g, prependG )
+	// Special regex chars: . \ + * ? [ ^ ] $ ( ) { } = ! < > | : - #
+	return safeBackrefs.replace( /[.\\+*?[^\]\$(){}=!<>\|:\-#]/g, '\\$&' ) // $& means the whole matched string.
 }
-
-/*
- *   /^[\p{L}](?:[\p{L}]|([- ',\.])(?!))*$/u
- *   /\^\[\\p\{L\}\]\(\?:\[\\p\{L\}\]\|\(\[- ',\\\.\]\)\(\?!\)\)\*\$/u
- */
-
 
 
 /**
@@ -109,25 +107,31 @@ const escapeRegex = ( string ) => {
  * @returns	string	Regex string with special chars escaped.
  */
 const unescapeRegex = ( string ) => {
-	const escapedSpecialChars = '/(\\' +
-		[
-			'/',
-			'.',
-			'*',
-			'+',
-			'?',
-			'|',
-			'(',
-			')',
-			'[',
-			']',
-			'{',
-			'}',
-			'\\',
-			'$',
-			'^',
-			'-'
-		].join( '|\\' ) + ')/g'
+	// Special regex chars: . \ + * ? [ ^ ] $ ( ) { } = ! < > | : - #
+	const escapedSpecialChars = '/(\\\\\\' + [
+		'\\', // Escaped \
+		'+',
+		'*',
+		'?',
+		'[',
+		'^',
+		']',
+		'$',
+		'(',
+		')',
+		'{',
+		'}',
+		'=',
+		'!',
+		'<',
+		'>',
+		'|',
+		':',
+		'-',
+		'#'
+	].join( '|\\\\\\' ) + ')/g'
+
+	console.log( 'UNREG', escapedSpecialChars )
 
 	return string.replace( escapedSpecialChars, '' )
 }
