@@ -99,11 +99,10 @@ export default function Edit( props ) {
 
 
 	const patt =      validation.pattern
-	// const pattEsc =   escapeRegex( patt )
 	const pattUnEsc = unescapeRegex( patt )
 
-	console.log( 'patt', patt )
-	console.log( 'pattUnEsc', pattUnEsc )
+	console.log( 'patt     : ', patt )
+	console.log( 'pattUnEsc: ', pattUnEsc )
 
 	const escapedRegexChars = '(\\' +
 		[
