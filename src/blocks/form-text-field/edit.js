@@ -109,75 +109,46 @@ export default function Edit( props ) {
 
 
 	const convertStringToRegex = ( string ) => {
-		const matches = string.match( /(?<pattern>.+)(?<=\/)(?<flags>[igsmyu]{1,6})$/ )
-		const pattern = matches?.groups?.pattern || ''
-		const flags   = matches?.groups?.flags || ''
-		const regex   = new RegExp( pattern, flags )
+		/*
+		 * Regex to match and capture regex parts.
+		 * 
+		 * @link https://regex101.com/r/fvExm8/1
+		 * Unescaped regex: ^(?<delim_start>\/(?=.+(?<delim_end>\/)(?<flags>(?:(?<flag>[igsmyu])(?!.*\k<flag>.*$)){0,6}$)))?(?<pattern>.*(?=\k<delim_end>\k<flags>)|(?<!^\/).*(?!\k<delim_end>\k<flags>))$
+		 */
+		const regexString = '^(?<delim_start>\\/(?=.+(?<delim_end>\\/)(?<flags>(?:(?<flag>[igsmyu])(?!.*\\k<flag>.*$)){0,6}$)))?(?<pattern>.*(?=\\k<delim_end>\\k<flags>)|(?<!^\\/).*(?!\\k<delim_end>\\k<flags>))$'
+
+		const RegExpRe = new RegExp( regexString )
+
+		console.log( 'RegExpRe   ', RegExpRe )
+		console.log( 'regexString', regexString )
+
+		const regexParts = string.match( RegExpRe )
+		const pattern    = regexParts?.groups?.pattern || ''
+		const flags      = regexParts?.groups?.flags || ''
+		const regex      = new RegExp( pattern, flags )
+
+		console.log( 'string    ', string )
+		console.log( 'regexParts', regexParts )
+		console.log( 'pattern   ', pattern )
+		console.log( 'flags     ', flags )
+
 		return regex
 	}
 
-	const regex = /\/([igsmyu]{1,6})$/
-	console.log( 'replceTest: ', '\/\\||\\:|\\-|\\#)/g'.replace( regex, '[replaced]' ) )
-
-
-	console.log( 'TESTESTESTESTESTEST ##############' )
-	convertStringToRegex( '//' )
-
-
-
-
-	// FIRST (?<delim_start>\/?)(?<pattern>(?:(?:(?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$))|(?:(?<=^[^\/]).*\/.*(?=[^\/]$)))|[^\/]+)(?<delim_end>\/?)(?<=\/)(?<flags>[igsmyu]{1,6})$
-
-
-	// THIS ONE IS WRONG, ITS DOESN@T MATCH A REGEX THAT STARTS *OR* ENDS IN /
 	
-	/*
-	 * This matches a regex pattern string capturing it's parts: (delimiter)(pattern)(delimiter)(flags).
-	 * 
-	 * Pattern breakdown:
-	 * 
-	 * ^(?<delim_start>\/?)                           // Match delimiter ('/') at line start 0 to 1 times.
-	 * (?<pattern>
-	 *     (?:
-	 *         (?:
-	 *             (?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$) // Match '/' when regex starts AND ends with delimiter ('/').
-	 *         )|(?:
-	 *             (?<=^[^\/]).*\/.*(?=[^\/]$)        // Match '/' when regex DOES NOT start OR end with delimiter ('/').
-	 *         )
-	 *     )
-	 *     |[^\/]+                                    // Or match anything but '/'.
-	 * )
-	 * (?<delim_end>\/?)                              // Match delimiter ('/') 0 to 1 times.
-	 * (?<=\/)(?<flags>[igsmyu]{1,6})$                // Match any regex flags at line end ( 'igsmyu' ) only if preceeded by '/'.
-	 */
+	console.log( '############## TESTESTESTESTESTEST ##############' )
+	convertStringToRegex( patt )
 	
-	
-	
-	/*
-	 * NEW: ^(?<delim_start>\/(?=.*\/[igsmyu]{0,6}$)) - match / only when a final delim is present
-	 * (?:(?<=^\/).*(?<delim_end>\/)(?=[igsmyu]{0,6}$)?) - match / only when a first delim is present
-	 * 
-	 * THIS COULD BE THE ONE:
-	 * ^(?<delim_start>\/(?=.*\/[igsmyu]{0,6}$))(?<pattern>(?:(?:(?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$))|(?:(?<=^[^\/]).*\/.*(?=[^\/]$)))|[^\/]+)(?<delim_end>\/?)(?<=\/)(?<flags>[igsmyu]{1,6})$
-	 */
-	
-	/*
-	 * ^(?<delim_start>\/?)                           // Match delimiter ('/') at line start 0 to 1 times.
-	 * (?<pattern>
-	 *     (?:
-	 *         (?:
-	 *             (?<=^\/).*\/.*(?=\/[igsmyu]{0,6}$) // Match '/' when regex starts AND ends with delimiter ('/').
-	 *         )|(?:
-	 *             (?<=^[^\/]).*\/.*(?=[^\/]$)        // Match '/' when regex DOES NOT start OR end with delimiter ('/').
-	 *         )
-	 *     )
-	 *     |[^\/]+                                    // Or match anything but '/'.
-	 * )
-	 * (?<delim_end>\/?)                              // Match delimiter ('/') 0 to 1 times.
-	 * (?<=\/)(?<flags>[igsmyu]{1,6})$                // Match any regex flags at line end ( 'igsmyu' ) only if preceeded by '/'.
-	 */
+	const newTest = convertStringToRegex( '/pattern/u' )
+	console.log( 'newTest', newTest )
 
 
+
+
+    /*
+     * console: /^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u
+     * php src: /^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u
+     */
 
 
 	return (
