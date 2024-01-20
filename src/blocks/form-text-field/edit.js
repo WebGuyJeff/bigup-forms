@@ -112,43 +112,28 @@ export default function Edit( props ) {
 		/*
 		 * Regex to match and capture regex parts.
 		 * 
-		 * @link https://regex101.com/r/fvExm8/1
-		 * Unescaped regex: ^(?<delim_start>\/(?=.+(?<delim_end>\/)(?<flags>(?:(?<flag>[igsmyu])(?!.*\k<flag>.*$)){0,6}$)))?(?<pattern>.*(?=\k<delim_end>\k<flags>)|(?<!^\/).*(?!\k<delim_end>\k<flags>))$
+		 * @link https://regex101.com/r/m1tRwJ/1
+		 * Unescaped regex: ^(?<delim>\/(?=.+(?<delim_end>\/)(?<flags>(?:(?<f>[igsmyu])(?!.*\k<f>.*$)){0,6}$)))?(?<pattern>.*(?=\k<delim>)|(?<!^\/).*(?!\k<delim>))(?:\k<delim>\k<flags>)?$
 		 */
-		const regexString = '^(?<delim_start>\\/(?=.+(?<delim_end>\\/)(?<flags>(?:(?<flag>[igsmyu])(?!.*\\k<flag>.*$)){0,6}$)))?(?<pattern>.*(?=\\k<delim_end>\\k<flags>)|(?<!^\\/).*(?!\\k<delim_end>\\k<flags>))$'
-
-		const RegExpRe = new RegExp( regexString )
-
-		console.log( 'RegExpRe   ', RegExpRe )
-		console.log( 'regexString', regexString )
+		const RegExpRe   = new RegExp( '^(?<delim>\\/(?=.+(?<delim_end>\\/)(?<flags>(?:(?<f>[igsmyu])(?!.*\\k<f>.*$)){0,6}$)))?(?<pattern>.*(?=\\k<delim>)|(?<!^\\/).*(?!\\k<delim>))(?:\\k<delim>\\k<flags>)?$' )
 
 		const regexParts = string.match( RegExpRe )
 		const pattern    = regexParts?.groups?.pattern || ''
 		const flags      = regexParts?.groups?.flags || ''
-		const regex      = new RegExp( pattern, flags )
 
-		console.log( 'string    ', string )
 		console.log( 'regexParts', regexParts )
 		console.log( 'pattern   ', pattern )
 		console.log( 'flags     ', flags )
+		
+		const regex      = new RegExp( pattern, flags )
 
 		return regex
 	}
 
 	
 	console.log( '############## TESTESTESTESTESTEST ##############' )
-	convertStringToRegex( patt )
-	
-	const newTest = convertStringToRegex( '/pattern/u' )
-	console.log( 'newTest', newTest )
+	console.log( 'pattTest', convertStringToRegex( patt ) )
 
-
-
-
-    /*
-     * console: /^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u
-     * php src: /^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u
-     */
 
 
 	return (

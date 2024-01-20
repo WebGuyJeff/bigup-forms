@@ -81,8 +81,8 @@ class Validate {
 				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',." and an infinite number of words.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'props'       => array(
-					// Back reference \g1 === \1 but the 'g' avoids conversion to an octal character.
-					'pattern'   => "/^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u",
+					// Use named back reference to avoid conversion to an octal character with '\1'.
+					'pattern'   => "/^[\p{L}](?:[\p{L}]|(?<punct>[- ',\.])(?!\k<punct>))*$/u",
 					'maxlength' => 50,
 					'minlength' => 2,
 				),
@@ -133,8 +133,8 @@ class Validate {
 				'description' => __( 'Any-case international alphanumeric characters and non-consecutive "_-" but not at the beginning or end.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'props'       => array(
-					// Back reference \g1 === \1 but the 'g' avoids conversion to an octal character.
-					'pattern'   => "/^[\p{L}\p{N}](?:[\p{L}\p{N}]|([_-])(?!\g1))+[\p{L}\p{N}]$/u",
+					// Use named back reference to avoid conversion to an octal character with '\1'.
+					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|(?<separator>[_-])(?!\k<separator>))+[\p{L}\p{N}]$/u',
 					'maxlength' => 20,
 					'minlength' => 0,
 				),
