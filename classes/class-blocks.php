@@ -1,5 +1,5 @@
 <?php
-namespace Bigup\Forms;
+namespace BigupWeb\Forms;
 
 /**
  * Register Gutenberg blocks.

@@ -92,11 +92,6 @@ class Sanitise {
 	public static function text( $data ) {
 
 		$clean_text = sanitize_text_field( $data );
-
-		// DEBUG.
-		$clean_text = preg_replace( '/a/g', '', $clean_text ); // Remove 'a' from the string.
-		error_log( $clean_text );
-
 		return $clean_text;
 	}
 

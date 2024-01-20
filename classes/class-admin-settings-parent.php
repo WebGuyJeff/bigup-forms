@@ -1,5 +1,5 @@
 <?php
-namespace Bigup\Forms;
+namespace BigupWeb\Forms;
 
 /**
  * Bigup Custom Fields - Admin Settings Parent.

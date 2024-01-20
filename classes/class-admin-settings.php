@@ -1,5 +1,5 @@
 <?php
-namespace Bigup\Forms;
+namespace BigupWeb\Forms;
 
 /**
  * Bigup Forms - Admin Settings.
@@ -62,13 +62,13 @@ class Admin_Settings {
 	public function register_admin_menu() {
 
 		add_submenu_page(
-			Admin_Settings_Parent::$page_slug,  // parent_slug
-			$this->admin_label . ' Settings',   // page_title
-			$this->admin_label,                 // menu_title
-			'manage_options',                   // capability
-			$this->page_slug,                   // menu_slug
+			Admin_Settings_Parent::$page_slug,       // parent_slug
+			$this->admin_label . ' Settings',        // page_title
+			$this->admin_label,                      // menu_title
+			'manage_options',                        // capability
+			$this->page_slug,                        // menu_slug
 			array( &$this, 'create_settings_page' ), // function
-			null,                               // position
+			null,                                    // position
 		);
 	}
 
@@ -145,9 +145,9 @@ class Admin_Settings {
 
 		// A single serialsed array holds all plugin settings.
 		register_setting(
-			$group,                        // option_group
-			'bigup_forms_settings', // option_name
-			array( $this, 'sanitise' )     // sanitise_callback
+			$group,                        // option_group.
+			'bigup_forms_settings',        // option_name.
+			array( $this, 'sanitise' )     // sanitise_callback.
 		);
 
 		// SMTP Account.
@@ -180,6 +180,11 @@ class Admin_Settings {
 		$section = 'section_fields';
 		add_settings_section( $section, 'Fields', array( &$this, 'echo_intro_section_fields' ), $page );
 			add_settings_field( 'files', 'Files', array( &$this, 'echo_field_files' ), $page, $section );
+
+		// Developer.
+		$section = 'developer';
+		add_settings_section( $section, 'Developer', array( &$this, 'echo_intro_section_developer' ), $page );
+			add_settings_field( 'debug', 'Enable debugging', array( &$this, 'echo_field_debug' ), $page, $section );
 	}
 
 
@@ -348,6 +353,24 @@ class Admin_Settings {
 		);
 	}
 
+	/**
+	 * Output Form Fields - Developer Settings
+	 */
+	public function echo_intro_section_developer() {
+		echo '<p>Settings for developers.</p>';
+	}
+	public function echo_field_debug() {
+		$setting = 'bigup_forms_settings[debug]';
+		printf(
+			'<input type="checkbox" value="1" id="%s" name="%s" %s><label for="%s">%s</label>',
+			$setting,
+			$setting,
+			isset( $this->settings['debug'] ) ? checked( '1', $this->settings['debug'], false ) : '',
+			$setting,
+			'Tick to enable debug logging.',
+		);
+	}
+
 
 	public function sanitise( $input ) {
 
@@ -395,6 +418,10 @@ class Admin_Settings {
 
 		if ( isset( $input['files'] ) ) {
 			$sanitised['files'] = $this->sanitise_checkbox( $input['files'] );
+		}
+
+		if ( isset( $input['debug'] ) ) {
+			$sanitised['debug'] = $this->sanitise_checkbox( $input['debug'] );
 		}
 
 		return $sanitised;

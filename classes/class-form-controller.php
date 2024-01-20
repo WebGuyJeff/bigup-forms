@@ -1,5 +1,5 @@
 <?php
-namespace Bigup\Forms;
+namespace BigupWeb\Forms;
 
 /**
  * Bigup Forms - Submission handler.

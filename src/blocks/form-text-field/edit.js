@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { makeNameAttributeSafe, escapeRegex, unescapeRegex } from '../../js/common/_util'
+import { makeNameAttributeSafe, escapeRegex, unescapeRegex, stringToRegex } from '../../js/common/_util'
 import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
 /**
@@ -96,45 +96,6 @@ export default function Edit( props ) {
 	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
 
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
-
-
-	const patt      = validation.pattern
-	const pattEsc   = escapeRegex( patt )
-	const pattUnEsc = unescapeRegex( pattEsc )
-
-	console.log( 'patt     : ', patt )
-	console.log( 'pattEsc  : ', pattEsc )
-	console.log( 'pattUnEsc: ', pattUnEsc )
-
-
-
-	const convertStringToRegex = ( string ) => {
-		/*
-		 * Regex to match and capture regex parts.
-		 * 
-		 * @link https://regex101.com/r/m1tRwJ/1
-		 * Unescaped regex: ^(?<delim>\/(?=.+(?<delim_end>\/)(?<flags>(?:(?<f>[igsmyu])(?!.*\k<f>.*$)){0,6}$)))?(?<pattern>.*(?=\k<delim>)|(?<!^\/).*(?!\k<delim>))(?:\k<delim>\k<flags>)?$
-		 */
-		const RegExpRe   = new RegExp( '^(?<delim>\\/(?=.+(?<delim_end>\\/)(?<flags>(?:(?<f>[igsmyu])(?!.*\\k<f>.*$)){0,6}$)))?(?<pattern>.*(?=\\k<delim>)|(?<!^\\/).*(?!\\k<delim>))(?:\\k<delim>\\k<flags>)?$' )
-
-		const regexParts = string.match( RegExpRe )
-		const pattern    = regexParts?.groups?.pattern || ''
-		const flags      = regexParts?.groups?.flags || ''
-
-		console.log( 'regexParts', regexParts )
-		console.log( 'pattern   ', pattern )
-		console.log( 'flags     ', flags )
-		
-		const regex      = new RegExp( pattern, flags )
-
-		return regex
-	}
-
-	
-	console.log( '############## TESTESTESTESTESTEST ##############' )
-	console.log( 'pattTest', convertStringToRegex( patt ) )
-
-
 
 	return (
 
@@ -258,10 +219,10 @@ export default function Edit( props ) {
 					}
 					{ 'pattern' in validation &&
 						<TextControl
-							label={ __( 'Regex Pattern' ) }
+							label={ __( 'Regular Expression (advanced)' ) }
 							value={ validation.pattern }
 							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, pattern: newValue } } ) } }
-							help={ __( 'A regular expression pattern to validate the input against.' ) }
+							help={ __( 'A regular expression pattern to validate the input against. Must be both PCRE2 and EMCA compatible.' ) }
 						/>
 					}
 				</PanelBody>
@@ -312,4 +273,6 @@ Edit.propTypes = {
 	name: PropTypes.string,
 	attributes: PropTypes.object,
 	setAttributes: PropTypes.func,
+	context: PropTypes.object,
+	variation: PropTypes.string,
 }

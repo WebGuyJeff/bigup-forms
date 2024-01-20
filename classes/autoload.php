@@ -23,7 +23,7 @@
 spl_autoload_register(
 	function ( $class ) {
 
-		$namespace       = 'Bigup\\Forms\\';
+		$namespace       = 'BigupWeb\\Forms\\';
 		$root_dir        = dirname( __DIR__, 1 );
 		$sub_dir         = str_replace( $root_dir, '', __DIR__ );
 		$filename_prefix = 'class-';

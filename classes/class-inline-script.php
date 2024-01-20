@@ -1,5 +1,5 @@
 <?php
-namespace Bigup\Forms;
+namespace BigupWeb\Forms;
 
 /**
  * Bigup Forms - Inline Script.
@@ -23,10 +23,6 @@ class Inline_Script {
 	 * This is how we pass backend variables to cient-side JS.
 	 */
 	public static function get_frontend_form_variables() {
-
-		$test = Validate::get_data_formats();
-		error_log( $test['human_name']['props']['pattern'] );
-
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
 				'settingsOK'  => self::mail_settings_are_set(),
@@ -34,8 +30,7 @@ class Inline_Script {
 				'restNonce'   => wp_create_nonce( 'wp_rest' ),
 				'debug'       => BIGUPFORMS_DEBUG,
 				'dataFormats' => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_data_formats() : false,
-			),
-			JSON_HEX_QUOT // All " are converted to \u0022.
+			)
 		);
 	}
 

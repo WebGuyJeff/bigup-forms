@@ -21,11 +21,12 @@
 			"default": true
 		},
 		"variation": {
-			"type": "string"
+			"type": "string",
+			"default": "contact"
 		}
 	},
 	"providesContext": {
-		"form/variation": "variation"
+		"bigup-forms/variation": "variation"
 	},
 	"supports": {
 		"html": false,

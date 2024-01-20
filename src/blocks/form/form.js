@@ -5,9 +5,12 @@ import './form.scss'
 import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
+import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
 
-console.log( metadata.name + ' BLOCK LOADED' )
-// RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
+if ( wpInlinedVars.debug ) {
+	console.log( metadata.name + ' BLOCK LOADED' )
+	// RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
+}
 
 /**
  * Register the block.

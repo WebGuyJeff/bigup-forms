@@ -1,5 +1,5 @@
 <?php
-namespace Bigup\Forms;
+namespace BigupWeb\Forms;
 
 /**
  * Plugin Name: Bigup Web: Bigup Forms
@@ -17,8 +17,11 @@ namespace Bigup\Forms;
  * @link https://jeffersonreal.uk
  */
 
+$settings     = get_option( 'bigup_forms_settings' );
+$enable_debug = ( $settings && array_key_exists( 'debug', $settings ) && $settings['debug'] ) ? true : false;
+
 // Set global constants.
-define( 'BIGUPFORMS_DEBUG', defined( 'WP_DEBUG' ) && WP_DEBUG === true );
+define( 'BIGUPFORMS_DEBUG', $enable_debug );
 define( 'BIGUPFORMS_PATH', trailingslashit( __DIR__ ) );
 define( 'BIGUPFORMS_URL', trailingslashit( get_site_url( null, strstr( __DIR__, '/wp-content/' ) ) ) );
 

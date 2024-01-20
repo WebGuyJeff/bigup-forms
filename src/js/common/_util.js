@@ -105,7 +105,7 @@ const escapeRegex = ( string ) => {
  */
 const unescapeRegex = ( string ) => {
 	// Special regex chars: . \ + * ? [ ^ ] $ ( ) { } = ! < > | : - #
-	const escapedSpecialChars = '/(\\\\' + [
+	const escapedSpecialChars = new RegExp( '\\\\\\' + [
 		'\\', // Escaped \
 		'+',
 		'*',
@@ -126,9 +126,47 @@ const unescapeRegex = ( string ) => {
 		':',
 		'-',
 		'#'
-	].join( '|\\\\' ) + ')/g'
-	return string.replace( escapedSpecialChars, '' )
+	].join( '|\\\\\\' ), 'g' )
+	const stripLeadingSlash = ( string ) => {
+		const hasSlash = new RegExp( /^\\.*/ )
+		if ( hasSlash.test( string ) ) {
+			return string.slice( 1 ) 
+		}
+		return string
+	}
+	return string.replace( escapedSpecialChars, stripLeadingSlash )
 }
 
 
-export { removeChildren, makeHumanReadable, makeNameAttributeSafe, escapeRegex, unescapeRegex }
+/**
+ * String to Regex.
+ * 
+ * Separates the delimiters and flags from a regex string before using the RegExp constructor to
+ * create and return a regex object.
+ * 
+ * @param   string Valid regex as a string.
+ * @returns object Regular expression object
+ */
+const stringToRegex = ( string ) => {
+	/*
+	 * Regex to match and capture regex parts.
+	 * @link https://regex101.com/r/m1tRwJ/1
+	 * Unescaped regex: ^(?<delim>\/(?=.+(?<delim_end>\/)(?<flags>(?:(?<f>[igsmyu])(?!.*\k<f>.*$)){0,6}$)))?(?<pattern>.*(?=\k<delim>)|(?<!^\/).*(?!\k<delim>))(?:\k<delim>\k<flags>)?$
+	 */
+	const regexRe    = new RegExp( '^(?<delim>\\/(?=.+(?<delim_end>\\/)(?<flags>(?:(?<f>[igsmyu])(?!.*\\k<f>.*$)){0,6}$)))?(?<pattern>.*(?=\\k<delim>)|(?<!^\\/).*(?!\\k<delim>))(?:\\k<delim>\\k<flags>)?$' )
+	const regexParts = string.match( regexRe )
+	const pattern    = regexParts?.groups?.pattern || ''
+	const flags      = regexParts?.groups?.flags || ''
+	const regex      = new RegExp( pattern, flags )
+	return regex
+}
+
+
+export {
+	removeChildren,
+	makeHumanReadable,
+	makeNameAttributeSafe,
+	escapeRegex,
+	unescapeRegex,
+	stringToRegex
+}

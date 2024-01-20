@@ -10,6 +10,7 @@
 	"editorScript": "file:./form-text-field.js",
 	"viewScript": "file:./form-text-field-view.js",
 	"ancestor": [ "bigup-forms/form" ],
+	"usesContext": [ "bigup-forms/variation" ],
 	"attributes": {
 		"variation": {
 			"type": "string",
