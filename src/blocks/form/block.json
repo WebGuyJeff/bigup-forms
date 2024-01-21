@@ -23,6 +23,14 @@
 		"variation": {
 			"type": "string",
 			"default": "contact"
+		},
+		"title": {
+			"type": "string",
+			"default": "Form"
+		},
+		"showTitle": {
+			"type": "boolean",
+			"default": true
 		}
 	},
 	"providesContext": {

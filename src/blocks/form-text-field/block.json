@@ -34,7 +34,7 @@
 			"source": "text",
 			"default": "Text"
 		},
-		"labelIsHidden": {
+		"showLabel": {
 			"type": "boolean",
 			"default": false
 		},

@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n'
 import { PropTypes } from 'prop-types'
-import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls } from '@wordpress/block-editor'
-import { PanelBody, SelectControl, CheckboxControl } from '@wordpress/components'
+import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls, RichText } from '@wordpress/block-editor'
+import { PanelBody, SelectControl, CheckboxControl, TextControl } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
@@ -19,7 +19,13 @@ const ALLOWED_BLOCKS = [
 
 export default function Edit( { name, attributes, setAttributes } ) {
 
-	const { textAlign, variation, showResetButton } = attributes
+	const {
+		textAlign,
+		variation,
+		title,
+		showTitle,
+		showResetButton
+	} = attributes
 
 	const blockProps = useBlockProps( {
 		className: 'bigup__form',
@@ -42,11 +48,23 @@ export default function Edit( { name, attributes, setAttributes } ) {
 				>
 					<SelectControl
 						label="Form Variation"
-						labelPosition="Left"
+						labelPosition="top"
 						title="Form Variation"
 						value={ variation }
 						options={ variationOptions }
 						onChange={ ( newValue ) => { setAttributes( { variation: newValue, } ) } }
+					/>
+					<TextControl
+						label={ __( 'Title' ) }
+						type="text"
+						value={ title }
+						onChange={ ( newValue ) => { setAttributes( { title: newValue, } ) } }
+						disabled={ ! showTitle }
+					/>
+					<CheckboxControl
+						label={ __( 'Show title' ) }
+						checked={ showTitle }
+						onChange={ ( newValue ) => { setAttributes( { showTitle: newValue, } ) } }
 					/>
 					<CheckboxControl
 						label={ __( 'Show reset button' ) }
@@ -73,7 +91,14 @@ export default function Edit( { name, attributes, setAttributes } ) {
 			>
 
 				<header>
-					<h3>Contact Form</h3>
+					{ showTitle &&
+						<RichText
+							tagName="h2"
+							value={ title }
+							onChange={ ( newValue ) => setAttributes( { title: newValue } ) }
+							placeholder={ __( 'Add a form title' ) }
+						/>
+					}
 				</header>
 
 				<div className='bigup__form_section'>

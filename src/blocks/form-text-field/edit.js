@@ -27,7 +27,7 @@ export default function Edit( props ) {
 		validation, // An object of validation rules used on front and back end for consistency.
 		format, // Name of the data format which determines the default validation rules.
 		label, // Text content for the field label element.
-		labelIsHidden, // Boolean flag to hide/show the label element.
+		showLabel, // Boolean flag to hide/show the label element.
 		required, // Boolean flag to enable/disable HTML 'required' attribute.
 		autocomplete, // Boolean flag to enable/disable HTML 'autocomplete' attribute.
 		rows, // Number of rows displayed in a textarea field.
@@ -118,12 +118,12 @@ export default function Edit( props ) {
 						type="text"
 						value={ label }
 						onChange={ ( newValue ) => { setAttributes( { label: newValue, } ) } }
-						disabled={ labelIsHidden }
+						disabled={ ! showLabel }
 					/>
 					<CheckboxControl
-						label={ __( 'Hide Label' ) }
-						checked={ labelIsHidden }
-						onChange={ ( newValue ) => { setAttributes( { labelIsHidden: newValue, } ) } }
+						label={ __( 'Show Label' ) }
+						checked={ showLabel }
+						onChange={ ( newValue ) => { setAttributes( { showLabel: newValue, } ) } }
 					/>
 					<CheckboxControl
 						label={ __( 'Required' ) }
@@ -239,7 +239,7 @@ export default function Edit( props ) {
 			</InspectorControls>
 
 			<div { ...blockProps } >
-				{ ! labelIsHidden &&
+				{ showLabel &&
 					<RichText
 						tagName="label"
 						className="bigup__form_inputLabel"
