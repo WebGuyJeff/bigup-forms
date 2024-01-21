@@ -6,7 +6,12 @@ import { ResetButton } from '../../components/ResetButton'
 
 export default function save( { attributes } ) {
 
-	const { textAlign, showResetButton } = attributes
+	const {
+		title,
+		showTitle,
+		textAlign,
+		showResetButton
+	} = attributes
 
 	const blockProps = useBlockProps.save( {
 		className: 'bigup__form',
@@ -22,7 +27,11 @@ export default function save( { attributes } ) {
 		>
 
 			<header>
-				<h3>Contact Form</h3>
+				{ title && showTitle &&
+					<h2>
+						{ title }
+					</h2>
+				}
 			</header>
 
 			<div className='bigup__form_section'>

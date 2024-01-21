@@ -25,7 +25,9 @@
 			"default": "contact"
 		},
 		"title": {
-			"type": "string",
+			"type": "rich-text",
+			"selector": "h2",
+			"source": "text",
 			"default": "Form"
 		},
 		"showTitle": {

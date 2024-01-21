@@ -16,7 +16,7 @@ export default function save( { attributes } ) {
 	const {
 		validation,
 		label,
-		labelIsHidden,
+		showLabel,
 		required,
 		autocomplete,
 		rows,
@@ -45,7 +45,7 @@ export default function save( { attributes } ) {
 
 		<>
 			<div { ...blockProps }>
-				{ label && ! labelIsHidden &&
+				{ label && showLabel &&
 					<label
 						htmlFor={ labelID }
 						className="bigup__form_inputLabel"

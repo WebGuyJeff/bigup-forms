@@ -96,6 +96,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 							tagName="h2"
 							value={ title }
 							onChange={ ( newValue ) => setAttributes( { title: newValue } ) }
+							aria-label={ title ? __( 'Form title' ) : __( 'Empty form title' ) }
 							placeholder={ __( 'Add a form title' ) }
 						/>
 					}
