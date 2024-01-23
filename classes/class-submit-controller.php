@@ -2,10 +2,9 @@
 namespace BigupWeb\Forms;
 
 /**
- * Bigup Forms - Submission handler.
+ * Bigup Forms - Submission controller.
  *
- * Handle form submissions by data validation, sanitization and response messaging before passing to
- * the mail handler.
+ * Handle form submissions, response messaging and passing of data to the mailer.
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
@@ -26,12 +25,12 @@ require BIGUPFORMS_PATH . 'vendor/autoload.php';
 use WP_REST_Request;
 use get_option;
 
-class Form_Controller {
+class Submit_Controller {
 
 	/**
 	 * Receive form submissions.
 	 */
-	public function bigup_forms_rest_api_callback( WP_REST_Request $request ) {
+	public function bigup_forms_rest_api_submit_callback( WP_REST_Request $request ) {
 
 		// Check header is multipart/form-data.
 		if ( ! str_contains( $request->get_header( 'Content-Type' ), 'multipart/form-data' ) ) {

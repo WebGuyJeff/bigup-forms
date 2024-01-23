@@ -26,7 +26,7 @@ class Inline_Script {
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
 				'settingsOK'  => self::mail_settings_are_set(),
-				'restURL'     => get_rest_url( null, 'bigup/contact-form/v1/submit' ),
+				'restURL'     => get_rest_url( null, 'bigup/forms/v1/submit' ),
 				'restNonce'   => wp_create_nonce( 'wp_rest' ),
 				'debug'       => BIGUPFORMS_DEBUG,
 				'dataFormats' => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_data_formats() : false,

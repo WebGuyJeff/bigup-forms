@@ -194,7 +194,7 @@ class Store_Forms {
 	/**
 	 * Log a new form submission.
 	 */
-	public static function save_form( $form_id = 0, $content, $name, $tags ) {
+	public static function save( $form_id = 0, $content, $name, $tags ) {
 
 		$form_title = date( 'd-m-Y_' ) . sanitize_title( strtolower( $name ) );
 

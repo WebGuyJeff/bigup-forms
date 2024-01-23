@@ -96,11 +96,20 @@ class Init {
 	 */
 	public function register_rest_api_routes() {
 		register_rest_route(
-			'bigup/contact-form/v1',
+			'bigup/forms/v1',
 			'/submit',
 			array(
 				'methods'             => 'POST',
-				'callback'            => array( new Form_Controller(), 'bigup_forms_rest_api_callback' ),
+				'callback'            => array( new Submit_Controller(), 'bigup_forms_rest_api_submit_callback' ),
+				'permission_callback' => '__return_true',
+			)
+		);
+		register_rest_route(
+			'bigup/forms/v1',
+			'/store/{id}',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( new Submit_Controller(), 'bigup_forms_rest_api_store_callback' ),
 				'permission_callback' => '__return_true',
 			)
 		);
