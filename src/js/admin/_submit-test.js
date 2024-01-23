@@ -45,7 +45,7 @@ async function submitTest( event ) {
 	}
 
 	// Fetch params.
-	const { restURL, restNonce } = wpInlinedVars
+	const { restSubmitURL, restNonce } = wpInlinedVars
 	const fetchOptions = {
 		method: "POST",
 		headers: {
@@ -60,7 +60,7 @@ async function submitTest( event ) {
 		// Display pre-fetch alerts in parrallel with fetch.
 		const preFetchAlerts = [ { 'text': 'Connecting...', 'type': 'info' } ]
 		let [ result, ] = await Promise.all( [
-			fetchHttpRequest( restURL, fetchOptions ),
+			fetchHttpRequest( restSubmitURL, fetchOptions ),
 			alertsShow( form, preFetchAlerts )
 		] )
 

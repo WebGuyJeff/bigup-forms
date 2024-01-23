@@ -13,6 +13,14 @@
 	"editorStyle": "file:./form-editor.css",
 	"style": "file:./form.css",
 	"attributes": {
+		"formID": {
+			"type": "number",
+			"default": 0
+		},
+		"formName": {
+			"type": "string",
+			"default": "Form"
+		},
 		"textAlign": {
 			"type": "string"
 		},
@@ -26,8 +34,8 @@
 		},
 		"title": {
 			"type": "rich-text",
-			"selector": "h2",
 			"source": "text",
+			"selector": "h2",
 			"default": "Form"
 		},
 		"showTitle": {

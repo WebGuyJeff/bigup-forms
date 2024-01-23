@@ -10,12 +10,13 @@ const getWpInlinedScript = () => {
 
 	const {
 		settingsOK, // Boolean value indicating email settings are configured.
-		restURL, // REST API endpoint URL.
+		restSubmitURL, // REST API submit endpoint.
+		restStoreURL, // REST API store endpoint.
 		restNonce, // WP nonce string.
 		debug, // Boolean value indicating whether debug output should be logged to console.
 		dataFormats, // Array of data format rules to use for validation.
 	} = bigupFormsWpInlinedScript
-	return { settingsOK, restURL, restNonce, debug, dataFormats }
+	return { settingsOK, restSubmitURL, restStoreURL, restNonce, debug, dataFormats }
 }
 const wpInlinedVars = getWpInlinedScript()
 

@@ -211,9 +211,16 @@ class Store_Forms {
 				),
 			),
 			true
-		); // Return error.
+		);
 		if ( is_wp_error( $result ) ) {
 			error_log( $result->get_error_message() );
+			return false;
+		} else if ( 0 === $result ) {
+			error_log( 'Bigup Forms: Unknown error 0 returned from wp_insert_post()' );
+			return false;
+		} else {
+			$form_post_id = $result;
+			return $form_post_id;
 		}
 	}
 }

@@ -95,6 +95,7 @@ class Init {
 	 * @link https://developer.wordpress.org/reference/functions/register_rest_route/
 	 */
 	public function register_rest_api_routes() {
+		// Form submission endpoint.
 		register_rest_route(
 			'bigup/forms/v1',
 			'/submit',
@@ -104,12 +105,13 @@ class Init {
 				'permission_callback' => '__return_true',
 			)
 		);
+		// Form editor save/update endpoint.
 		register_rest_route(
 			'bigup/forms/v1',
-			'/store/{id}',
+			'/store',
 			array(
 				'methods'             => 'POST',
-				'callback'            => array( new Submit_Controller(), 'bigup_forms_rest_api_store_callback' ),
+				'callback'            => array( new Store_Controller(), 'bigup_forms_rest_api_store_callback' ),
 				'permission_callback' => '__return_true',
 			)
 		);

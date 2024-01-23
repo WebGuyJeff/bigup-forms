@@ -26,31 +26,24 @@ class Store_Controller {
 
 		// Check header is multipart/form-data.
 		if ( ! str_contains( $request->get_header( 'Content-Type' ), 'multipart/form-data' ) ) {
-			$this->send_json_response( [ 405, 'Sending your message failed due to a malformed request from your browser' ] );
-
-			// Request handlers should exit() when done.
-			exit;
+			$this->send_json_response( array( 405, 'Unexpected payload content-type' ) );
+			exit; // Request handlers should exit() when done.
 		}
 
-		// Get form text data.
-		$form_fields = $request->get_body_params();
-		$fields      = [];
-		foreach ( $form_fields as $name => $json_field ) {
-			$field           = json_decode( $json_field, true );
-			$fields[ $name ] = array(
-				'type'   => $field['type'],
-				'value'  => $field['value'],
-				'format' => $field['format'],
-			);
-		}
-
+		// Get REST data.
+		$form_data = $request->get_body_params();
+		$form_id   = array_key_exists( 'id', $form_data ) ? $form_data['id'] : 0;
+		$content   = $form_data['content'];
+		$name      = $form_data['name'];
+		$tags      = $form_data['tags'];
 
 		// https://code.tutsplus.com/posting-via-the-front-end-inserting--wp-27034t
 
 		// https://webkul.com/blog/add-custom-rest-api-route-wordpress/#:~:text=Registering%20a%20Custom%20Rest%20Route,callback%20function%20to%20action%20rest_api_init.
 
-
-		Store_Forms::save( $data, $id );
+		$result = Store_Forms::save( $form_id, $content, $name, $tags );
+		$this->send_json_response( ( $result ) ? 200 : 500, $result );
+		exit; // Request handlers should exit() when done.
 	}
 
 
@@ -63,27 +56,19 @@ class Store_Controller {
 	 *
 	 * @param array $info: [ int(http-code), str(human readable message) ].
 	 */
-	private function send_json_response( $status, $fields = [] ) {
-
-		if ( ! is_array( $status ) ) {
-			error_log( 'Bigup_Forms: send_json_response expects array but ' . gettype( $status ) . ' received.' );
-			$status = [ 500, 'Sending your message failed due to an unexpected error.' ];
-		}
+	private function send_json_response( $status, $form_id ) {
 
 		// Ensure response headers haven't already sent to browser.
 		if ( ! headers_sent() ) {
 			header( 'Content-Type: application/json; charset=utf-8' );
-			status_header( $status[0] );
+			status_header( $status );
 		}
 
-		// Create response body.
-		$response['ok']     = ( $status[0] < 300 ) ? true : false;
-		$response['output'] = $status[1];
-		$response['fields'] = $fields;
+		$response = [
+			'ok' => ( $status < 300 ) ? true : false,
+			'id' => $form_id,
+		];
 
-		// PHPMailer debug ($mail->SMTPDebug) gets dumped to output buffer
-		// and breaks JSON response. Using ob_clean() before output prevents this.
-		ob_clean();
 		echo wp_json_encode( $response );
 	}
 }
