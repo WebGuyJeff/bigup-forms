@@ -45,8 +45,9 @@ async function submit( event ) {
 			input.name,
 			JSON.stringify( {
 				'value': input.value,
-				// Type used to select suitable sanitisation in back end.
-				'type': input.type
+				'type': input.type,
+				// Format used to select suitable validation in back end.
+				'format': input.type,
 			} )
 		)
 	} )

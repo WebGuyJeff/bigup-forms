@@ -149,12 +149,15 @@ class Validate {
 	 * Validate input data from a submitted form. Requires input data and data format to determine
 	 * validation method..
 	 */
-	public function form_data( $data ) {
-		foreach ( $fields as $field => $data ) {
-			$field['errors'] = self::by_format( $field['data'], $field['format'] );
+	public function form_data( $form_data ) {
+		foreach ( $form_data['fields'] as $field => $data ) {
+			$result = self::by_format( $field['data'], $field['format'] );
+			if ( true !== $result ) {
+				$form_data['fields'][ $field ]['errors'] = $result;
+				$form_data['has_errors']                 = true;
+			}
 		}
-
-		return $fields;
+		return $form_data;
 	}
 
 

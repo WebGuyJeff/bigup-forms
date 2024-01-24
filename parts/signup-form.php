@@ -2,11 +2,7 @@
 namespace BigupWeb\Forms;
 
 /**
- * Bigup Forms - HTML Template.
- *
- * This template defines the front end form HTML.
- *
- * Note: FormData will only use input fields that use the name attribute.
+ * Bigup Forms - HTML template signup form.
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
@@ -20,7 +16,6 @@ Variables passed from caller:
 $title
 $message
 $classes
-$files
 */
 
 // Exclude decorative wrappers when 'nostyles' option is true.
@@ -84,56 +79,7 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 				<span class="bigup__form_flag bigup__form_flag-hover"></span>
 				<span class="bigup__form_flag bigup__form_flag-focus"></span>
 			</div>
-		<div class="bigup__form_inputWrap bigup__form_inputWrap-wide">
 		<?php endif ?>
-
-				<textarea
-					class="bigup__form_input"
-					name="message"
-					maxlength="5000"
-					title="Message"
-					rows="8"
-					aria-label="Message"
-					placeholder="Type your message here..."
-					onfocus="this.placeholder=''"
-					onblur="this.placeholder='Type your message...'"
-				></textarea>
-
-		<?php if ( $decorative_markup ) : ?>
-				<span class="bigup__form_flag bigup__form_flag-hover"></span>
-				<span class="bigup__form_flag bigup__form_flag-focus"></span>
-			</div>
-		<?php endif ?>
-
-		<?php
-		if ( true === ! ! $files ) {
-			?>
-
-			<div class="bigup__customFileUpload">
-				<label class="bigup__customFileUpload_label">
-					<input
-						class="bigup__customFileUpload_input"
-						title="Attach a File"
-						type="file"
-						name="files"
-						multiple
-					>
-					<span class="bigup__customFileUpload_icon">
-						<?php echo Util::get_contents( BIGUPFORMS_PATH . 'assets/svg/file.svg' ); ?>
-					</span>	
-					<?php _e( 'Attach file', 'bigup_forms' ); ?>
-				</label>
-				<div class="bigup__customFileUpload_output"></div>
-				<template>
-					<span class="bigup__customFileUpload_icon">
-						<?php echo Util::get_contents( BIGUPFORMS_PATH . 'assets/svg/bin.svg' ); ?>
-					</span>	
-				</template>
-			</div>
-
-			<?php
-		}
-		?>
 
 		<button class="button bigup__form_submit" type="submit" value="Submit" disabled>
 			<span class="bigup__form_submitLabel-ready">

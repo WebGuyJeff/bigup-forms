@@ -63,7 +63,7 @@ class Widget extends WP_Widget {
 
 
 	/**
-	 * display the contact form widget on the front end.
+	 * Display the contact form widget on the front end.
 	 */
 	public function widget( $args, $instance ) {
 

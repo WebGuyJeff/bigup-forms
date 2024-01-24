@@ -79,7 +79,7 @@ class Submit_Controller {
 		 */
 		$Validate            = new Validate();
 		$validated_form_data = $Validate->form_data( $form_data );
-		if ( $validated_data['has_errors'] ) {
+		if ( $validated_form_data['has_errors'] ) {
 			$this->send_json_response( [ 400, __( 'Correct errors and resubmit', 'bigup-forms' ) ], $validated_form_data );
 
 			// Request handlers should exit() when done.

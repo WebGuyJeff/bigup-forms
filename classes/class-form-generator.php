@@ -15,6 +15,14 @@ namespace BigupWeb\Forms;
 
 class Form_Generator {
 
+	/**
+	 * Template file paths.
+	 */
+	private const PATHS = array(
+		'contact' => BIGUPFORMS_PATH . 'parts/contact-form.php',
+		'signup'  => BIGUPFORMS_PATH . 'parts/signup-form.php',
+	);
+
 
 	/**
 	 * Helper function - include_with_vars.
@@ -51,40 +59,40 @@ class Form_Generator {
 	 *
 	 * Includes the correct template with the variables.
 	 *
-	 * @param array $vars Vars passed by caller from widget/shortcode settings.
+	 * @param array $attrs Attributes passed by caller from widget/shortcode settings.
 	 */
-	public static function get_form( $vars = array() ) {
+	public static function get_form( $attrs = array() ) {
 
-		$form_template = plugin_dir_path( __DIR__ ) . 'parts/form.php';
+		$template = self::PATHS[ $attrs['form'] ];
 
-		if ( ! isset( $vars['align'] ) ) {
+		if ( ! isset( $attrs['align'] ) ) {
 			$align = '';
-		} elseif ( 'middle' === $vars['align'] ) {
+		} elseif ( 'middle' === $attrs['align'] ) {
 			$align = 'aligncenter';
-		} elseif ( 'left' === $vars['align'] ) {
+		} elseif ( 'left' === $attrs['align'] ) {
 			$align = 'alignleft';
-		} elseif ( 'right' === $vars['align'] ) {
+		} elseif ( 'right' === $attrs['align'] ) {
 			$align = 'alignright';
 		} else {
 			$align = '';
 		}
 
-		$saved_settings  = get_option( 'bigup_forms_settings' );
-		$nostyles        = $saved_settings['nostyles'] ?? false;
-		$styles          = $saved_settings['styles'] ?? false;
-		$files           = $saved_settings['files'] ?? false;
-		$vars['classes'] = '';
+		$saved_settings   = get_option( 'bigup_forms_settings' );
+		$nostyles         = $saved_settings['nostyles'] ?? false;
+		$styles           = $saved_settings['styles'] ?? false;
+		$files            = $saved_settings['files'] ?? false;
+		$attrs['classes'] = '';
 
 		if ( $nostyles ) {
-			$vars['classes'] .= 'bigup__form-nostyles';
+			$attrs['classes'] .= 'bigup__form-nostyles';
 		} else {
-			$vars['classes'] .= $styles ? 'bigup__form-dark' : 'bigup__form-vanilla';
+			$attrs['classes'] .= $styles ? 'bigup__form-dark' : 'bigup__form-vanilla';
 		}
-		$vars['classes'] .= ' ' . $align;
-		$vars['files']    = isset( $vars['files'] ) ? $vars['files'] : $files;
+		$attrs['classes'] .= ' ' . $align;
+		$attrs['files']    = isset( $attrs['files'] ) ? $attrs['files'] : $files;
 
 		// Include the form template with the widget vars.
-		$form = self::include_with_vars( $form_template, $vars );
+		$form = self::include_with_vars( $template, $attrs );
 		return $form;
 	}
 }
