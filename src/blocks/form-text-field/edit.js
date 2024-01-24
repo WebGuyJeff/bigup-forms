@@ -16,10 +16,15 @@ import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
  */
 export default function Edit( props ) {
 
-	// Don't destructure props to avoid clash between block name and input name.
+	// Don't destructure props.name to avoid clash between block name and input name.
 	const blockName       = props.name
 	const attributes      = props.attributes
 	const setAttributes   = props.setAttributes
+	const formID          = props.context[ 'bigup-forms/formID' ]
+
+console.log( 'formID', formID )
+
+
 	const blockProps      = useBlockProps()
 	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {

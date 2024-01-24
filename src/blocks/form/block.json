@@ -44,7 +44,7 @@
 		}
 	},
 	"providesContext": {
-		"bigup-forms/variation": "variation"
+		"bigup-forms/formID": "formID"
 	},
 	"supports": {
 		"html": false,

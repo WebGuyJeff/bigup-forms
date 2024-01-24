@@ -39,7 +39,10 @@ export default function save( { attributes } ) {
 	}
 
 	// Generate ID to associate the input and label.
-	const labelID = 'inner-' + blockProps.id
+	const labelID = name
+
+	console.log( 'labelID', name )
+
 
 	return (
 
