@@ -16,6 +16,7 @@ export default function save( { attributes } ) {
 	const {
 		validation,
 		label,
+		labelID,
 		showLabel,
 		required,
 		autocomplete,
@@ -37,12 +38,6 @@ export default function save( { attributes } ) {
 	} else {
 		conditionalProps.type = type
 	}
-
-	// Generate ID to associate the input and label.
-	const labelID = name
-
-	console.log( 'labelID', name )
-
 
 	return (
 

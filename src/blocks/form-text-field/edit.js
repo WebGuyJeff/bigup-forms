@@ -21,10 +21,6 @@ export default function Edit( props ) {
 	const attributes      = props.attributes
 	const setAttributes   = props.setAttributes
 	const formID          = props.context[ 'bigup-forms/formID' ]
-
-console.log( 'formID', formID )
-
-
 	const blockProps      = useBlockProps()
 	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {
@@ -32,12 +28,13 @@ console.log( 'formID', formID )
 		validation, // An object of validation rules used on front and back end for consistency.
 		format, // Name of the data format which determines the default validation rules.
 		label, // Text content for the field label element.
+		labelID, // ID to associate input/label elements. Must be unique on page.
 		showLabel, // Boolean flag to hide/show the label element.
 		required, // Boolean flag to enable/disable HTML 'required' attribute.
 		autocomplete, // Boolean flag to enable/disable HTML 'autocomplete' attribute.
 		rows, // Number of rows displayed in a textarea field.
 		type, // HTML 'type' attribute for <input> elements.
-		name, // HTML name attribute which is the unique field key for the submitted form.
+		name, // HTML name attribute. Must be unique on the form.
 		placeholder // Text content of the field placeholder.
 	}                     = attributes
 	const { dataFormats } = wpInlinedVars // Predefined validation formats from the server.
@@ -89,18 +86,22 @@ console.log( 'formID', formID )
 		}
 	} )
 
+	let InputTagName = ''
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
+		InputTagName = 'textarea'
 		conditionalProps.rows = rows
 	} else {
 		// All <input> elements set to type="text" to allow inline placeholder editing.
+		InputTagName = 'input'
 		conditionalProps.type = 'text'
 	}
 
-	// Set the HTML tag when switching between input[type='text']/textarea.
-	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
-
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
+
+	// labelID Not used in Edit, but must set to attribute for save function.
+	const newLabelID = name + '-' + formID
+	console.log( 'labelID', newLabelID )
 
 	return (
 
@@ -238,7 +239,7 @@ console.log( 'formID', formID )
 					label={ __( 'HTML Input Name' ) }
 					autoComplete="off"
 					value={ name }
-					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ), } ) } }
+					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ) } ) } }
 					help={ __( 'Identity of the field which must be unique on this form. Must consist of lowercase letters, numbers, hyphens, underscores and begin with a letter.' ) }
 				/>
 			</InspectorControls>

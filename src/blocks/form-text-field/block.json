@@ -31,12 +31,18 @@
 		"label": {
 			"type": "rich-text",
 			"selector": "label",
-			"source": "text",
-			"default": "Text"
+			"source": "text"
+		},
+		"labelID": {
+			"type": "string",
+			"selector": "label",
+			"source": "attribute",
+			"attribute": "id",
+			"default": "bigup-text"
 		},
 		"showLabel": {
 			"type": "boolean",
-			"default": false
+			"default": true
 		},
 		"name": {
 			"type": "string",
