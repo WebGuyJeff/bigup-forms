@@ -99,7 +99,7 @@ class Validate {
 			),
 			'email_non_rfc'       => array(
 				'label'       => __( 'Email', 'bigup-forms' ),
-				'description' => __( 'Formats allowed by most international email providers. Allow a maximum of 254 characters, 64 of which must be before the "@". Allow underscore, full-stop, plus sign, hyphen, and must have a full-stop after the "@" for TLDs like "co.uk". The TLD may contain additional full-stops.', 'bigup-forms' ),
+				'description' => __( 'Email format allowed by most international email providers. A maximum of 254 characters, 64 of which must be before the "@". "_.+-" are allowed and must have a full-stop after the "@" for TLDs like "co.uk". The TLD may contain additional full-stops.', 'bigup-forms' ),
 				'types'       => array( 'email' ),
 				'rules'       => array(
 					'pattern'   => '/^(?=.{6,254}$)[\p{L}\p{N}_.+-]{1,64}@[\p{L}\p{N}-]+\.[\p{L}\p{N}.-]+$/u',
@@ -109,7 +109,7 @@ class Validate {
 			),
 			'domain_non_rfc'      => array( // See https://stackoverflow.com/questions/10306690/what-is-a-regular-expression-which-will-match-a-valid-domain-name-without-a-subd/30007882#answer-26987741.
 				'label'       => __( 'Domain', 'bigup-forms' ),
-				'description' => __( 'Most valid domain names. May not match extremely obscure domain names which would likely never be submitted in a public form.', 'bigup-forms' ),
+				'description' => __( 'Valid domain names.', 'bigup-forms' ),
 				'types'       => array( 'url' ),
 				'rules'       => array(
 					'pattern'   => '/^(?=.{4,253}$)((?!-))(xn--)?[\p{L}\p{N}][\p{L}\p{N}-]{0,61}[\p{L}\p{N}]{0,1}\.(xn--)?([\p{L}\p{N}\-]{1,61}|[\p{L}\p{N}-]{1,30}\.[\p{L}]{2,})$/u',
@@ -141,12 +141,12 @@ class Validate {
 			),
 			'message_text_legacy' => array(
 				'label'       => __( 'Message Text (free format)', 'bigup-forms' ),
-				'description' => __( 'Any text with a minimum of 10 and maximum of 3000 characters', 'bigup-forms' ),
+				'description' => __( 'A minimum of 2 and maximum of 3000 characters', 'bigup-forms' ),
 				'types'       => array( 'textarea' ),
 				'rules'       => array(
 					'pattern'   => '',
 					'maxlength' => 3000,
-					'minlength' => 10,
+					'minlength' => 2,
 				),
 			),
 		);
@@ -196,13 +196,13 @@ class Validate {
 
 				case 'maxlength':
 					if ( $test && strlen( $data ) > $test ) {
-						$errors[] = __( 'Maximum length allowed: ', 'bigup-forms' ) . $test;
+						$errors[] = __( 'Maximum characters allowed: ', 'bigup-forms' ) . $test;
 					}
 					break;
 
 				case 'minlength':
 					if ( $test && strlen( $data ) < $test ) {
-						$errors[] = __( 'Minimum length allowed: ', 'bigup-forms' ) . $test;
+						$errors[] = __( 'Minimum characters allowed: ', 'bigup-forms' ) . $test;
 					}
 					break;
 
