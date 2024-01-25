@@ -54,7 +54,7 @@ export default function Edit( props ) {
 	const onChangeFormat = ( newFormat ) => {
 		setAttributes( {
 			format: newFormat,
-			validation: dataFormats[ newFormat ].props
+			validation: dataFormats[ newFormat ].rules
 		} )
 	}
 

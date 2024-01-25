@@ -59,7 +59,7 @@ class Validate {
 				'label'       => __( 'Any Text (free format)', 'bigup-forms' ),
 				'description' => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text', 'email', 'tel', 'password', 'url' ),
-				'props'       => array(
+				'rules'       => array(
 					'pattern'   => '',
 					'maxlength' => '',
 					'minlength' => '',
@@ -69,7 +69,7 @@ class Validate {
 				'label'       => __( 'Any Number (free format)', 'bigup-forms' ),
 				'description' => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
 				'types'       => array( 'number', 'date', 'time' ),
-				'props'       => array(
+				'rules'       => array(
 					'pattern' => '',
 					'max'     => '',
 					'min'     => '',
@@ -80,7 +80,7 @@ class Validate {
 				'label'       => __( 'Name', 'bigup-forms' ),
 				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',." and an infinite number of words.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
-				'props'       => array(
+				'rules'       => array(
 					// Use named back reference to avoid conversion to an octal character with '\1'.
 					'pattern'   => "/^[\p{L}](?:[\p{L}]|(?<punct>[- ',\.])(?!\k<punct>))*$/u",
 					'maxlength' => 50,
@@ -91,7 +91,7 @@ class Validate {
 				'label'       => __( 'Phone Number', 'bigup-forms' ),
 				'description' => __( 'Common international phone number characters "+-()" and whitespace.', 'bigup-forms' ),
 				'types'       => array( 'tel' ),
-				'props'       => array(
+				'rules'       => array(
 					'pattern'   => '^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$',
 					'maxlength' => 20,
 					'minlength' => 5,
@@ -101,7 +101,7 @@ class Validate {
 				'label'       => __( 'Email', 'bigup-forms' ),
 				'description' => __( 'Formats allowed by most international email providers. Allow a maximum of 254 characters, 64 of which must be before the "@". Allow underscore, full-stop, plus sign, hyphen, and must have a full-stop after the "@" for TLDs like "co.uk". The TLD may contain additional full-stops.', 'bigup-forms' ),
 				'types'       => array( 'email' ),
-				'props'       => array(
+				'rules'       => array(
 					'pattern'   => '/^(?=.{6,254}$)[\p{L}\p{N}_.+-]{1,64}@[\p{L}\p{N}-]+\.[\p{L}\p{N}.-]+$/u',
 					'maxlength' => 254,
 					'minlength' => 6,
@@ -109,9 +109,9 @@ class Validate {
 			),
 			'domain_non_rfc'   => array( // See https://stackoverflow.com/questions/10306690/what-is-a-regular-expression-which-will-match-a-valid-domain-name-without-a-subd/30007882#answer-26987741.
 				'label'       => __( 'Domain', 'bigup-forms' ),
-				'description' => __( 'Allow most valid domain names. May not match extremely obscure domain names which would likely never be submitted in a public form.', 'bigup-forms' ),
+				'description' => __( 'Most valid domain names. May not match extremely obscure domain names which would likely never be submitted in a public form.', 'bigup-forms' ),
 				'types'       => array( 'url' ),
-				'props'       => array(
+				'rules'       => array(
 					'pattern'   => '/^(?=.{4,253}$)((?!-))(xn--)?[\p{L}\p{N}][\p{L}\p{N}-]{0,61}[\p{L}\p{N}]{0,1}\.(xn--)?([\p{L}\p{N}\-]{1,61}|[\p{L}\p{N}-]{1,30}\.[\p{L}]{2,})$/u',
 					'maxlength' => 253,
 					'minlength' => 4,
@@ -119,9 +119,9 @@ class Validate {
 			),
 			'port_number'      => array( // See https://stackoverflow.com/questions/12968093/regex-to-validate-port-number#answer-12968117.
 				'label'       => __( 'Port number', 'bigup-forms' ),
-				'description' => __( 'Only allow valid port numbers.', 'bigup-forms' ),
+				'description' => __( 'Valid port numbers between 1 and 65535.', 'bigup-forms' ),
 				'types'       => array( 'number' ),
-				'props'       => array(
+				'rules'       => array(
 					'pattern' => '^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$',
 					'max'     => 65535,
 					'min'     => 1,
@@ -130,9 +130,9 @@ class Validate {
 			),
 			'alphanumeric_key' => array(
 				'label'       => __( 'Alphanumeric key', 'bigup-forms' ),
-				'description' => __( 'Any-case international alphanumeric characters and non-consecutive "_-" but not at the beginning or end.', 'bigup-forms' ),
+				'description' => __( 'Any-case international alphanumeric characters and non-consecutive "_-". Must begin and end with a letter or number.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
-				'props'       => array(
+				'rules'       => array(
 					// Use named back reference to avoid conversion to an octal character with '\1'.
 					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|(?<separator>[_-])(?!\k<separator>))+[\p{L}\p{N}]$/u',
 					'maxlength' => 20,
@@ -150,7 +150,7 @@ class Validate {
 	 * validation method..
 	 */
 	public function form_data( $form_data ) {
-		foreach ( $form_data['fields'] as $field => $data ) {
+		foreach ( $form_data['fields'] as $field ) {
 			$result = self::by_format( $field['data'], $field['format'] );
 			if ( true !== $result ) {
 				$form_data['fields'][ $field ]['errors'] = $result;
@@ -168,30 +168,41 @@ class Validate {
 	 * dynamic functions.
 	 */
 	public static function by_format( $data, $format ) {
-		switch ( $format ) {
 
-			case 'alphanumeric':
-				return self::alphanumeric( $data );
+		$format = $this->data_formats[ $format ];
+		$errors = [];
 
-			case 'human_name':
-				return self::human_name( $data );
+		foreach ( $format[ 'rules' ] as $rule\ ) {
+			switch ( $rules) {
+				case 'pattern':
+					if ( ! preg_match('/word[0-9]/', $string ) ) {
+						$errors[] = $format['description'];
+					}
+					break;
 
-			case 'email':
-				return self::email( $data );
+				case 'maxlength':
 
-			case 'domain':
-				return self::domain( $data );
 
-			case 'port':
-				return self::port( $data );
+				case 'minlength':
 
-			case 'boolean':
-				return self::boolean( $data );
 
-			default:
-				error_log( 'Bigup Forms: Unknown validation format "' . $format . '" passed with value' );
-				return false;
+				case 'max':
+
+
+				case 'min':
+
+
+				case 'step':
+
+
+				default:
+					error_log( 'Bigup Forms: Unknown validation rule "' . $rule . '" passed with value' );
+					return 'Error: Unexpected data recieved. Please try again or alert website owner';
+			}
 		}
+
+		$valid = ( $errors ) ? $errors : true;
+		return $valid;
 	}
 
 
