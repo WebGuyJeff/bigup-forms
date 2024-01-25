@@ -37,7 +37,7 @@ async function submit( event ) {
 	}
 
 	const formData   = new FormData()
-	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( [name="required_field" ] )' )
+	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( .saveTheBees, .bigup__customFileUpload_input )' )
 	const fileInput  = form.querySelector( '.bigup__customFileUpload_input' )
 
 	textInputs.forEach( input => {
@@ -46,11 +46,17 @@ async function submit( event ) {
 			JSON.stringify( {
 				'value': input.value,
 				'type': input.type,
-				// Format used to select suitable validation in back end.
-				'format': input.type,
+				'id': ( input.id ) ? input.id : false,
 			} )
 		)
 	} )
+	formData.append(
+		'formMeta',
+		JSON.stringify( {
+			'name': form.getAttribute( 'name' ),
+			'friendlyName': form.getAttribute( 'data-name' )
+		} )
+	)
 
 	// Handle attachments if file input present.
 	if ( fileInput ) {
@@ -96,27 +102,38 @@ async function submit( event ) {
 			alertsShow( form, preFetchAlerts )
 		] )
 
-		// Update form fields with values and errors returned from server if present.
-		if ( result.fields && result.fields.length > 0 ) {
+		// If server has reported validation errors.
+		if ( result.formData?.has_errors ) {
+			// Check fields for errors.
 			textInputs.forEach( input => {
 
-				const valueFromServer = result?.fields[ input.name ]?.value
-				if ( valueFromServer && valueFromServer !== input.value ) {
+				// Remove the errors when user focuses on the field to make changes.
+				const removeErrors = ( { target } ) => {
+					const errorBox = target.nextElementSibling
+					if ( errorBox.classList.contains( 'bigup__form_inlineErrors' ) ) {
+						errorBox.remove()
+						input.removeAttribute( 'aria-errormessage' )
+						input.removeAttribute( 'aria-invalid' )
+					}
+				}
+				input.addEventListener( 'focus', removeErrors, { once: true } )
 
-					// Set input value.
-					input.value = valueFromServer
-
+				const fieldErrors = result.formData.fields[ input.name ]?.errors
+				if ( fieldErrors ) {
 					// Attach errors to input.
 					let div = document.createElement( 'div' )
-					result.fields[ input.name ].errors.forEach( error => {
+					div.classList.add( 'bigup__form_inlineErrors' )
+					fieldErrors.forEach( error => {
 						let span = document.createElement( 'span' )
 						span.innerHTML = error
 						div.appendChild( span )
 					} )
+					const errorID = input.name + '-error'
+					div.setAttribute( 'id', errorID )
+					input.setAttribute( 'aria-errormessage', errorID )
+					input.setAttribute( 'aria-invalid', true )
 					input.after( div )
-
 				}
-
 			} )
 		}
 

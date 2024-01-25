@@ -22,6 +22,72 @@ namespace BigupWeb\Forms;
  */
 class Sanitise {
 
+
+	/**
+	 * Sanitise user input.
+	 *
+	 * TO BE REFACTORED - SANITISATION SHOULD NOT OCCUR ON USER INPUT!!!
+	 *
+	 * - Performed BEFORE validation.
+	 * - Returns an array with cleaned values.
+	 * - Does not validate values and will return empty array keys in cases where all characters are
+	 *   invalid.
+	 * - Returned array is a clone of input array, plus a $modified sub-array containing an error
+	 *   message, original value and sanitised value for public-safe error message output.
+	 *
+	 * **Input array structure**
+	 *
+	 * $form_data = [
+	 *     'fields' => [
+	 *         $name => [
+	 *             'value' => <field value>,
+	 *             'type'  => <html input type or 'textarea'>,
+	 *         ]
+	 *         ...
+	 * ];
+	 *
+	 * **Output array structure**
+	 *
+	 * $form_data = [
+	 *     'fields' => [
+	 *         $name => [
+	 *             'value'  => <sanitised field value>,
+	 *             'type'   => <html input type or 'textarea'>,
+	 *             'errors' => [ <Public friendly message indicating removed characters> ],
+	 *         ],
+	 *         ...
+	 *     ]
+	 *     ...
+	 * ]
+	 *
+	 * @param array $form_data Submitted form data.
+	 * @return array $form_data_sanitised Form data with cleaned values and errors.
+	 */
+	public function form_data( $form_data ) {
+
+		$sanitised_fields = array();
+		$has_errors       = false;
+
+		foreach ( $form_data['fields'] as $field => $data ) {
+
+			$type = $data['type'];
+			$old  = trim( $data['value'] );
+			$new  = self::by_type( $type, $old );
+
+			$form_data['fields'][ $field ]['value']    = $new;
+			$form_data['fields'][ $field ]['errors'][] = ( $new !== $old ) ? __( 'Disallowed characters removed', 'bigup-forms' ) : '';
+			if ( $new !== $old ) {
+				$has_errors = true;
+			}
+		}
+
+		$form_data['has_errors'] = $has_errors;
+
+		return $form_data;
+	}
+
+
+
 	/**
 	 * Sanitise Callback
 	 *

@@ -331,7 +331,7 @@ class Admin_Settings {
 			$setting,
 			isset( $this->settings['nostyles'] ) ? checked( '1', $this->settings['nostyles'], false ) : '',
 			$setting,
-			'Tick to remove all styles provided by this plugin and allow theme styles to take precedence (overrides "Fancy dark theme" setting).',
+			'Tick to remove all style-related markup (overrides other style settings).',
 		);
 	}
 

@@ -60,6 +60,7 @@ class Send_SMTP {
 			return [ 500, 'Sending your message failed due to a bad local mailserver configuration.' ];
 		}
 
+		$form   = $form_data['form'];
 		$fields = $form_data['fields'];
 
 		$username              = $this->smtp_settings['username'];
@@ -71,13 +72,14 @@ class Send_SMTP {
 		$from_email            = $this->smtp_settings['from_email'];
 		$to_email              = $this->smtp_settings['to_email'];
 
+		$form_name = strtolower( $form['friendly_name'] );
 		$site_url  = html_entity_decode( get_bloginfo( 'url' ) );
 		$domain    = parse_url( $site_url, PHP_URL_HOST );
 		$site_name = html_entity_decode( get_bloginfo( 'name' ) );
 		$from_name = $site_name ? $site_name : 'Bigup Forms';
-		$subject   = 'New website message from ' . $domain;
-		$name      = isset( $fields['fields']['name'] ) ? $fields['fields']['name'] : 'Anonymous user';
-		$email     = isset( $fields['fields']['email'] ) ? $fields['fields']['email'] : null;
+		$subject   = 'New ' . $form_name . ' submission from ' . $domain;
+		$name      = isset( $fields['fields']['name'] ) ? $fields['fields']['name']['value'] : 'Anonymous user';
+		$email     = isset( $fields['fields']['email'] ) ? $fields['fields']['email']['value'] : null;
 
 		// Build plaintext email body.
 		$plaintext_fields_output = "\n\n";
@@ -86,7 +88,7 @@ class Send_SMTP {
 		}
 		$plaintext_fields_output .= "\n\n";
 		$plaintext                = <<<PLAIN
-			This message was sent via the contact form at $site_url.
+			This was submitted via the {$form_name} at {$site_url}.
 			{$plaintext_fields_output}
 			You are viewing the plaintext version of this email because you have
 			disallowed HTML content in your email client. To view this and any future
@@ -98,18 +100,18 @@ class Send_SMTP {
 		// Build html email body.
 		$html_fields_output = "\n";
 		foreach ( $fields as $name => $data ) {
-			$html_fields_output .= '<tr><td><b>' . ucfirst( $name ) . ': </b></td><td>' . $data['value'] . "</td></tr>\n";
+			$html_fields_output .= '<tr><td width="140">' . ucfirst( $name ) . ': </td><td>' . $data['value'] . "</td></tr>\n";
 		}
 		$html = <<<HTML
 			<table>
 				<tr>
-					<td height="60px">
-						<i>This message was sent via the contact form at $site_url</i>
+					<td height="80px" colspan="2">
+						<i>This was submitted via the <b>{$form_name}</b> at {$site_url}</i>
 					</td>
 				</tr>
 				<tr>
-					<th>Form Field</th>
-					<th>Entered Value</th>
+					<th height="40px" width="140" align="left">Field</th>
+					<th height="40px" align="left">Input</th>
 				</tr>
 				{$html_fields_output}
 			</table>

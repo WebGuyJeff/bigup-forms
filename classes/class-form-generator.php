@@ -83,10 +83,12 @@ class Form_Generator {
 		$files            = $saved_settings['files'] ?? false;
 		$attrs['classes'] = '';
 
+		// This needs a refactor to account for new styles e.g. ".is-style-inset-light".
+
 		if ( $nostyles ) {
-			$attrs['classes'] .= 'bigup__form-nostyles';
+			$attrs['classes'] .= 'is-style-nostyles';
 		} else {
-			$attrs['classes'] .= $styles ? 'bigup__form-dark' : 'bigup__form-vanilla';
+			$attrs['classes'] .= $styles ? 'is-style-inset-dark' : 'is-style-vanilla';
 		}
 		$attrs['classes'] .= ' ' . $align;
 		$attrs['files']    = isset( $attrs['files'] ) ? $attrs['files'] : $files;

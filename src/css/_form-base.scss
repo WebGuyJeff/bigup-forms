@@ -31,6 +31,23 @@
 		display: none;
 	}
 
+	// Remove the gap below textareas.
+	textarea {
+		vertical-align: top;
+	}
+
+	.bigup__form_inlineErrors {
+		display: flex;
+		flex-flow: column;
+		margin: 0 2em;
+		border-radius: 0 0 0.6em 0.6em;
+		background:var(--bigup_red);
+		padding: 0.4em 0.7em;
+		color:#fff;
+		font-weight: 600;
+		font-variation-settings: "wght" 600;
+	}
+
 	.bigup__form_controls {
 
 		.bigup__form_buttonWrap {

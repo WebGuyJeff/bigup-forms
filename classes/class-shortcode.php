@@ -12,7 +12,6 @@ namespace BigupWeb\Forms;
  * @license GPL2+
  * @link https://jeffersonreal.uk
  */
-
 class Shortcode {
 
 
@@ -21,7 +20,6 @@ class Shortcode {
 	 */
 	public static function display_shortcode( $attrs = array() ) {
 
-		// enqueue contact form and styles
 		wp_enqueue_script( 'bigup_forms_public_js' );
 		wp_enqueue_style( 'bigup_forms_public_css' );
 

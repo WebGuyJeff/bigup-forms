@@ -19,10 +19,10 @@ $classes
 */
 
 // Exclude decorative wrappers when 'nostyles' option is true.
-$decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
+$decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 ?>
 
-<form class="bigup__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
+<form name="signup" data-name="Signup Form" class="bigup__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
 
 	<header>
 		<?php
@@ -67,7 +67,7 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 
 				<input
 					class="bigup__form_input"
-					name="email" type="text"
+					name="email" type="email"
 					maxlength="100" title="Email"
 					required aria-label="Email"
 					placeholder="Email (required)"
@@ -81,14 +81,18 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 			</div>
 		<?php endif ?>
 
-		<button class="button bigup__form_submit" type="submit" value="Submit" disabled>
-			<span class="bigup__form_submitLabel-ready">
-				<?php _e( 'Submit', 'bigup_forms' ); ?>
-			</span>
-			<span class="bigup__form_submitLabel-notReady">
-				<?php _e( '[please wait]', 'bigup_forms' ); ?>
-			</span>
-		</button>
+		<div className='bigup__form_controls'>
+			<div className='bigup__form_buttonWrap'>
+				<button class="button bigup__form_submit wp-element-button" type="submit" value="Submit" disabled>
+					<span class="bigup__form_submitLabel-ready">
+						<?php _e( 'Submit', 'bigup_forms' ); ?>
+					</span>
+					<span class="bigup__form_submitLabel-notReady">
+						<?php _e( '[please wait]', 'bigup_forms' ); ?>
+					</span>
+				</button>
+			</div>
+		</div>
 
 	</div>
 

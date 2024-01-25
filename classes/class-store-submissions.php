@@ -44,6 +44,12 @@ class Store_Submissions {
 	 */
 	private $custom_fields = array(
 		array(
+			'name'        => '_form_name',
+			'title'       => 'Form Used',
+			'description' => '',
+			'type'        => 'text',
+		),
+		array(
 			'name'        => '_name',
 			'title'       => 'Name',
 			'description' => '',
@@ -199,7 +205,7 @@ class Store_Submissions {
 	/**
 	 * Save the new Custom Fields values
 	 */
-	function save_custom_fields( $post_id, $post ) {
+	public function save_custom_fields( $post_id, $post ) {
 		if ( ! isset( $_POST[ $this->metabox . '_wpnonce' ] )
 			|| ! wp_verify_nonce( $_POST[ $this->metabox . '_wpnonce' ], $this->metabox )
 			|| ! current_user_can( 'edit_post', $post_id ) ) {
@@ -222,30 +228,32 @@ class Store_Submissions {
 	/**
 	 * Log a new form submission.
 	 */
-	public static function log_form_entry( $data, $send_result ) {
+	public static function log_form_entry( $form_data, $send_result ) {
 
-		$fields = $data['fields'];
+		$form   = $form_data['form'];
+		$fields = $form_data['fields'];
 
 		$file_info = '';
-		if ( array_key_exists( 'files', $data ) ) {
-			$number_of_files = count( $data['files'] ) - 1;
+		if ( array_key_exists( 'files', $form_data ) ) {
+			$number_of_files = count( $form_data['files'] ) - 1;
 			for ( $n = 0; $n <= $number_of_files; $n++ ) {
-				$file_info .= $data['files'][ $n ]['name'] . "\n";
+				$file_info .= $form_data['files'][ $n ]['name'] . "\n";
 			}
 		}
 
-		$name = isset( $fields['name'] ) ? $fields['name'] : 'Anonymous';
+		$name = isset( $fields['name'] ) ? $fields['name']['value'] : 'Anonymous';
 
 		$result = wp_insert_post(
 			array(
 				'post_type'   => 'bigup_form_entry',
 				'post_status' => 'publish',
-				'post_title'  => date( 'd-m-Y_' ) . sanitize_title( strtolower( $name ) ),
+				'post_title'  => sanitize_title( strtolower( $form['name'] . '-' . $name ) ),
 				'meta_input'  => array(
+					'_bufe__form_name'   => $form['friendly_name'],
 					'_bufe__name'        => $name,
-					'_bufe__email'       => isset( $fields['email'] ) ? $fields['email'] : '[Not provided]',
-					'_bufe__phone'       => isset( $fields['phone'] ) ? $fields['phone'] : '[Not provided]',
-					'_bufe__message'     => isset( $fields['message'] ) ? $fields['message'] : '[Not provided]',
+					'_bufe__email'       => isset( $fields['email'] ) ? $fields['email']['value'] : '',
+					'_bufe__phone'       => isset( $fields['phone'] ) ? $fields['phone']['value'] : '',
+					'_bufe__message'     => isset( $fields['message'] ) ? $fields['message']['value'] : '',
 					'_bufe__files'       => $file_info,
 					'_bufe__send-result' => implode( ' | ', $send_result ),
 				),
@@ -254,6 +262,8 @@ class Store_Submissions {
 		); // Return error.
 		if ( is_wp_error( $result ) ) {
 			error_log( $result->get_error_message() );
+		} else if ( 0 === $result ) {
+			error_log( 'Bigup Forms: Unknown error 0 returned from wp_insert_post()' );
 		}
 	}
 }

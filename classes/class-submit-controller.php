@@ -34,41 +34,57 @@ class Submit_Controller {
 
 		// Check header is multipart/form-data.
 		if ( ! str_contains( $request->get_header( 'Content-Type' ), 'multipart/form-data' ) ) {
-			$this->send_json_response( [ 405, 'Sending your message failed due to a malformed request from your browser' ] );
+			$this->send_json_response( array( 405, 'Sending your message failed due to a malformed request from your browser' ) );
 
 			// Request handlers should exit() when done.
 			exit;
 		}
 
-		// Get form text data.
-		$form_fields = $request->get_body_params();
-		$fields      = [];
-		foreach ( $form_fields as $name => $json_field ) {
-			$field           = json_decode( $json_field, true );
-			$fields[ $name ] = array(
-				'type'   => $field['type'],
-				'value'  => $field['value'],
-				'format' => $field['format'],
-			);
-		}
+		// Patch for classic (non-Gutenberg) forms.
+		$classic_form_formats = array(
+			'name'    => 'human_name',
+			'email'   => 'email_non_rfc',
+			'message' => 'message_text_legacy',
+		);
 
-		// Get form file data.
-		$form_files = $request->get_file_params();
-		$files      = [];
-		if ( array_key_exists( 'files', $form_files ) ) {
-			$number_of_files = count( $form_files['files']['name'] ) - 1;
-			for ( $n = 0; $n <= $number_of_files; $n++ ) {
-				$files[ $n ] = [
-					'name'     => $form_files['files']['name'][ $n ],
-					'tmp_name' => $form_files['files']['tmp_name'][ $n ],
+		// Get and sort text data between fields and form.
+		$body_params = $request->get_body_params();
+		$fields      = array();
+		$form        = array();
+		foreach ( $body_params as $name => $json_data ) {
+			$data = json_decode( $json_data, true );
+			if ( 'formMeta' === $name ) {
+				$form = [
+					'name'          => $data['name'],
+					'friendly_name' => $data['friendlyName'],
+				];
+			} else {
+				$fields[ $name ] = [
+					'value'  => $data['value'],
+					'type'   => $data['type'],
+					'format' => $classic_form_formats[ $name ],
 				];
 			}
 		}
 
-		$form_data = [
+		// Get file data.
+		$file_params = $request->get_file_params();
+		$files       = array();
+		if ( array_key_exists( 'files', $file_params ) ) {
+			$number_of_files = count( $file_params['files']['name'] ) - 1;
+			for ( $n = 0; $n <= $number_of_files; $n++ ) {
+				$files[ $n ] = array(
+					'name'     => $file_params['files']['name'][ $n ],
+					'tmp_name' => $file_params['files']['tmp_name'][ $n ],
+				);
+			}
+		}
+
+		$form_data = array(
+			'form'   => $form,
 			'fields' => $fields,
 			'files'  => $files,
-		];
+		);
 
 		/*
 		 * Validate data.
@@ -80,7 +96,7 @@ class Submit_Controller {
 		$Validate            = new Validate();
 		$validated_form_data = $Validate->form_data( $form_data );
 		if ( $validated_form_data['has_errors'] ) {
-			$this->send_json_response( [ 400, __( 'Correct errors and resubmit', 'bigup-forms' ) ], $validated_form_data );
+			$this->send_json_response( array( 400, __( 'Correct errors and resubmit', 'bigup-forms' ) ), $validated_form_data );
 
 			// Request handlers should exit() when done.
 			exit;
@@ -102,150 +118,6 @@ class Submit_Controller {
 
 
 	/**
-	 * Sanitise user input.
-	 * 
-	 * TO BE REFACTORED - SANITISATION SHOULD NOT OCCUR ON USER INPUT!!!
-	 *
-	 * - Performed BEFORE validation.
-	 * - Returns an array with cleaned values.
-	 * - Does not validate values and will return empty array keys in cases where all characters are
-	 *   invalid.
-	 * - Returned array is a clone of input array, plus a $modified sub-array containing an error
-	 *   message, original value and sanitised value for public-safe error message output.
-	 *
-	 * **Input array structure**
-	 *
-	 * $form_data = [
-	 *     'fields' => [
-	 *         $name => [
-	 *             'value' => <field value>,
-	 *             'type'  => <html input type or 'textarea'>,
-	 *         ]
-	 *         ...
-	 * ];
-	 *
-	 * **Output array structure**
-	 *
-	 * $form_data = [
-	 *     'fields' => [
-	 *         $name => [
-	 *             'value'  => <sanitised field value>,
-	 *             'type'   => <html input type or 'textarea'>,
-	 *             'errors' => [ <Public friendly message indicating removed characters> ],
-	 *         ],
-	 *         ...
-	 *     ]
-	 *     ...
-	 * ]
-	 *
-	 * @param array $form_data Submitted form data.
-	 * @return array $form_data_sanitised Form data with cleaned values and errors.
-	 */
-	public function sanitise( $form_data ) {
-
-		$sanitised_fields = [];
-		$has_errors       = false;
-
-		foreach ( $form_data['fields'] as $field => $data ) {
-
-			$type = $data['type'];
-			$old  = trim( $data['value'] );
-			$new  = Sanitise::by_type( $type, $old );
-
-			$form_data['fields'][ $field ]['value']    = $new;
-			$form_data['fields'][ $field ]['errors'][] = ( $new !== $old ) ? __( 'Disallowed characters removed', 'bigup-forms' ) : '';
-			if ( $new !== $old ) {
-				$has_errors = true;
-			}
-		}
-
-		$form_data['has_errors'] = $has_errors;
-
-		return $form_data;
-	}
-
-
-	/**
-	 * Validate user input.
-	 *
-	 * Performed AFTER sanitization.
-	 * Note: Never modifies or returns values.
-	 *
-	 * **Input array structure**
-	 *
-	 * $form_data = [
-	 *     'fields' => [
-	 *         $name => [
-	 *             'value'  => <sanitised field value>,
-	 *             'type'   => <html input type or 'textarea'>,
-	 *             'errors' => [ <Public friendly message indicating removed characters> ],
-	 *         ],
-	 *         ...
-	 *     ]
-	 *     ...
-	 * ]
-	 *
-	 * **Output array structure**
-	 *
-	 * $form_data = [
-	 *     'fields' => [
-	 *         $name => [
-	 *             'value'  => <sanitised field value>,
-	 *             'type'   => <html input type or 'textarea'>,
-	 *             'errors' => [
-	 *                 <sanitisation error message>,
-	 *                 <validation error message>,
-	 *             ],
-	 *         ],
-	 *         ...
-	 *     ]
-	 *     ...
-	 * ]
-	 *
-	 * @param array $form_data Sanitised form data.
-	 * @return array $form_data_sanitised Sanitised form data including validation errors.
-	 */
-	public function validate( $form_data ) {
-
-		foreach ( $form_data['fields'] as $field => $data ) {
-			$type  = $data['type'];
-			$value = $data['value'];
-			$error = false;
-
-			switch ( $type ) {
-
-				case 'text':
-					if ( 'name' === $field && ( strlen( $value ) < 2 || strlen( $value ) > 50 ) ) {
-						$error = __( '2-50 characters allowed.', 'bigup-forms' );
-					} elseif ( strlen( $value ) < 2 || strlen( $value ) > 100 ) {
-						$error = __( '2-100 characters allowed.', 'bigup-forms' );
-					}
-					continue 2;
-
-				case 'email':
-					if ( ! PHPMailer::validateAddress( $value ) ) {
-						$error = __( 'Invalid email address.', 'bigup-forms' );
-					}
-					continue 2;
-
-				case 'textarea':
-					if ( strlen( $value ) < 10 || strlen( $value ) > 3000 ) {
-						$error = __( '10-3000 characters allowed.', 'bigup-forms' );
-					}
-					continue 2;
-			}
-
-			if ( $error ) {
-				$form_data['fields'][ $field ]['errors'][] = $error;
-				$form_data['has_errors']                   = true;
-			}
-		}
-
-		return $form_data;
-	}
-
-
-	/**
 	 * Send JSON response to client.
 	 *
 	 * Sets the response header to the passed http status code and a
@@ -254,11 +126,11 @@ class Submit_Controller {
 	 *
 	 * @param array $info: [ int(http-code), str(human readable message) ].
 	 */
-	private function send_json_response( $status, $fields = [] ) {
+	private function send_json_response( $status, $form_data = array() ) {
 
 		if ( ! is_array( $status ) ) {
 			error_log( 'Bigup_Forms: send_json_response expects array but ' . gettype( $status ) . ' received.' );
-			$status = [ 500, 'Sending your message failed due to an unexpected error.' ];
+			$status = array( 500, 'Sending your message failed due to an unexpected error.' );
 		}
 
 		// Ensure response headers haven't already sent to browser.
@@ -270,7 +142,7 @@ class Submit_Controller {
 		// Create response body.
 		$response['ok']     = ( $status[0] < 300 ) ? true : false;
 		$response['output'] = $status[1];
-		$response['fields'] = $fields;
+		$response['formData'] = $form_data;
 
 		// PHPMailer debug ($mail->SMTPDebug) gets dumped to output buffer
 		// and breaks JSON response. Using ob_clean() before output prevents this.

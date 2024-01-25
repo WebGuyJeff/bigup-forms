@@ -1,4 +1,7 @@
 .bigup__alert_output {
+
+	--bigup_padding: 0.5em 0.75em;
+
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -18,7 +21,7 @@
 		padding: var(--bigup_padding);
 		text-align: center;
 		color: var(--bigup_textBlack);
-		font-weight: 700;
+		font-weight: 600;
 
 		&::before {
 			margin-inline-end:.5em;

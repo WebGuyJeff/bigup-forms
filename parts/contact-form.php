@@ -20,10 +20,10 @@ $files
 */
 
 // Exclude decorative wrappers when 'nostyles' option is true.
-$decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
+$decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 ?>
 
-<form class="bigup__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
+<form name="contact" data-name="Contact Form" class="bigup__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
 
 	<header>
 		<?php
@@ -43,63 +43,57 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 			style="position:absolute;height:0;overflow:hidden;opacity:0;"
 		>
 
-		<?php if ( $decorative_markup ) : ?>
-			<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
-		<?php endif ?>
-
-				<input
-					class="bigup__form_input"
-					name="name"
-					type="text"
-					maxlength="100"
-					title="Name"
-					required aria-label="Name"
-					placeholder="Name (required)"
-					onfocus="this.placeholder=''"
-					onblur="this.placeholder='Name (required)'"
-				>
-
-		<?php if ( $decorative_markup ) : ?>
+		<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
+			<input
+				class="bigup__form_input"
+				name="name"
+				type="text"
+				maxlength="100"
+				title="Name"
+				required aria-label="Name"
+				placeholder="Name (required)"
+				onfocus="this.placeholder=''"
+				onblur="this.placeholder='Name (required)'"
+			>
+			<?php if ( $decorative_markup ) : ?>
 				<span class="bigup__form_flag bigup__form_flag-hover"></span>
 				<span class="bigup__form_flag bigup__form_flag-focus"></span>
-			</div>
-			<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
-		<?php endif ?>
+			<?php endif ?>
+		</div>
 
-				<input
-					class="bigup__form_input"
-					name="email" type="text"
-					maxlength="100" title="Email"
-					required aria-label="Email"
-					placeholder="Email (required)"
-					onfocus="this.placeholder=''"
-					onblur="this.placeholder='Email (required)'"
-				>
-
-		<?php if ( $decorative_markup ) : ?>
+		<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
+			<input
+				class="bigup__form_input"
+				name="email" type="email"
+				maxlength="100" title="Email"
+				required aria-label="Email"
+				placeholder="Email (required)"
+				onfocus="this.placeholder=''"
+				onblur="this.placeholder='Email (required)'"
+			>
+			<?php if ( $decorative_markup ) : ?>
 				<span class="bigup__form_flag bigup__form_flag-hover"></span>
 				<span class="bigup__form_flag bigup__form_flag-focus"></span>
-			</div>
+			<?php endif ?>
+		</div>
+
 		<div class="bigup__form_inputWrap bigup__form_inputWrap-wide">
-		<?php endif ?>
-
-				<textarea
-					class="bigup__form_input"
-					name="message"
-					maxlength="5000"
-					title="Message"
-					rows="8"
-					aria-label="Message"
-					placeholder="Type your message here..."
-					onfocus="this.placeholder=''"
-					onblur="this.placeholder='Type your message...'"
-				></textarea>
-
-		<?php if ( $decorative_markup ) : ?>
+			<textarea
+				class="bigup__form_input"
+				name="message"
+				maxlength="3000"
+				title="Message"
+				rows="8"
+				aria-label="Message"
+				placeholder="Type your message here..."
+				onfocus="this.placeholder=''"
+				onblur="this.placeholder='Type your message...'"
+			></textarea>
+			<?php if ( $decorative_markup ) : ?>
 				<span class="bigup__form_flag bigup__form_flag-hover"></span>
 				<span class="bigup__form_flag bigup__form_flag-focus"></span>
-			</div>
-		<?php endif ?>
+			<?php endif ?>
+		</div>
 
 		<?php
 		if ( true === ! ! $files ) {
@@ -131,14 +125,18 @@ $decorative_markup = ! str_contains( $classes, 'bigup__form-nostyles' );
 		}
 		?>
 
-		<button class="button bigup__form_submit" type="submit" value="Submit" disabled>
-			<span class="bigup__form_submitLabel-ready">
-				<?php _e( 'Submit', 'bigup_forms' ); ?>
-			</span>
-			<span class="bigup__form_submitLabel-notReady">
-				<?php _e( '[please wait]', 'bigup_forms' ); ?>
-			</span>
-		</button>
+		<div className='bigup__form_controls'>
+			<div className='bigup__form_buttonWrap'>
+				<button class="button bigup__form_submit wp-element-button" type="submit" value="Submit" disabled>
+					<span class="bigup__form_submitLabel-ready">
+						<?php _e( 'Submit', 'bigup_forms' ); ?>
+					</span>
+					<span class="bigup__form_submitLabel-notReady">
+						<?php _e( '[please wait]', 'bigup_forms' ); ?>
+					</span>
+				</button>
+			</div>
+		</div>
 
 	</div>
 
