@@ -6,5 +6,7 @@
 ./classes
 ./dashicons
 ./parts
-./vendor
+./vendor/autoload.php
+./vendor/composer
+./vendor/phpmailer
 ./plugin-entry.php

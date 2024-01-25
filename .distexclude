@@ -5,6 +5,7 @@
 ./src
 ./dist
 ./node_modules
+./vendor
 ./package*
 ./webpack*
 ./.*
