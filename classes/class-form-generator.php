@@ -47,24 +47,34 @@ class Form_Generator {
 			$align = '';
 		}
 
-		$saved_settings   = get_option( 'bigup_forms_settings' );
-		$nostyles         = $saved_settings['nostyles'] ?? false;
-		$styles           = $saved_settings['styles'] ?? false;
-		$files            = $saved_settings['files'] ?? false;
-		$attrs['classes'] = '';
+		$saved_settings = get_option( 'bigup_forms_settings' );
+		$nostyles       = $saved_settings['nostyles'] ?? false;
+		$styles         = $saved_settings['styles'] ?? false;
+		$files          = $saved_settings['files'] ?? false;
+		$files          = isset( $attrs['files'] ) ? $attrs['files'] : $files;
+		$classes        = '';
+		$form_title     = $attrs['title'] ? $attrs['title'] : false;
+		$message        = $attrs['message'] ? $attrs['message'] : false;
 
 		// This needs a refactor to account for new styles e.g. ".is-style-inset-light".
 
 		if ( $nostyles ) {
-			$attrs['classes'] .= 'is-style-nostyles';
+			$classes .= 'is-style-nostyles';
 		} else {
-			$attrs['classes'] .= $styles ? 'is-style-inset-dark' : 'is-style-vanilla';
+			$classes .= $styles ? 'is-style-inset-dark' : 'is-style-vanilla';
 		}
-		$attrs['classes'] .= ' ' . $align;
-		$attrs['files']    = isset( $attrs['files'] ) ? $attrs['files'] : $files;
+		$classes .= ' ' . $align;
 
 		// Include the form template with the widget vars.
-		$form = Util::include_with_vars( $template, $attrs );
+		$form = Util::include_with_vars(
+			$template,
+			array(
+				$form_title,
+				$message,
+				$classes,
+				$files,
+			)
+		);
 		return $form;
 	}
 }

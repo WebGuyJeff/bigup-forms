@@ -11,13 +11,8 @@ namespace BigupWeb\Forms;
  * @link https://jeffersonreal.uk
  */
 
-/*
-	Variables passed from caller:
-
-	$form_name
-	$site_url
-	$fields
-*/
+// Variables passed from caller.
+[ $form_name, $site_url, $fields ] = $variables;
 
 $intro_html  = "This was submitted via the <b>{$form_name}</b> at {$site_url}.";
 $fields_html = "\n";
@@ -33,6 +28,10 @@ foreach ( $fields as $name => $data ) {
 	HTML;
 	$fields_html .= "\n";
 }
+
+
+// DEBUG.
+error_log( wp_json_encode( $fields_html ) );
 
 ?>
 
@@ -145,7 +144,7 @@ foreach ( $fields as $name => $data ) {
 									<td class="wrapper" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; box-sizing: border-box; padding: 24px;" valign="top">
 										<p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;"><?php __( 'Hi,', 'bigup-forms' ); ?></p>
 										<p style="font-family: Helvetica, sans-serif; font-size: 16px; font-weight: normal; margin: 0; margin-bottom: 16px;">
-											<?php $intro_html; ?>
+											<?php echo $intro_html; ?>
 										</p>
 										<hr>
 										<br>
@@ -156,7 +155,7 @@ foreach ( $fields as $name => $data ) {
 													<td align="center" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top;" valign="top">
 														<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;" width="100%">
 															<tbody>
-																<?php $fields_html; ?>
+																<?php echo $fields_html; ?>
 															</tbody>
 														</table>
 													</td>

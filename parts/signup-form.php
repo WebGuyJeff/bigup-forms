@@ -11,12 +11,8 @@ namespace BigupWeb\Forms;
  * @link https://jeffersonreal.uk
  */
 
-/*
-Variables passed from caller:
-$title
-$message
-$classes
-*/
+// Variables passed from caller.
+[ $form_title, $message, $classes, $files ] = $variables;
 
 // Exclude decorative wrappers when 'nostyles' option is true.
 $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );

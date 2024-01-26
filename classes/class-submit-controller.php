@@ -54,16 +54,16 @@ class Submit_Controller {
 		foreach ( $body_params as $name => $json_data ) {
 			$data = json_decode( $json_data, true );
 			if ( 'formMeta' === $name ) {
-				$form = [
+				$form = array(
 					'name'          => $data['name'],
 					'friendly_name' => $data['friendlyName'],
-				];
+				);
 			} else {
-				$fields[ $name ] = [
+				$fields[ $name ] = array(
 					'value'  => $data['value'],
 					'type'   => $data['type'],
 					'format' => $classic_form_formats[ $name ],
-				];
+				);
 			}
 		}
 
@@ -140,8 +140,8 @@ class Submit_Controller {
 		}
 
 		// Create response body.
-		$response['ok']     = ( $status[0] < 300 ) ? true : false;
-		$response['output'] = $status[1];
+		$response['ok']       = ( $status[0] < 300 ) ? true : false;
+		$response['output']   = $status[1];
 		$response['formData'] = $form_data;
 
 		// PHPMailer debug ($mail->SMTPDebug) gets dumped to output buffer

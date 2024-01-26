@@ -11,13 +11,8 @@ namespace BigupWeb\Forms;
  * @link https://jeffersonreal.uk
  */
 
-/*
-Variables passed from caller:
-$title
-$message
-$classes
-$files
-*/
+// Variables passed from caller.
+[ $form_title, $message, $classes, $files ] = $variables;
 
 // Exclude decorative wrappers when 'nostyles' option is true.
 $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
@@ -27,8 +22,8 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 
 	<header>
 		<?php
-			$title   = ( $title ) ? '<h3 id="aria_form-title" class="bigup__form_title">' . $title . '</h3>' . "\n" : '';
-			$message = ( $message ) ? '<p id="aria_form-desc" class="bigup__form_message">' . $message . '</p>' . "\n" : '';
+			$form_title = ( $form_title ) ? '<h3 id="aria_form-title" class="bigup__form_title">' . $form_title . '</h3>' . "\n" : '';
+			$message    = ( $message ) ? '<p id="aria_form-desc" class="bigup__form_message">' . $message . '</p>' . "\n" : '';
 			echo $title . $message;
 		?>
 	</header>

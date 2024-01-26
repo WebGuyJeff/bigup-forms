@@ -102,7 +102,7 @@ class Send_Local {
 		// Build html email body.
 		$html = Util::include_with_vars(
 			BIGUPFORMS_PATH . 'parts/email.php',
-			$vars = array(
+			array(
 				$form_name,
 				$site_url,
 				$fields,
