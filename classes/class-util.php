@@ -17,6 +17,29 @@ class Util {
 
 
 	/**
+	 * Include with variables.
+	 *
+	 * This function extends include() by adding the ability to pass variables to the included file.
+	 */
+	public static function include_with_vars( $template_path, $variables = array() ) {
+		$output = null;
+		if ( file_exists( $template_path ) ) {
+
+			// Extract variables to local namespace.
+			extract( $variables );
+			// Start output buffering.
+			ob_start();
+			// Include the template file.
+			include $template_path;
+			// End buffering and return its contents.
+			$output = ob_get_clean();
+
+		}
+		return $output;
+	}
+
+
+	/**
 	 * Retrieve file contents the 'WordPress way'.
 	 *
 	 * @param string $path File system path.

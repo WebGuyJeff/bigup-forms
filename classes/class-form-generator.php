@@ -25,36 +25,6 @@ class Form_Generator {
 
 
 	/**
-	 * Helper function - include_with_vars.
-	 *
-	 * This function allows the passing of variables between template parts.
-	 * Example of passing a title from index.php to header.php:
-	 *
-	 * index.php:
-	 * includeWithVariables('header.php', array('title' => 'Header Title'));
-	 *
-	 * header.php:
-	 * echo $title;
-	 */
-	public static function include_with_vars( $template_path, $variables = array() ) {
-		$output = null;
-		if ( file_exists( $template_path ) ) {
-
-			// Extract variables to local namespace.
-			extract( $variables );
-			// Start output buffering.
-			ob_start();
-			// Include the template file.
-			include $template_path;
-			// End buffering and return its contents.
-			$output = ob_get_clean();
-
-		}
-		return $output;
-	}
-
-
-	/**
 	 * Get Form
 	 *
 	 * Includes the correct template with the variables.
@@ -94,7 +64,7 @@ class Form_Generator {
 		$attrs['files']    = isset( $attrs['files'] ) ? $attrs['files'] : $files;
 
 		// Include the form template with the widget vars.
-		$form = self::include_with_vars( $template, $attrs );
+		$form = Util::include_with_vars( $template, $attrs );
 		return $form;
 	}
 }

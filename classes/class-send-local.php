@@ -100,24 +100,14 @@ class Send_Local {
 		$plaintext_cleaned        = wp_strip_all_tags( $plaintext );
 
 		// Build html email body.
-		$html_fields_output = "\n";
-		foreach ( $fields as $name => $data ) {
-			$html_fields_output .= '<tr><td width="140">' . ucfirst( $name ) . ': </td><td>' . $data['value'] . "</td></tr>\n";
-		}
-		$html = <<<HTML
-			<table>
-				<tr>
-					<td height="80px" colspan="2">
-						<i>This was submitted via the <b>{$form_name}</b> at {$site_url}</i>
-					</td>
-				</tr>
-				<tr>
-					<th height="40px" width="140" align="left">Field</th>
-					<th height="40px" align="left">Input</th>
-				</tr>
-				{$html_fields_output}
-			</table>
-		HTML;
+		$html = Util::include_with_vars(
+			BIGUPFORMS_PATH . 'parts/email.php',
+			$vars = array(
+				$form_name,
+				$site_url,
+				$fields,
+			),
+		);
 
 		// Make sure PHP server script limit is higher than mailer timeout!
 		set_time_limit( 60 );
