@@ -29,19 +29,14 @@ foreach ( $fields as $name => $data ) {
 	$fields_html .= "\n";
 }
 
-
-// DEBUG.
-error_log( wp_json_encode( $fields_html ) );
-
 ?>
-
 
 <html>
 
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Simple Transactional Email</title>
+<title>New website form submission</title>
 <style media="all" type="text/css">
 	@media all {
 		.btn-primary table td:hover {

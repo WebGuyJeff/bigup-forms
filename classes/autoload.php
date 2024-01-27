@@ -28,11 +28,11 @@ spl_autoload_register(
 		$sub_dir         = str_replace( $root_dir, '', __DIR__ );
 		$filename_prefix = 'class-';
 
-		// does the class use the namespace prefix?
+		// Does the class use the namespace prefix?
 		$namespace_length = strlen( $namespace );
 
 		if ( strncmp( $namespace, $class, $namespace_length ) !== 0 ) {
-				// no, move to the next registered autoloader
+				// No, move to the next registered autoloader.
 				return;
 		}
 
@@ -43,7 +43,7 @@ spl_autoload_register(
 		$filename       = str_replace( '\\', DIRECTORY_SEPARATOR, $sub_namespace . DIRECTORY_SEPARATOR . $filename_prefix . $classname . '.php' );
 		$class_filepath = strtolower( $root_dir . $sub_dir . str_replace( '_', '-', $filename ) );
 
-		// if the file exists, require it
+		// If the file exists, require it.
 		if ( file_exists( $class_filepath ) ) {
 			include_once $class_filepath;
 		} else {

@@ -194,9 +194,9 @@ class Store_Forms {
 	/**
 	 * Log a new form submission.
 	 */
-	public static function save( $form_id = 0, $content, $name, $tags ) {
+	public static function save( $form_id, $form_name, $content, $tags ) {
 
-		$form_title = date( 'd-m-Y_' ) . sanitize_title( strtolower( $name ) );
+		$form_title = date( 'd-m-Y_' ) . sanitize_title( strtolower( $form_name ) );
 
 		$result = wp_insert_post(
 			array(
@@ -207,7 +207,7 @@ class Store_Forms {
 				'post_content' => $content,
 				'tags_input'   => $tags,
 				'meta_input'   => array(
-					'_bufo__name' => $name,
+					'_bufo__name' => $form_name,
 				),
 			),
 			true
@@ -215,7 +215,7 @@ class Store_Forms {
 		if ( is_wp_error( $result ) ) {
 			error_log( $result->get_error_message() );
 			return false;
-		} else if ( 0 === $result ) {
+		} elseif ( 0 === $result ) {
 			error_log( 'Bigup Forms: Unknown error 0 returned from wp_insert_post()' );
 			return false;
 		} else {

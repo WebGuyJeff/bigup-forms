@@ -24,7 +24,7 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 		<?php
 			$form_title = ( $form_title ) ? '<h3 id="aria_form-title" class="bigup__form_title">' . $form_title . '</h3>' . "\n" : '';
 			$message    = ( $message ) ? '<p id="aria_form-desc" class="bigup__form_message">' . $message . '</p>' . "\n" : '';
-			echo $title . $message;
+			echo $form_title . $message;
 		?>
 	</header>
 

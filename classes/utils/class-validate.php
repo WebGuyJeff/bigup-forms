@@ -59,6 +59,7 @@ class Validate {
 				'label'       => __( 'Any Text (free format)', 'bigup-forms' ),
 				'description' => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text', 'email', 'tel', 'password', 'url' ),
+				'error'       => '',
 				'rules'       => array(
 					'pattern'   => '',
 					'maxlength' => '',
@@ -69,6 +70,7 @@ class Validate {
 				'label'       => __( 'Any Number (free format)', 'bigup-forms' ),
 				'description' => __( 'Disable format checking to allow any input.', 'bigup-forms' ),
 				'types'       => array( 'number', 'date', 'time' ),
+				'error'       => '',
 				'rules'       => array(
 					'pattern' => '',
 					'max'     => '',
@@ -80,6 +82,7 @@ class Validate {
 				'label'       => __( 'Name', 'bigup-forms' ),
 				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',." and an infinite number of words.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
+				'error'       => __( 'Only letters, spaces and \' - , . allowed.', 'bigup-forms' ),
 				'rules'       => array(
 					// Use named back reference to avoid conversion to an octal character with '\1'.
 					'pattern'   => "/^[\p{L}](?:[\p{L}]|(?<punct>[- ',\.])(?!\k<punct>))*$/u",
@@ -91,6 +94,7 @@ class Validate {
 				'label'       => __( 'Phone Number', 'bigup-forms' ),
 				'description' => __( 'Common international phone number characters "+-()" and whitespace.', 'bigup-forms' ),
 				'types'       => array( 'tel' ),
+				'error'       => __( 'Only numbers, spaces and + - ( ) allowed.', 'bigup-forms' ),
 				'rules'       => array(
 					'pattern'   => '^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$',
 					'maxlength' => 20,
@@ -101,6 +105,7 @@ class Validate {
 				'label'       => __( 'Email', 'bigup-forms' ),
 				'description' => __( 'Email format allowed by most international email providers. A maximum of 254 characters, 64 of which must be before the "@". "_.+-" are allowed and must have a full-stop after the "@" for TLDs like "co.uk". The TLD may contain additional full-stops.', 'bigup-forms' ),
 				'types'       => array( 'email' ),
+				'error'       => __( 'Must be a valid email address.', 'bigup-forms' ),
 				'rules'       => array(
 					'pattern'   => '/^(?=.{6,254}$)[\p{L}\p{N}_.+-]{1,64}@[\p{L}\p{N}-]+\.[\p{L}\p{N}.-]+$/u',
 					'maxlength' => 254,
@@ -111,6 +116,7 @@ class Validate {
 				'label'       => __( 'Domain', 'bigup-forms' ),
 				'description' => __( 'Valid domain names.', 'bigup-forms' ),
 				'types'       => array( 'url' ),
+				'error'       => __( 'Must be a valid domain name.', 'bigup-forms' ),
 				'rules'       => array(
 					'pattern'   => '/^(?=.{4,253}$)((?!-))(xn--)?[\p{L}\p{N}][\p{L}\p{N}-]{0,61}[\p{L}\p{N}]{0,1}\.(xn--)?([\p{L}\p{N}\-]{1,61}|[\p{L}\p{N}-]{1,30}\.[\p{L}]{2,})$/u',
 					'maxlength' => 253,
@@ -121,6 +127,7 @@ class Validate {
 				'label'       => __( 'Port number', 'bigup-forms' ),
 				'description' => __( 'Valid port numbers between 1 and 65535.', 'bigup-forms' ),
 				'types'       => array( 'number' ),
+				'error'       => __( 'Must be a valid port number.', 'bigup-forms' ),
 				'rules'       => array(
 					'pattern' => '^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$',
 					'max'     => 65535,
@@ -132,6 +139,7 @@ class Validate {
 				'label'       => __( 'Alphanumeric key', 'bigup-forms' ),
 				'description' => __( 'Any-case international alphanumeric characters and non-consecutive "_-". Must begin and end with a letter or number.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
+				'error'       => __( 'Only letters, numbers and non-consecutive _ - allowed.', 'bigup-forms' ),
 				'rules'       => array(
 					// Use named back reference to avoid conversion to an octal character with '\1'.
 					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|(?<separator>[_-])(?!\k<separator>))+[\p{L}\p{N}]$/u',
@@ -143,6 +151,7 @@ class Validate {
 				'label'       => __( 'Message Text (free format)', 'bigup-forms' ),
 				'description' => __( 'A minimum of 2 and maximum of 3000 characters', 'bigup-forms' ),
 				'types'       => array( 'textarea' ),
+				'error'       => '',
 				'rules'       => array(
 					'pattern'   => '',
 					'maxlength' => 3000,

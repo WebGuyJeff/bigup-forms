@@ -32,16 +32,19 @@ class Store_Controller {
 
 		// Get REST data.
 		$form_data = $request->get_body_params();
-		$form_id   = array_key_exists( 'id', $form_data ) ? $form_data['id'] : 0;
+		$form_id   = $form_data['id'];
+		$form_name = $form_data['name'];
 		$content   = $form_data['content'];
-		$name      = $form_data['name'];
-		$tags      = $form_data['tags'];
+		$tags      = array_key_exists( 'tags', $form_data ) ? $form_data['tags'] : array();
 
-		// https://code.tutsplus.com/posting-via-the-front-end-inserting--wp-27034t
+		// Save the form.
+		$result = Store_Forms::save(
+			$form_id,
+			$form_name,
+			$content,
+			$tags
+		);
 
-		// https://webkul.com/blog/add-custom-rest-api-route-wordpress/#:~:text=Registering%20a%20Custom%20Rest%20Route,callback%20function%20to%20action%20rest_api_init.
-
-		$result = Store_Forms::save( $form_id, $content, $name, $tags );
 		$this->send_json_response( ( $result ) ? 200 : 500, $result );
 		exit; // Request handlers should exit() when done.
 	}
@@ -64,10 +67,10 @@ class Store_Controller {
 			status_header( $status );
 		}
 
-		$response = [
+		$response = array(
 			'ok' => ( $status < 300 ) ? true : false,
 			'id' => $form_id,
-		];
+		);
 
 		echo wp_json_encode( $response );
 	}
