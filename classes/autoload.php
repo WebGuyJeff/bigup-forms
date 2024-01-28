@@ -1,53 +1,37 @@
 <?php
 /**
- * Bigup Forms - Class Autoloader
+ * Bigup Forms - Class autoload by namesapce.
  *
- * After registering this autoload function with SPL, the following line
- * would cause the function to attempt to load the \Brand\Project\Sub_Project\Class class
- * from /path/to/project/src/sub_project/class.php:
- *
- *    new \Brand\Project\Sub_Project\Class;
- *
- * The general flow is:
- *
- *  - See an undefined class being used in the code being executed
- *  - Call all the functions registered with the spl_autoloader, and pass them the undefined class name
+ * - Sub-directories are searched recursively.
+ * - Classes are denoted by the suffix .class.php.
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
  * @copyright Copyright (c) 2024, Jefferson Real
- * @license GPL2+
+ * @license GPL3+
  * @link https://jeffersonreal.uk
- * @param string $class The fully-qualified class name.
+ *
+ * @param string $full_classname A fully-qualified class name e.g. 'Brand\\Project\\Class'.
+ * @param string $namespace The namespace e.g. 'Brand\\Project\\'.
+ * @param string $root Directory to recursively search.
  */
+
 spl_autoload_register(
-	function ( $class ) {
+	function ( $full_classname ) use ( $namespace, $root ) {
 
-		$namespace       = 'BigupWeb\\Forms\\';
-		$root_dir        = dirname( __DIR__, 1 );
-		$sub_dir         = str_replace( $root_dir, '', __DIR__ );
-		$filename_prefix = 'class-';
-
-		// Does the class use the namespace prefix?
-		$namespace_length = strlen( $namespace );
-
-		if ( strncmp( $namespace, $class, $namespace_length ) !== 0 ) {
-				// No, move to the next registered autoloader.
-				return;
+		if ( strpos( $full_classname, $namespace ) !== 0 ) {
+			return;
 		}
 
-		$relative_classname = substr( $class, $namespace_length );
-		$classname          = array_reverse( explode( '\\', $class ) )[0];
-		$sub_namespace      = str_replace( $classname, '', $relative_classname );
+		$classname = substr( $full_classname, strlen( $namespace ) );
+		$filename  = strtolower( str_replace( '_', '-', $classname ) ) . '.class.php';
 
-		$filename       = str_replace( '\\', DIRECTORY_SEPARATOR, $sub_namespace . DIRECTORY_SEPARATOR . $filename_prefix . $classname . '.php' );
-		$class_filepath = strtolower( $root_dir . $sub_dir . str_replace( '_', '-', $filename ) );
-
-		// If the file exists, require it.
-		if ( file_exists( $class_filepath ) ) {
-			include_once $class_filepath;
-		} else {
-			echo '<script>console.log("ERROR: Bigup_Forms php autoload | Class not found: ' . $classname . '");</script>';
+		$tree = new RecursiveDirectoryIterator( $root );
+		foreach ( new RecursiveIteratorIterator( $tree ) as $file ) {
+			if ( $file->getFilename() === $filename ) {
+				include_once $file->getPathname();
+				break;
+			}
 		}
 	}
 );

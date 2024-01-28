@@ -8,7 +8,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
- * @license GPL2+
+ * @license GPL3+
  * @link https://jeffersonreal.uk
  */
 

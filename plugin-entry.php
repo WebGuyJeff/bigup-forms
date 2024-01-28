@@ -13,7 +13,7 @@ namespace BigupWeb\Forms;
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
  * @copyright Copyright (c) 2024, Jefferson Real
- * @license GPL2+
+ * @license GPL3+
  * @link https://jeffersonreal.uk
  */
 
@@ -25,8 +25,10 @@ define( 'BIGUPFORMS_DEBUG', $enable_debug );
 define( 'BIGUPFORMS_PATH', trailingslashit( __DIR__ ) );
 define( 'BIGUPFORMS_URL', trailingslashit( get_site_url( null, strstr( __DIR__, '/wp-content/' ) ) ) );
 
-// Setup PHP namespace.
-require_once BIGUPFORMS_PATH . 'classes/autoload.php';
+// Register namespaced autoloader.
+$namespace = 'BigupWeb\\Forms\\';
+$root      = BIGUPFORMS_PATH . 'classes/';
+require_once $root . 'autoload.php';
 
 // Setup the plugin.
 $Init = new Init();

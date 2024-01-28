@@ -11,7 +11,7 @@ namespace BigupWeb\Forms;
  * @package bigup_custom_fields
  * @author Jefferson Real <me@jeffersonreal.uk>
  * @copyright Copyright (c) 2024, Jefferson Real
- * @license GPL2+
+ * @license GPL3+
  * @link https://jeffersonreal.uk
  */
 
