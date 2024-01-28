@@ -107,19 +107,26 @@ async function submit( event ) {
 			// Check fields for errors.
 			textInputs.forEach( input => {
 
-				// Remove the errors when user focuses on the field to make changes.
-				const removeErrors = ( { target } ) => {
-					const errorBox = target.nextElementSibling
-					if ( errorBox.classList.contains( 'bigup__form_inlineErrors' ) ) {
+				// Remove inline errors.
+				const removeErrors = ( input ) => {
+					const errorBox = input?.nextElementSibling
+					if ( errorBox && errorBox.classList.contains( 'bigup__form_inlineErrors' ) ) {
 						errorBox.remove()
 						input.removeAttribute( 'aria-errormessage' )
 						input.removeAttribute( 'aria-invalid' )
 					}
 				}
-				input.addEventListener( 'focus', removeErrors, { once: true } )
+
+				// Remove errors on user focus.
+				const onFocus = ( { target } ) => removeErrors( target )
+				input.addEventListener( 'focus', onFocus, { once: true } )
 
 				const fieldErrors = result.formData.fields[ input.name ]?.errors
 				if ( fieldErrors ) {
+
+					// Remove old errors.
+					removeErrors( input )
+
 					// Attach errors to input.
 					let div = document.createElement( 'div' )
 					div.classList.add( 'bigup__form_inlineErrors' )

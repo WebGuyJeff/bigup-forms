@@ -19,7 +19,7 @@ namespace BigupWeb\Forms;
 use PHPMailer\PHPMailer\PHPMailer;
 
 // Load Composer's autoloader (includes vendor/PHPMailer)
-require plugin_dir_path( __DIR__ ) . 'vendor/autoload.php';
+require BIGUPFORMS_PATH . 'vendor/autoload.php';
 
 class Get_Settings {
 
@@ -31,7 +31,7 @@ class Get_Settings {
 	 */
 	public static function smtp() {
 
-		$option_names = [
+		$option_names = array(
 			'username',
 			'password',
 			'host',
@@ -40,7 +40,7 @@ class Get_Settings {
 			'use_local_mail_server',
 			'from_email',
 			'to_email',
-		];
+		);
 
 		$smtp_settings = self::get_options_from_database( $option_names );
 

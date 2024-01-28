@@ -38,7 +38,7 @@ class Store_Controller {
 		$tags      = array_key_exists( 'tags', $form_data ) ? $form_data['tags'] : array();
 
 		// Save the form.
-		$result = Store_Forms::save(
+		$result = CPT_Form::save(
 			$form_id,
 			$form_name,
 			$content,

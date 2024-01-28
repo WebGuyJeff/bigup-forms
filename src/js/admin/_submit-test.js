@@ -11,13 +11,22 @@ import { wpInlinedVars } from '../common/_wp-inlined-script'
 
 /**
  * Test values to pass in fetch request.
- * 
- * Backend controller expects values for 'email', 'name' and 'message'.
  */
 const testValues = {
-	'email': 'test@email.test',
-	'name': 'Test Email',
-	'message': 'This is a test message. If you receive this, your email settings are OK! 🥳',
+	'formMeta': JSON.stringify( {
+		'name': 'test',
+		'friendlyName': 'Settings Test'
+	} ),
+	'name': JSON.stringify( {
+		'value': 'Test Bot',
+		'type': 'text',
+		'id': false,
+	} ),
+	'message': JSON.stringify( {
+		'value': 'This is a test message. If you receive this, your email settings are OK! 🥳',
+		'type': 'text',
+		'id': false,
+	} ),
 }
 
 

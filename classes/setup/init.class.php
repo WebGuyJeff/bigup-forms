@@ -33,8 +33,8 @@ class Init {
 			new Admin_Settings();
 		}
 		add_action( 'init', array( new Blocks(), 'register_all' ), 10, 0 );
-		add_action( 'init', array( new Store_Submissions(), 'create_cpt' ), 10, 0 );
-		add_action( 'init', array( new Store_Forms(), 'create_cpt' ), 10, 0 );
+		add_action( 'init', array( new CPT_Form_Entry(), 'register' ), 10, 0 );
+		add_action( 'init', array( new CPT_Form(), 'register' ), 10, 0 );
 		add_action( 'rest_api_init', array( $this, 'register_rest_api_routes' ), 10, 0 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_and_styles' ), 10, 0 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts_and_styles' ), 10, 0 );

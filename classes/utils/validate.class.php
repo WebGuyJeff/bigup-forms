@@ -80,7 +80,7 @@ class Validate {
 			),
 			'human_name'          => array(
 				'label'       => __( 'Name', 'bigup-forms' ),
-				'description' => __( 'Any-case international alphanumeric characters, non-consecutive " -\',." and an infinite number of words.', 'bigup-forms' ),
+				'description' => __( 'Must only include letters and non-consecutive spaces or any of - \' , .' , 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'error'       => __( 'Only letters, spaces and \' - , . allowed.', 'bigup-forms' ),
 				'rules'       => array(
@@ -114,7 +114,7 @@ class Validate {
 			),
 			'domain_non_rfc'      => array( // See https://stackoverflow.com/questions/10306690/what-is-a-regular-expression-which-will-match-a-valid-domain-name-without-a-subd/30007882#answer-26987741.
 				'label'       => __( 'Domain', 'bigup-forms' ),
-				'description' => __( 'Valid domain names.', 'bigup-forms' ),
+				'description' => __( 'Must be a valid domain name.', 'bigup-forms' ),
 				'types'       => array( 'url' ),
 				'error'       => __( 'Must be a valid domain name.', 'bigup-forms' ),
 				'rules'       => array(
@@ -125,7 +125,7 @@ class Validate {
 			),
 			'port_number'         => array( // See https://stackoverflow.com/questions/12968093/regex-to-validate-port-number#answer-12968117.
 				'label'       => __( 'Port number', 'bigup-forms' ),
-				'description' => __( 'Valid port numbers between 1 and 65535.', 'bigup-forms' ),
+				'description' => __( 'Must be a valid port number between 1 and 65535.', 'bigup-forms' ),
 				'types'       => array( 'number' ),
 				'error'       => __( 'Must be a valid port number.', 'bigup-forms' ),
 				'rules'       => array(
@@ -137,7 +137,7 @@ class Validate {
 			),
 			'alphanumeric_key'    => array(
 				'label'       => __( 'Alphanumeric key', 'bigup-forms' ),
-				'description' => __( 'Any-case international alphanumeric characters and non-consecutive "_-". Must begin and end with a letter or number.', 'bigup-forms' ),
+				'description' => __( 'Must only include alphanumeric characters or non-consecutive _ - and begin and end with a letter or number.', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'error'       => __( 'Only letters, numbers and non-consecutive _ - allowed.', 'bigup-forms' ),
 				'rules'       => array(

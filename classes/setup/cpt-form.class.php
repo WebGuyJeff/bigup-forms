@@ -2,9 +2,9 @@
 namespace BigupWeb\Forms;
 
 /**
- * Bigup Forms - Store_Submissions.
+ * Bigup Forms - Store Forms.
  *
- * Handle logging form submissions with a custom post type.
+ * Handle saved forms as a custom post type.
  *
  * @package bigup-forms
  * @author Jefferson Real <me@jeffersonreal.uk>
@@ -22,67 +22,33 @@ use function is_wp_error;
 use function get_error_message;
 use function sanitize_title;
 
-class Store_Submissions {
+class CPT_Form {
+
+	public const MENU_ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij4KICA8cGF0aCBmaWxsPSIjMDAwIiBkPSJNMi40IDBBMi40IDIuNCAwIDAgMCAwIDIuNHYxOS4yQTIuNCAyLjQgMCAwIDAgMi40IDI0aDE5LjJhMi40IDIuNCAwIDAgMCAyLjQtMi40VjIuNEEyLjQgMi40IDAgMCAwIDIxLjYgMFptMCAxLjJoMTkuMmMuNjcgMCAxLjIuNTMgMS4yIDEuMnYxOS4yYzAgLjY3LS41MyAxLjItMS4yIDEuMkgyLjRhMS4yIDEuMiAwIDAgMS0xLjItMS4yVjIuNGMwLS42Ny41My0xLjIgMS4yLTEuMlptMS4yIDEuMmMtLjY3IDAtMS4yLjUzLTEuMiAxLjJ2Mi4xMWMwIC42Ny41MyAxLjIgMS4yIDEuMmgxMmMuNjcgMCAxLjItLjUzIDEuMi0xLjJWMy42YzAtLjY3LS41My0xLjItMS4yLTEuMlptLjYgMS4ySDE1Yy4zNCAwIC42LjI2LjYuNnYuOTFhLjYuNiAwIDAgMS0uNi42SDQuMmEuNi42IDAgMCAxLS42LS42VjQuMmMwLS4zNC4yNi0uNi42LS42Wk0zLjYgOGMtLjY3IDAtMS4yLjU0LTEuMiAxLjJ2Mi4xYzAgLjY4LjUzIDEuMiAxLjIgMS4yaDE2Ljc1Yy42NyAwIDEuMi0uNTIgMS4yLTEuMlY5LjJjMC0uNjYtLjUzLTEuMi0xLjItMS4yWm0uNiAxLjJoMTUuNTVjLjM0IDAgLjYuMjYuNi42di45YS42LjYgMCAwIDEtLjYuNkg0LjJhLjYuNiAwIDAgMS0uNi0uNnYtLjljMC0uMzQuMjYtLjYuNi0uNlptLS42IDQuNGMtLjY3IDAtMS4yLjU0LTEuMiAxLjJ2Mi4xMmMwIC42NS41MyAxLjIgMS4yIDEuMmgxNi44Yy42NyAwIDEuMi0uNTUgMS4yLTEuMnYtMi4xMWMwLS42Ny0uNTMtMS4yLTEuMi0xLjJabS42IDEuMmgxNS42Yy4zNCAwIC42LjI3LjYuNnYuOTJhLjYuNiAwIDAgMS0uNi42SDQuMmEuNi42IDAgMCAxLS42LS42di0uOTFjMC0uMzQuMjYtLjYuNi0uNlptNS40IDQuNGExLjIgMS4yIDAgMSAwIDAgMi40aDQuOGExLjIgMS4yIDAgMSAwIDAtMi40WiIvPgo8L3N2Zz4K';
 
 	/**
 	 * @var string $prefix Prefix for storing custom fields in the postmeta table
 	 */
-	private $prefix = '_bufe_';
+	private $prefix = '_bufo_';
 
 	/**
 	 * @var string Post type ID
 	 */
-	private $post_type = 'bigup_form_entry';
+	private $post_type = 'bigup_form';
 
 	/**
 	 * @var string Metabox ID
 	 */
-	private $metabox = 'form-entry-fields';
+	private $metabox = 'form-meta';
 
 	/**
 	 * @var array $custom_fields Defines the custom fields available
 	 */
 	private $custom_fields = array(
 		array(
-			'name'        => '_form_name',
-			'title'       => 'Form Used',
-			'description' => '',
-			'type'        => 'text',
-		),
-		array(
 			'name'        => '_name',
-			'title'       => 'Name',
+			'title'       => 'Form name',
 			'description' => '',
-			'type'        => 'text',
-		),
-		array(
-			'name'        => '_email',
-			'title'       => 'Email',
-			'description' => '',
-			'type'        => 'email',
-		),
-		array(
-			'name'        => '_phone',
-			'title'       => 'Phone',
-			'description' => '',
-			'type'        => 'tel',
-		),
-		array(
-			'name'        => '_message',
-			'title'       => 'Message',
-			'description' => '',
-			'type'        => 'textarea',
-		),
-		array(
-			'name'        => '_files',
-			'title'       => 'Files',
-			'description' => '',
-			'type'        => 'textarea',
-		),
-		array(
-			'name'        => '_send-result',
-			'title'       => 'Send Result',
-			'description' => 'The response from the mailer.',
 			'type'        => 'text',
 		),
 	);
@@ -90,40 +56,40 @@ class Store_Submissions {
 	/**
 	 * Register the custom post type.
 	 */
-	public function create_cpt() {
+	public function register() {
 		register_post_type(
 			$this->post_type,
 			array(
 				'labels'              => array(
-					'name'               => 'Form Entries',
-					'singular_name'      => 'Form Entry',
-					'add_new'            => 'New Form Entry',
-					'add_new_item'       => 'Add New Form Entry',
-					'edit_item'          => 'Edit Form Entry',
-					'new_item'           => 'New Form Entry',
-					'view_item'          => 'View Form Entries',
-					'search_items'       => 'Search Form Entries',
-					'not_found'          => 'No Form Entries Found',
-					'not_found_in_trash' => 'No Form Entries found in Trash',
+					'name'               => 'Forms',
+					'singular_name'      => 'Form',
+					'add_new'            => 'New Form',
+					'add_new_item'       => 'Add New Form',
+					'edit_item'          => 'Edit Form',
+					'new_item'           => 'New Form',
+					'view_item'          => 'View Form',
+					'search_items'       => 'Search Forms',
+					'not_found'          => 'No Forms Found',
+					'not_found_in_trash' => 'No Forms found in Trash',
 				),
-				'supports'            => array( 'title', 'custom-fields' ),
-				'description'         => 'This is a log of submitted form entries.',
+				'supports'            => array( 'title', 'editor', 'custom-fields' ),
+				'description'         => 'Predefined and user created forms.',
 				'public'              => true,
 				'exclude_from_search' => true,
 				'publicly_queryable'  => false,
 				'query_var'           => false,
 				'show_in_menu'        => true,
 				'menu_position'       => 2,
-				'menu_icon'           => 'dashicons-email-alt',
+				'menu_icon'           => self::MENU_ICON,
 				'hierarchical'        => false,
-				'taxonomies'          => array( 'category' ),
-				'show_in_rest'        => false,
+				'taxonomies'          => array( 'tag' ),
+				'show_in_rest'        => true,
 				'delete_with_user'    => false,
-				// 'capabilities'        => array( 'create_posts' => false )
+				// 'capabilities'     => array( 'create_posts' => false )
 			)
 		);
-		register_taxonomy_for_object_type( 'category', $this->post_type );
-		add_action( 'admin_menu', array( &$this, 'create_custom_fields' ) );
+		register_taxonomy_for_object_type( 'tag', $this->post_type );
+		add_action( 'admin_menu', array( &$this, 'register_custom_fields' ) );
 		add_action( 'save_post', array( &$this, 'save_custom_fields' ), 1, 2 );
 		add_action( 'do_meta_boxes', array( &$this, 'remove_default_custom_fields' ), 10, 3 );
 	}
@@ -140,8 +106,8 @@ class Store_Submissions {
 	/**
 	 * Create new Custom Fields meta box
 	 */
-	public function create_custom_fields() {
-		add_meta_box( $this->metabox, 'Form Entry', array( &$this, 'display_custom_fields' ), $this->post_type, 'normal', 'high' );
+	public function register_custom_fields() {
+		add_meta_box( $this->metabox, 'Form Meta', array( &$this, 'display_custom_fields' ), $this->post_type, 'normal', 'high' );
 	}
 
 	/**
@@ -205,7 +171,7 @@ class Store_Submissions {
 	/**
 	 * Save the new Custom Fields values
 	 */
-	public function save_custom_fields( $post_id, $post ) {
+	function save_custom_fields( $post_id, $post ) {
 		if ( ! isset( $_POST[ $this->metabox . '_wpnonce' ] )
 			|| ! wp_verify_nonce( $_POST[ $this->metabox . '_wpnonce' ], $this->metabox )
 			|| ! current_user_can( 'edit_post', $post_id ) ) {
@@ -228,42 +194,33 @@ class Store_Submissions {
 	/**
 	 * Log a new form submission.
 	 */
-	public static function log_form_entry( $form_data, $send_result ) {
+	public static function save( $form_id, $form_name, $content, $tags ) {
 
-		$form   = $form_data['form'];
-		$fields = $form_data['fields'];
-
-		$file_info = '';
-		if ( array_key_exists( 'files', $form_data ) ) {
-			$number_of_files = count( $form_data['files'] ) - 1;
-			for ( $n = 0; $n <= $number_of_files; $n++ ) {
-				$file_info .= $form_data['files'][ $n ]['name'] . "\n";
-			}
-		}
-
-		$name = isset( $fields['name'] ) ? $fields['name']['value'] : 'Anonymous';
+		$form_title = date( 'd-m-Y_' ) . sanitize_title( strtolower( $form_name ) );
 
 		$result = wp_insert_post(
 			array(
-				'post_type'   => 'bigup_form_entry',
-				'post_status' => 'publish',
-				'post_title'  => sanitize_title( strtolower( $form['name'] . '-' . $name ) ),
-				'meta_input'  => array(
-					'_bufe__form_name'   => $form['friendly_name'],
-					'_bufe__name'        => $name,
-					'_bufe__email'       => isset( $fields['email'] ) ? $fields['email']['value'] : '',
-					'_bufe__phone'       => isset( $fields['phone'] ) ? $fields['phone']['value'] : '',
-					'_bufe__message'     => isset( $fields['message'] ) ? $fields['message']['value'] : '',
-					'_bufe__files'       => $file_info,
-					'_bufe__send-result' => implode( ' | ', $send_result ),
+				'ID'           => $form_id,     // If equal to something other than 0, the post with that ID will be updated.
+				'post_type'    => 'bigup_form',
+				'post_status'  => 'publish',
+				'post_title'   => $form_title,
+				'post_content' => $content,
+				'tags_input'   => $tags,
+				'meta_input'   => array(
+					'_bufo__name' => $form_name,
 				),
 			),
 			true
-		); // Return error.
+		);
 		if ( is_wp_error( $result ) ) {
 			error_log( $result->get_error_message() );
-		} else if ( 0 === $result ) {
+			return false;
+		} elseif ( 0 === $result ) {
 			error_log( 'Bigup Forms: Unknown error 0 returned from wp_insert_post()' );
+			return false;
+		} else {
+			$form_post_id = $result;
+			return $form_post_id;
 		}
 	}
 }

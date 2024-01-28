@@ -109,8 +109,10 @@ class Submit_Controller {
 		$result           = $mail_handler->compose_and_send_email( $form_data );
 		$this->send_json_response( $result );
 
-		// Save the form entry to the database.
-		Store_Submissions::log_form_entry( $form_data, $result );
+		if ( 'test' !== $form_data['form']['name'] ) {
+			// Save the form entry to the database.
+			CPT_Form_Entry::log_form_entry( $form_data, $result );
+		}
 
 		// Request handlers should exit() when done.
 		exit;
