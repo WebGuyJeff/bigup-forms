@@ -27,7 +27,7 @@ use function plugin_dir_path;
 use function get_site_url;
 
 // Load Composer's autoloader
-require plugin_dir_path( __DIR__ ) . 'vendor/autoload.php';
+require BIGUPFORMS_PATH . 'vendor/autoload.php';
 
 
 class Send_Local {
