@@ -1,27 +1,32 @@
 const path = require( 'path' )
 const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' )
-// @wordpress/scripts config.
+// Import the @wordpress/scripts config.
 const wordpressConfig = require( '@wordpress/scripts/config/webpack.config' )
-// @wordpress/scripts helper which generates entry points from any '**/block.json' in 'src'.
+// Import the utility to generate entry points from any '**/block.json' in 'src'.
 const { getWebpackEntryPoints } = require( '@wordpress/scripts/utils/config' )
 
 // See svgo.config.js to configure SVG manipulation.
 
 module.exports = {
+	// Spread the WordPress config.
 	...wordpressConfig,
+
 	entry: {
-		// Everything outputs to build/.
+		// Spread the auto-generated entrypoints.
 		...getWebpackEntryPoints(),
-		// 'example/output': './path/to/dir/entrypoint.js'
+
+		// Extend with new entrypoints.
 		'css/bigup-forms-public': path.join( __dirname, '/src/css/form.scss' ),
 		'css/bigup-forms-admin': path.join( __dirname, '/src/css/admin.scss' ),
 		'js/bigup-forms-public': path.join( __dirname, '/src/js/view-public.js' ),
 		'js/bigup-forms-admin': path.join( __dirname, '/src/js/view-admin.js' ),
 	},
 	plugins: [
+		// Spread the WordPress plugins.
 		...wordpressConfig.plugins,
+
 		new BrowserSyncPlugin( {
-			proxy: 'localhost:8001', // Live WordPress site. Using IP breaks it.
+			proxy: 'localhost:6969', // Live WordPress site. Using IP breaks it.
 			ui: { port: 3001 }, // BrowserSync UI.
 			port: 3000, // Dev port on localhost.
 			logLevel: 'debug',

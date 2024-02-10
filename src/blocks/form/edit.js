@@ -6,6 +6,7 @@ import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
 import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
+import './form-editor.scss'
 
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-files',

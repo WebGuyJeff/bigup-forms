@@ -6,6 +6,7 @@ import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
 import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
+import './form.scss'
 
 if ( wpInlinedVars.debug ) {
 	console.log( metadata.name + ' BLOCK LOADED' )
