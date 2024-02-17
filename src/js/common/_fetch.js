@@ -38,7 +38,7 @@ async function fetchHttpRequest( url, options ) {
 		
 		if ( ! error.output ) {
 			// error is not a server response, so display a generic error.
-			error.output = [ 'Failed to establish a connection to the server.' ]
+			error.output = [ 'Unable to connect to the website. Please check your internet connection and try again.' ]
 			error.ok = false
 			console.error( error )
 		}
