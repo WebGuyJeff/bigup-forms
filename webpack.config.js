@@ -16,10 +16,10 @@ module.exports = {
 		...getWebpackEntryPoints(),
 
 		// Extend with new entrypoints.
-		'css/bigup-forms-public': path.join( __dirname, '/src/css/form.scss' ),
+		'css/bigup-forms-public': path.join( __dirname, '/src/css/frontend.scss' ),
 		'css/bigup-forms-admin': path.join( __dirname, '/src/css/admin.scss' ),
-		'js/bigup-forms-public': path.join( __dirname, '/src/js/view-public.js' ),
-		'js/bigup-forms-admin': path.join( __dirname, '/src/js/view-admin.js' ),
+		'js/bigup-forms-public': path.join( __dirname, '/src/js/frontend.js' ),
+		'js/bigup-forms-admin': path.join( __dirname, '/src/js/admin.js' ),
 	},
 	plugins: [
 		// Spread the WordPress plugins.

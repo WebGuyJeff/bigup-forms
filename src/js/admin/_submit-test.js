@@ -15,10 +15,10 @@ import { wpInlinedVars } from '../common/_wp-inlined-script'
 const testValues = {
 	'formMeta': JSON.stringify( {
 		'name': 'test',
-		'friendlyName': 'Settings Test'
+		'friendlyName': 'Bigup Forms Settings Test'
 	} ),
 	'name': JSON.stringify( {
-		'value': 'Test Bot',
+		'value': 'Bigup Forms Test Bot',
 		'type': 'text',
 		'id': false,
 	} ),

@@ -5,7 +5,7 @@ namespace BigupWeb\Forms;
  * A library of helper functions for WordPress.
  *
  * @package lonewolf
- * @author Jefferson Real <me@jeffersonreal.uk>
+ * @author Jefferson Real <jeff@webguyjeff.com>
  * @copyright Copyright 2023 Jefferson Real
  */
 

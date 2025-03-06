@@ -8,10 +8,11 @@
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 
-@import '../../css/form-base';
-@import '../../css/theme-base';
-@import '../../css/theme-inset-dark';
-@import '../../css/theme-inset-light';
-@import '../../css/theme-vanilla';
-@import '../../css/file-upload';
-@import '../../css/alert-popup';
+@import '../../css/frontend/reset';
+@import '../../css/frontend/form-base';
+@import '../../css/frontend/theme-base';
+@import '../../css/frontend/theme-inset-dark';
+@import '../../css/frontend/theme-inset-light';
+@import '../../css/frontend/theme-vanilla';
+@import '../../css/frontend/file-upload';
+@import '../../css/common/alert-popup';

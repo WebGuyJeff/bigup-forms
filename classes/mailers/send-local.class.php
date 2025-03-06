@@ -10,10 +10,10 @@ namespace BigupWeb\Forms;
  * and Linux, so this is a good backup when SMTP isn't an available.
  *
  * @package bigup-forms
- * @author Jefferson Real <me@jeffersonreal.uk>
+ * @author Jefferson Real <jeff@webguyjeff.com>
  * @copyright Copyright (c) 2024, Jefferson Real
  * @license GPL3+
- * @link https://jeffersonreal.uk
+ * @link https://webguyjeff.com
  */
 
 // Import PHPMailer classes into the global namespace

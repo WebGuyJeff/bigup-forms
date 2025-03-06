@@ -7,9 +7,9 @@ namespace BigupWeb\Forms;
  * Handle logging form submissions with a custom post type.
  *
  * @package bigup-forms
- * @author Jefferson Real <me@jeffersonreal.uk>
+ * @author Jefferson Real <jeff@webguyjeff.com>
  * @license GPL3+
- * @link https://jeffersonreal.uk
+ * @link https://webguyjeff.com
  */
 
 // WordPress dependencies.

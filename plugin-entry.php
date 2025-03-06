@@ -3,18 +3,18 @@ namespace BigupWeb\Forms;
 
 /**
  * Plugin Name: Bigup Web: Bigup Forms
- * Plugin URI: https://jeffersonreal.uk
+ * Plugin URI: https://webguyjeff.com
  * Description: A customisable form plugin for WordPress Gutenberg Editor.
- * Version: 0.7.3
+ * Version: 0.7.5
  * Author: Jefferson Real
- * Author URI: https://jeffersonreal.uk
+ * Author URI: https://webguyjeff.com
  * License: GPL2
  *
  * @package bigup-forms
- * @author Jefferson Real <me@jeffersonreal.uk>
+ * @author Jefferson Real <jeff@webguyjeff.com>
  * @copyright Copyright (c) 2024, Jefferson Real
  * @license GPL3+
- * @link https://jeffersonreal.uk
+ * @link https://webguyjeff.com
  */
 
 $settings     = get_option( 'bigup_forms_settings' );

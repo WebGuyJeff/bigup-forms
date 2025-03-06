@@ -7,10 +7,10 @@ namespace BigupWeb\Forms;
  * Generates inline script ready for inlining with client-side JavaScript.
  *
  * @package bigup-forms
- * @author Jefferson Real <me@jeffersonreal.uk>
+ * @author Jefferson Real <jeff@webguyjeff.com>
  * @copyright Copyright (c) 2024, Jefferson Real
  * @license GPL3+
- * @link https://jeffersonreal.uk
+ * @link https://webguyjeff.com
  */
 class Inline_Script {
 
