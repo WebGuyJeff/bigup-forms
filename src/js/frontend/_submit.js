@@ -54,7 +54,7 @@ async function submit( event ) {
 		'formMeta',
 		JSON.stringify( {
 			'name': form.getAttribute( 'name' ),
-			'friendlyName': form.getAttribute( 'data-name' )
+			'id': form.getAttribute( 'data-form-id' )
 		} )
 	)
 

@@ -7,9 +7,11 @@ import { ResetButton } from '../../components/ResetButton'
 export default function save( { attributes } ) {
 
 	const {
+		formID, // CPT Post ID for the saved form.
+		formName,
+		textAlign,
 		title,
 		showTitle,
-		textAlign,
 		showResetButton
 	} = attributes
 
@@ -24,6 +26,8 @@ export default function save( { attributes } ) {
 			method='post'
 			acceptCharset='utf-8'
 			autoComplete='on'
+			name={ formName }
+			data-form-id={ formID }
 		>
 
 			<header>

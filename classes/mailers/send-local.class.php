@@ -74,12 +74,12 @@ class Send_Local {
 		$from_email            = $this->settings['from_email'];
 		$to_email              = $this->settings['to_email'];
 
-		$form_name = strtolower( $form['friendly_name'] );
+		$form_name = strtolower( $form['name'] );
 		$site_url  = html_entity_decode( get_bloginfo( 'url' ) );
 		$domain    = wp_parse_url( $site_url, PHP_URL_HOST );
 		$site_name = html_entity_decode( get_bloginfo( 'name' ) );
 		$from_name = $site_name ? $site_name : 'Bigup Forms';
-		$subject   = 'New ' . $form_name . ' submission from ' . $domain;
+		$subject   = 'New ' . $form_name . ' form submission from ' . $domain;
 		$name      = isset( $fields['fields']['name'] ) ? $fields['fields']['name']['value'] : 'Anonymous user';
 		$email     = isset( $fields['fields']['email'] ) ? $fields['fields']['email']['value'] : null;
 
@@ -90,7 +90,7 @@ class Send_Local {
 		}
 		$plaintext_fields_output .= "\n\n";
 		$plaintext                = <<<PLAIN
-			This was submitted via the {$form_name} at {$site_url}.
+			This was submitted via the {$form_name} form at {$site_url}.
 			{$plaintext_fields_output}
 			You are viewing the plaintext version of this email because you have
 			disallowed HTML content in your email client. To view this and any future

@@ -55,8 +55,8 @@ class Submit_Controller {
 			$data = json_decode( $json_data, true );
 			if ( 'formMeta' === $name ) {
 				$form = array(
-					'name'          => $data['name'],
-					'friendly_name' => $data['friendlyName'],
+					'name' => $data['name'],
+					'id'   => $data['id'],
 				);
 			} else {
 				$fields[ $name ] = array(

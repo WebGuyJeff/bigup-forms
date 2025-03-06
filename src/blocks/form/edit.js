@@ -177,6 +177,8 @@ export default function Edit( { name, attributes, setAttributes } ) {
 				method='post'
 				acceptCharset='utf-8'
 				autoComplete='on'
+				name={ formName }
+				data-form-id={ formID }
 			>
 
 				<header>
