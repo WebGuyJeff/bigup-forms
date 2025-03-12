@@ -1,5 +1,5 @@
 {
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "bigup-forms/form-file-upload",
 	"version": "0.0.1",
 	"title": "Form File Upload",

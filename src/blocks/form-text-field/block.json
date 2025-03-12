@@ -1,5 +1,5 @@
 {
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "bigup-forms/form-text-field",
 	"version": "0.0.1",
 	"title": "Text Field",
