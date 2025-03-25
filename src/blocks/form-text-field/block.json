@@ -20,13 +20,13 @@
 			"type": "string",
 			"default": "any_text"
 		},
-		"validation": {
-			"type": "object",
-			"default": {
-				"minlength": "",
-				"maxlength": "",
-				"pattern": ""
-			}
+		"validationAttrs": {
+			"type": "array",
+			"default": [
+				"minlength",
+				"maxlength",
+				"pattern"
+			]
 		},
 		"label": {
 			"type": "rich-text",
@@ -85,6 +85,48 @@
 			"selector": "input",
 			"attribute": "rows",
 			"default": "8"
+		},
+		"pattern": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "pattern",
+			"default": ""
+		},
+		"maxlength": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "maxlength",
+			"default": ""
+		},
+		"minlength": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "minlength",
+			"default": ""
+		},
+		"max": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "max",
+			"default": ""
+		},
+		"min": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "min",
+			"default": ""
+		},
+		"step": {
+			"type": "string",
+			"source": "attribute",
+			"selector": "input",
+			"attribute": "step",
+			"default": ""
 		}
 	}
 }

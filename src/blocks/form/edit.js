@@ -5,7 +5,7 @@ import { PanelBody, SelectControl, CheckboxControl, TextControl, ButtonGroup, Bu
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
-import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 import './form-editor.scss'
 
 const ALLOWED_BLOCKS = [
@@ -39,7 +39,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 	const {
 		restStoreURL,
 		restNonce
-	} = wpInlinedVars
+	} = bigupFormsInlinedVars
 
 	// Select control values.
 	const blockVariations  = wp.blocks.getBlockType( name ).variations
@@ -109,56 +109,62 @@ export default function Edit( { name, attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings' ) }
+					title={ __( 'Settings', 'bigup-forms' ) }
 					initialOpen={ true } 
 				>
 					<TextControl
-						label={ __( 'Name' ) }
+						label={ __( 'Name', 'bigup-forms' ) }
 						type="text"
 						value={ formName }
 						onChange={ ( newValue ) => { setAttributes( { formName: newValue } ) } }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<ButtonGroup>
 						<Button
 							variant="primary"
 							onClick={ handleSave }
 							style={{
-								marginBottom: '12px'
+								marginBottom: '12px',
+								marginRight: '12px'
 							}}
 						>
-							{ ( formID > 0 ) ? 'Update Form' : 'Save Form' }
+							{ ( formID > 0 ) ? __( 'Update Form', 'bigup-forms' ) : __( 'Save Form', 'bigup-forms' ) }
 						</Button>
 					</ButtonGroup>
-					<span>ID: { formID }</span>
+					<span>{ formID > 0 ? 'ID: ' + formID : __( 'unsaved', 'bigup-forms' ) }</span>
 					<SelectControl
-						label={ __( 'Replace With:' ) }
+						label={ __( 'Replace With', 'bigup-forms' ) }
 						labelPosition="top"
-						title={ __( 'Replace With' ) }
+						title={ __( 'Replace With', 'bigup-forms' ) }
 						value={ variation }
 						options={ variationOptions }
 						onChange={ ( newValue ) => { setAttributes( { variation: newValue } ) } }
+						__nextHasNoMarginBottom={ true }
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Form Elements' ) }
+					title={ __( 'Form Elements', 'bigup-forms' ) }
 					initialOpen={ true } 
 				>
 					<TextControl
-						label={ __( 'Title' ) }
+						label={ __( 'Title', 'bigup-forms' ) }
 						type="text"
 						value={ title }
 						onChange={ ( newValue ) => { setAttributes( { title: newValue } ) } }
 						disabled={ ! showTitle }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
-						label={ __( 'Show title' ) }
+						label={ __( 'Show title', 'bigup-forms' ) }
 						checked={ showTitle }
 						onChange={ ( newValue ) => { setAttributes( { showTitle: newValue } ) } }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
-						label={ __( 'Show reset button' ) }
+						label={ __( 'Show reset button', 'bigup-forms' ) }
 						checked={ showResetButton }
 						onChange={ ( newValue ) => { setAttributes( { showResetButton: newValue } ) } }
+						__nextHasNoMarginBottom={ true }
 					/>
 				</PanelBody>
 			</InspectorControls>
@@ -187,8 +193,8 @@ export default function Edit( { name, attributes, setAttributes } ) {
 							tagName="h2"
 							value={ title }
 							onChange={ ( newValue ) => setAttributes( { title: newValue } ) }
-							aria-label={ title ? __( 'Form title' ) : __( 'Empty form title' ) }
-							placeholder={ __( 'Add a form title' ) }
+							aria-label={ title ? __( 'Form title', 'bigup-forms' ) : __( 'Empty form title', 'bigup-forms' ) }
+							placeholder={ __( 'Add a form title', 'bigup-forms' ) }
 						/>
 					}
 				</header>

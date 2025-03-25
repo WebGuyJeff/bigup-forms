@@ -14,7 +14,7 @@ import { InputWrap } from '../../components/InputWrap'
 export default function save( { attributes } ) {
 
 	const {
-		validation,
+		validationAttrs,
 		label,
 		labelID,
 		showLabel,
@@ -23,7 +23,8 @@ export default function save( { attributes } ) {
 		rows,
 		type,
 		name,
-		placeholder
+		placeholder,
+		step
 	}                = attributes
 	const blockProps = useBlockProps.save()
 
@@ -33,11 +34,16 @@ export default function save( { attributes } ) {
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
 		conditionalProps.rows = rows
-	} else if ( validation?.step !== undefined && validation.step !== null ) {
-		conditionalProps.step = validation.step
 	} else {
 		conditionalProps.type = type
 	}
+
+	// Get the html input validation attributes.
+	validationAttrs.forEach( attr => {
+		if ( attributes[ attr ] !== "" ) {
+			conditionalProps[ attr ] = attributes[ attr ]
+		}
+	} )
 
 	return (
 
@@ -63,7 +69,7 @@ export default function save( { attributes } ) {
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autoComplete={ autocomplete }
 						{ ...conditionalProps }
-						required={ required }
+						required={ required ? 'required' : '' }
 					/>
 				</InputWrap>
 			</div>

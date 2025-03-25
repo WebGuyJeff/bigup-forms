@@ -5,9 +5,7 @@
  */
 
 const getWpInlinedScript = () => {
-
 	if ( typeof bigupFormsWpInlinedScript === 'undefined' ) return false
-
 	const {
 		settingsOK, // Boolean value indicating email settings are configured.
 		restSubmitURL, // REST API submit endpoint.
@@ -18,6 +16,6 @@ const getWpInlinedScript = () => {
 	} = bigupFormsWpInlinedScript
 	return { settingsOK, restSubmitURL, restStoreURL, restNonce, debug, dataFormats }
 }
-const wpInlinedVars = getWpInlinedScript()
+const bigupFormsInlinedVars = getWpInlinedScript()
 
-export { wpInlinedVars }
+export { bigupFormsInlinedVars }

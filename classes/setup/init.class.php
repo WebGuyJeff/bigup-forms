@@ -38,6 +38,7 @@ class Init {
 		add_action( 'rest_api_init', array( $this, 'register_rest_api_routes' ), 10, 0 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'frontend_scripts_and_styles' ), 10, 0 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts_and_styles' ), 10, 0 );
+		add_action( 'enqueue_block_assets', array( $this, 'editor_scripts_and_styles' ), 10, 0 );
 		add_shortcode( 'bigup_forms', array( new Shortcode(), 'display_shortcode' ), 10, 0 );
 		add_action(
 			'widgets_init',
@@ -76,11 +77,6 @@ class Init {
 	public function admin_scripts_and_styles() {
 		wp_register_style( 'bigup_forms_admin_css', BIGUPFORMS_URL . 'build/css/bigup-forms-admin.css', array(), filemtime( BIGUPFORMS_PATH . 'build/css/bigup-forms-admin.css' ), 'all' );
 		wp_register_script( 'bigup_forms_admin_js', BIGUPFORMS_URL . 'build/js/bigup-forms-admin.js', array(), filemtime( BIGUPFORMS_PATH . 'build/js/bigup-forms-admin.js' ), false );
-		wp_add_inline_script(
-			'bigup_forms_admin_js',
-			Inline_Script::get_frontend_form_variables(),
-			'before'
-		);
 		if ( ! wp_script_is( 'bigup_icons', 'registered' ) ) {
 			wp_register_style( 'bigup_icons', BIGUPFORMS_URL . 'dashicons/css/bigup-icons.css', array(), filemtime( BIGUPFORMS_PATH . 'dashicons/css/bigup-icons.css' ), 'all' );
 		}
@@ -88,6 +84,19 @@ class Init {
 			wp_enqueue_style( 'bigup_icons' );
 		}
 	}
+
+
+	/**
+	 * Register editor scripts and styles.
+	 */
+	public function editor_scripts_and_styles() {
+		wp_add_inline_script(
+			'bigup-forms-form', // name from block.json with a '-' instead of '/'.
+			Inline_Script::get_frontend_form_variables(),
+			'before'
+		);
+	}
+
 
 	/**
 	 * Register rest api routes.

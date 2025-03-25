@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n'
-import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 import { Logo } from './svg'
 
-const { dataFormats } = wpInlinedVars
+const { dataFormats } = bigupFormsInlinedVars
 
 const Variations = [
 	{
@@ -20,9 +20,10 @@ const Variations = [
 			'placeholder': __( 'Type here', 'bigup-forms' ),
 			'variation': 'text',
 			'format': 'any_text',
-			'validation': dataFormats[ 'any_text' ].props,
-			'required': true
+			'required': true,
+			...dataFormats[ 'any_text' ].rules
 		},
+		validationAttrs: Object.keys( dataFormats[ 'any_text' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'text'
 		}
@@ -42,9 +43,10 @@ const Variations = [
 			'placeholder': __( 'Type here', 'bigup-forms' ),
 			'variation': 'number',
 			'format': 'any_number',
-			'validation': dataFormats[ 'any_number' ].props,
-			'required': true
+			'required': true,
+			...dataFormats[ 'any_number' ].rules
 		},
+		validationAttrs: Object.keys( dataFormats[ 'any_number' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'number'
 		}
@@ -64,9 +66,10 @@ const Variations = [
 			'placeholder': __( 'Enter your name', 'bigup-forms' ),
 			'variation': 'name',
 			'format': 'human_name',
-			'validation': dataFormats[ 'human_name' ].props,
-			'required': true
+			'required': true,
+			...dataFormats[ 'human_name' ].rules
 		},
+		validationAttrs: Object.keys( dataFormats[ 'human_name' ].rules ),
 		// If isActive is not set, the Editor cannot distinguish between the original block and your variation, so the original block information will be displayed.
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'name'
@@ -87,9 +90,10 @@ const Variations = [
 			'placeholder': __( 'Enter your email', 'bigup-forms' ),
 			'variation': 'email',
 			'format': 'email_non_rfc',
-			'validation': dataFormats[ 'email_non_rfc' ].props,
-			'required': true
+			'required': true,
+			...dataFormats[ 'email_non_rfc' ].rules
 		},
+		validationAttrs: Object.keys( dataFormats[ 'email_non_rfc' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'email'
 		}
@@ -109,9 +113,10 @@ const Variations = [
 			'placeholder': __( 'Enter your phone number', 'bigup-forms' ),
 			'variation': 'phone',
 			'format': 'phone_number',
-			'validation': dataFormats[ 'phone_number' ].props,
-			'required': true
+			'required': true,
+			...dataFormats[ 'phone_number' ].rules
 		},
+		validationAttrs: Object.keys( dataFormats[ 'phone_number' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'phone'
 		}
@@ -131,9 +136,10 @@ const Variations = [
 			'placeholder': __( 'Type your message...', 'bigup-forms' ),
 			'variation': 'message',
 			'format': 'any_text',
-			'validation': dataFormats[ 'any_text' ].props,
-			'required': true
+			'required': true,
+			...dataFormats[ 'any_text' ].rules
 		},
+		validationAttrs: Object.keys( dataFormats[ 'any_text' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'text-large'
 		}

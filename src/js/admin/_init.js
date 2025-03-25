@@ -1,5 +1,5 @@
 import { submitTest } from './_submit-test'
-import { wpInlinedVars } from '../common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../common/_wp-inlined-script'
 
 /**
  * Initialise the email test button.
@@ -13,7 +13,7 @@ const init = () => {
 		button.addEventListener( 'click', submitTest )
 
 		// Enable the submit button now js is ready (disabled by default).
-		if ( wpInlinedVars.settingsOK ) {
+		if ( bigupFormsInlinedVars.settingsOK ) {
 			button.disabled = false
 		}
 	}

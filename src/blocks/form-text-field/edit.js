@@ -4,7 +4,7 @@ import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpre
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
 import { makeNameAttributeSafe, escapeRegex, unescapeRegex, stringToRegex } from '../../js/common/_util'
-import { wpInlinedVars } from '../../js/common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -25,7 +25,7 @@ export default function Edit( props ) {
 	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {
 		variation, // The block variation name.
-		validation, // An object of validation rules used on front and back end for consistency.
+		validationAttrs, // An object of validation rules used on front and back end for consistency.
 		format, // Name of the data format which determines the default validation rules.
 		label, // Text content for the field label element.
 		labelID, // ID to associate input/label elements. Must be unique on page.
@@ -35,9 +35,16 @@ export default function Edit( props ) {
 		rows, // Number of rows displayed in a textarea field.
 		type, // HTML 'type' attribute for <input> elements.
 		name, // HTML name attribute. Must be unique on the form.
-		placeholder // Text content of the field placeholder.
+		placeholder, // Text content of the field placeholder.
+		pattern, // Input validation regex pattern.
+		maxlength, // Input validation max string length.
+		minlength, // Input validation min string length.
+		max, // Input validation max number.
+		min, // Input validation min number.
+		step // Input validation number step.
 	}                     = attributes
-	const { dataFormats } = wpInlinedVars // Predefined validation formats from the server.
+
+	const { dataFormats } = bigupFormsInlinedVars // Predefined validation formats from the server.
 	const inputTypes      = [
 		'textarea',
 		'text',
@@ -52,9 +59,12 @@ export default function Edit( props ) {
 
 	// Changing (data) format sets validation rules.
 	const onChangeFormat = ( newFormat ) => {
+		const rules = dataFormats[ newFormat ].rules
 		setAttributes( {
 			format: newFormat,
-			validation: dataFormats[ newFormat ].rules
+			// Track the valid validation attributes to control which settings are shown.
+			validationAttrs: Object.keys( rules ),
+			...rules
 		} )
 	}
 
@@ -64,7 +74,7 @@ export default function Edit( props ) {
 			if ( newVariation === variation.name ) {
 				setAttributes( {
 					variation: newVariation,
-					...variation.attributes,
+					...variation.attributes
 				} )
 			}
 		} )
@@ -97,11 +107,18 @@ export default function Edit( props ) {
 		conditionalProps.type = 'text'
 	}
 
+	// Get the html input validation attributes.
+	validationAttrs.forEach( attr => {
+		if ( attributes[ attr ] !== "" ) {
+			conditionalProps[ attr ] = attributes[ attr ]
+		}
+	} )
+
 	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
 
 	// labelID Not used in Edit, but must set to attribute for save function.
 	const newLabelID = name + '-' + formID
-	console.log( 'labelID', newLabelID )
+	// console.log( 'labelID', newLabelID )
 
 	return (
 
@@ -118,6 +135,7 @@ export default function Edit( props ) {
 						value={ variation }
 						options={ variationOptions }
 						onChange={ ( newValue ) => onChangeVariation( newValue ) }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<TextControl
 						label={ __( 'Label' ) }
@@ -125,22 +143,26 @@ export default function Edit( props ) {
 						value={ label }
 						onChange={ ( newValue ) => { setAttributes( { label: newValue, } ) } }
 						disabled={ ! showLabel }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
 						label={ __( 'Show Label' ) }
 						checked={ showLabel }
 						onChange={ ( newValue ) => { setAttributes( { showLabel: newValue, } ) } }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
 						label={ __( 'Required' ) }
 						checked={ required }
 						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
+						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
 						label={ __( 'Autocomplete' ) }
 						checked={ ( autocomplete === "on" ) ? true : false }
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
 						help={ __( 'Allow browser-assisted form-filling.' ) }
+						__nextHasNoMarginBottom={ true }
 					/>
 					{ variation === 'any_text' || variation === 'any_number' &&
 						<SelectControl
@@ -150,6 +172,7 @@ export default function Edit( props ) {
 							value={ type }
 							options={ typeOptions }
 							onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
 					{ type === 'textarea' &&
@@ -159,6 +182,7 @@ export default function Edit( props ) {
 							value={ rows }
 							onChange={ ( newValue ) => { setAttributes( { rows: newValue, } ) } }
 							help={ __( 'Height of the input in text rows.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
 				</PanelBody>
@@ -177,58 +201,65 @@ export default function Edit( props ) {
 						value={ format }
 						onChange={ ( newValue ) => onChangeFormat( newValue ) }
 						help={ __( 'The format you want the input to conform to.' ) }
+						__nextHasNoMarginBottom={ true }
 					/>
-					{ 'minlength' in validation &&
+					{ 'minlength' in validationAttrs &&
 						<TextControl
 							label={ __( 'Minimum length' ) }
 							type="number"
-							value={ validation.minlength }
-							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, minlength: newValue } } ) } }
+							value={ minlength }
+							onChange={ ( newValue ) => { setAttributes( { minlength: newValue } ) } }
 							help={ __( 'Minimum length of the text.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
-					{ 'maxlength' in validation &&
+					{ 'maxlength' in validationAttrs &&
 						<TextControl
 							label={ __( 'Maximum length' ) }
 							type="number"
-							value={ validation.maxlength }
-							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, maxlength: newValue } } ) } }
+							value={ maxlength }
+							onChange={ ( newValue ) => { setAttributes( { maxlength: newValue } ) } }
 							help={ __( 'Maximum length of the text.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
-					{ 'min' in validation &&
+					{ 'min' in validationAttrs &&
 						<TextControl
 							label={ __( 'Minimum' ) }
 							type="number"
-							value={ validation.min }
-							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, min: newValue } } ) } }
+							value={ min }
+							onChange={ ( newValue ) => { setAttributes( { min: newValue } ) } }
 							help={ __( 'Minimum value.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
-					{ 'max' in validation &&
+					{ 'max' in validationAttrs &&
 						<TextControl
 							label={ __( 'Maximum' ) }
 							type="number"
-							value={ validation.max }
-							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, max: newValue } } ) } }
+							value={ max }
+							onChange={ ( newValue ) => { setAttributes( { max: newValue } ) } }
 							help={ __( 'Maximum value.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
-					{ 'step' in validation &&
+					{ 'step' in validationAttrs &&
 						<TextControl
 							label={ __( 'Step' ) }
 							type="number"
-							value={ validation.step }
-							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, step: newValue } } ) } }
+							value={ step }
+							onChange={ ( newValue ) => { setAttributes( { step: newValue } ) } }
 							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
-					{ 'pattern' in validation &&
+					{ 'pattern' in validationAttrs &&
 						<TextControl
 							label={ __( 'Regular Expression (advanced)' ) }
-							value={ validation.pattern }
-							onChange={ ( newValue ) => { setAttributes( { validation: { ...validation, pattern: newValue } } ) } }
+							value={ pattern }
+							onChange={ ( newValue ) => { setAttributes( { pattern: newValue } ) } }
 							help={ __( 'A regular expression pattern to validate the input against. Must be both PCRE2 and EMCA compatible.' ) }
+							__nextHasNoMarginBottom={ true }
 						/>
 					}
 				</PanelBody>
@@ -241,6 +272,7 @@ export default function Edit( props ) {
 					value={ name }
 					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ) } ) } }
 					help={ __( 'Identity of the field which must be unique on this form. Must consist of lowercase letters, numbers, hyphens, underscores and begin with a letter.' ) }
+					__nextHasNoMarginBottom={ true }
 				/>
 			</InspectorControls>
 
@@ -267,7 +299,7 @@ export default function Edit( props ) {
 						onBlur={ ( e ) => { e.target.value = '' } }
 						autoComplete={ autocomplete }
 						{ ...conditionalProps }
-						required={ required }
+						required={ required ? 'required' : '' }
 					/>
 				</InputWrap>
 			</div>

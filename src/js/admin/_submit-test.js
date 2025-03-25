@@ -1,7 +1,7 @@
 import { debug, start, stopwatch } from '../common/_debug'
 import { fetchHttpRequest } from '../common/_fetch'
 import { alertsShowWaitHide, alertsShow } from '../common/_alert'
-import { wpInlinedVars } from '../common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../common/_wp-inlined-script'
 
 
 /**
@@ -53,7 +53,7 @@ async function submitTest( event ) {
 	}
 
 	// Fetch params.
-	const { restSubmitURL, restNonce } = wpInlinedVars
+	const { restSubmitURL, restNonce } = bigupFormsInlinedVars
 	const fetchOptions = {
 		method: "POST",
 		headers: {

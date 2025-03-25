@@ -3,7 +3,7 @@ import { fetchHttpRequest } from '../common/_fetch'
 import { disallowedTypes } from './_file-upload'
 import { removeChildren } from '../common/_util'
 import { alertsShowWaitHide, alertsShow } from '../common/_alert'
-import { wpInlinedVars } from '../common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../common/_wp-inlined-script'
 
 /**
  * Handle frontend form submissions.
@@ -82,7 +82,7 @@ async function submit( event ) {
 	}
 
 	// Fetch params.
-	const { restSubmitURL, restNonce } = wpInlinedVars
+	const { restSubmitURL, restNonce } = bigupFormsInlinedVars
 	const fetchOptions = {
 		method: "POST",
 		headers: {
