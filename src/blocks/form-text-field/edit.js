@@ -294,9 +294,8 @@ export default function Edit( props ) {
 				{ showLabel &&
 					<RichText
 						id={ labelId }
-						className="bigup__form_inputLabel"
-						htmlFor={ name + blockIdSuffix }
-						tagName="label"
+						className={ 'bigup__form_inputLabel' }
+						tagName={ 'label' }
 						value={ label }
 						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
@@ -305,7 +304,6 @@ export default function Edit( props ) {
 				<InputWrap>
 					<InputTagName
 						name={ name }
-						id={ name + blockIdSuffix }
 						className={ 'bigup__form_input' }
 						placeholder={ editPlaceholder }
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }

@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n'
-import { useBlockProps } from '@wordpress/block-editor'
+import { useBlockProps, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
 
 /**
@@ -62,13 +62,13 @@ export default function save( { attributes } ) {
 		<>
 			<div { ...blockProps }>
 				{ showLabel &&
-					<label
+					<RichText.Content
 						id={ labelId }
-						className="bigup__form_inputLabel"
+						className={ 'bigup__form_inputLabel' }
+						tagName={ 'label' }
 						htmlFor={ name + blockIdSuffix }
-					>
-						{ label }
-					</label>
+						value={ label }
+					/>
 				}
 				<InputWrap>
 					<InputTagName

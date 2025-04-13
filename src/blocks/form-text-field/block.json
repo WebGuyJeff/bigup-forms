@@ -32,8 +32,8 @@
 			]
 		},
 		"label": {
-			"type": "rich-text",
-			"selector": "label",
+			"type": "string",
+			"selector": ".bigup__form_inputLabel",
 			"source": "text"
 		},
 		"showLabel": {

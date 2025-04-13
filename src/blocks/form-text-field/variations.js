@@ -95,25 +95,25 @@ const Variations = [
 		}
 	},
 	{
-		name: 'phone',
+		name: 'tel',
 		title: __( 'Phone Field', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Phone number input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'phone' ],
 		attributes: {
 			'type': 'tel',
-			'name': 'phone',
+			'name': 'tel',
 			'label': __( 'Phone', 'bigup-forms' ),
 			'autocomplete': 'on',
 			'placeholder': __( 'Enter your phone number', 'bigup-forms' ),
-			'variation': 'phone',
+			'variation': 'tel',
 			'format': 'phone_number',
 			'required': true,
 			...dataFormats[ 'phone_number' ].rules
 		},
 		validationAttrs: Object.keys( dataFormats[ 'phone_number' ].rules ),
 		isActive: ( blockAttributes ) => { 
-			return blockAttributes.variation === 'phone'
+			return blockAttributes.variation === 'tel'
 		}
 	},
 	{
