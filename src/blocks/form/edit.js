@@ -9,7 +9,7 @@ import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 import './form-editor.scss'
 
 const ALLOWED_BLOCKS = [
-	'bigup-forms/form-files',
+	'bigup-forms/form-file-upload',
 	'bigup-forms/form-text-field',
 	'core/buttons',
 	'core/columns',

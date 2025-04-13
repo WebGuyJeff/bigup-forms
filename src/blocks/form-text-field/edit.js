@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { PropTypes } from 'prop-types'
+import React, { useEffect } from 'react'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
@@ -20,15 +21,16 @@ export default function Edit( props ) {
 	const blockName       = props.name
 	const attributes      = props.attributes
 	const setAttributes   = props.setAttributes
+	const clientId        = props.clientId
 	const formID          = props.context[ 'bigup-forms/formID' ]
 	const blockProps      = useBlockProps()
 	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {
+		blockId, // The block ID.
 		variation, // The block variation name.
 		validationAttrs, // An object of validation rules used on front and back end for consistency.
 		format, // Name of the data format which determines the default validation rules.
 		label, // Text content for the field label element.
-		labelID, // ID to associate input/label elements. Must be unique on page.
 		showLabel, // Boolean flag to hide/show the label element.
 		required, // Boolean flag to enable/disable HTML 'required' attribute.
 		autocomplete, // Boolean flag to enable/disable HTML 'autocomplete' attribute.
@@ -43,6 +45,12 @@ export default function Edit( props ) {
 		min, // Input validation min number.
 		step // Input validation number step.
 	}                     = attributes
+
+	useEffect( () => {
+        if ( ! blockId ) {
+            setAttributes( { blockId: clientId } )
+        }
+    }, [] )
 
 	const { dataFormats } = bigupFormsInlinedVars // Predefined validation formats from the server.
 	const inputTypes      = [
@@ -80,6 +88,14 @@ export default function Edit( props ) {
 		} )
 	}
 
+	// Changing label updates name attribute to match (which must be uniquie on form).
+	const onChangeLabel = ( newLabel ) => {
+		setAttributes( {
+			label: newLabel,
+			name: makeNameAttributeSafe( newLabel )
+		} )
+	}
+
 	// Variation select control values.
 	const variationOptions = []
 	blockVariations.forEach( variation => variationOptions.push( { value: variation.name, label: variation.title } ) )
@@ -96,6 +112,11 @@ export default function Edit( props ) {
 		}
 	} )
 
+	const blockIdSuffix = '-' + blockId
+	const labelId       = name + '-label' + blockIdSuffix
+
+
+	// Set the HTML tag to either input or textarea.
 	let InputTagName = ''
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
@@ -106,6 +127,14 @@ export default function Edit( props ) {
 		InputTagName = 'input'
 		conditionalProps.type = 'text'
 	}
+	if ( required ) {
+		conditionalProps.required = 'required=""'
+	}
+	if ( showLabel ) {
+		conditionalProps[ 'aria-labelledby' ] = labelId
+	} else {
+		conditionalProps[ 'aria-label' ] = label
+	}
 
 	// Get the html input validation attributes.
 	validationAttrs.forEach( attr => {
@@ -114,22 +143,18 @@ export default function Edit( props ) {
 		}
 	} )
 
-	const editPlaceholder = placeholder ? placeholder : 'Type a placeholder...'
-
-	// labelID Not used in Edit, but must set to attribute for save function.
-	const newLabelID = name + '-' + formID
-	// console.log( 'labelID', newLabelID )
+	const editPlaceholder = placeholder ? placeholder : __( 'Type a placeholder...', 'bigup-forms' )
 
 	return (
 
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings' ) }
+					title={ __( 'Settings', 'bigup-forms' ) }
 					initialOpen={ true } 
 				>
 					<SelectControl
-						label={ __( 'Field Variation' ) }
+						label={ __( 'Field Variation', 'bigup-forms' ) }
 						labelPosition="top"
 						title="Form Variation"
 						value={ variation }
@@ -138,37 +163,37 @@ export default function Edit( props ) {
 						__nextHasNoMarginBottom={ true }
 					/>
 					<TextControl
-						label={ __( 'Label' ) }
+						label={ __( 'Label', 'bigup-forms' ) }
 						type="text"
 						value={ label }
-						onChange={ ( newValue ) => { setAttributes( { label: newValue, } ) } }
-						disabled={ ! showLabel }
+						onChange={ ( newValue ) => onChangeLabel( newValue ) }
+						help={ __( 'The field label must be unique on this form.', 'bigup-forms' ) }
 						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
-						label={ __( 'Show Label' ) }
+						label={ __( 'Show Label', 'bigup-forms' ) }
 						checked={ showLabel }
 						onChange={ ( newValue ) => { setAttributes( { showLabel: newValue, } ) } }
 						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
-						label={ __( 'Required' ) }
+						label={ __( 'Required', 'bigup-forms' ) }
 						checked={ required }
 						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
 						__nextHasNoMarginBottom={ true }
 					/>
 					<CheckboxControl
-						label={ __( 'Autocomplete' ) }
+						label={ __( 'Autocomplete', 'bigup-forms' ) }
 						checked={ ( autocomplete === "on" ) ? true : false }
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
-						help={ __( 'Allow browser-assisted form-filling.' ) }
+						help={ __( 'Allow browser-assisted form-filling.', 'bigup-forms' ) }
 						__nextHasNoMarginBottom={ true }
 					/>
 					{ variation === 'any_text' || variation === 'any_number' &&
 						<SelectControl
-							label={ __( 'HTML Type' ) }
+							label={ __( 'HTML Type', 'bigup-forms' ) }
 							labelPosition="top"
-							title={ __( 'HTML Type' ) }
+							title={ __( 'HTML Type', 'bigup-forms' ) }
 							value={ type }
 							options={ typeOptions }
 							onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
@@ -177,11 +202,11 @@ export default function Edit( props ) {
 					}
 					{ type === 'textarea' &&
 						<TextControl
-							label={ __( 'Line rows' ) }
+							label={ __( 'Line rows', 'bigup-forms' ) }
 							type="number"
 							value={ rows }
 							onChange={ ( newValue ) => { setAttributes( { rows: newValue, } ) } }
-							help={ __( 'Height of the input in text rows.' ) }
+							help={ __( 'Height of the input in text rows.',	'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
@@ -190,116 +215,104 @@ export default function Edit( props ) {
 
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Validation' ) }
+					title={ __( 'Validation', 'bigup-forms' ) }
 					initialOpen={ true }
 				>
 					<SelectControl
-						label={ __( 'Data Format' ) }
+						label={ __( 'Data Format', 'bigup-forms' ) }
 						labelPosition="top"
-						title={ __( 'Data Format' ) }
+						title={ __( 'Data Format', 'bigup-forms' ) }
 						options={ formatOptions }
 						value={ format }
 						onChange={ ( newValue ) => onChangeFormat( newValue ) }
-						help={ __( 'The format you want the input to conform to.' ) }
+						help={ __( 'The format you want the input to conform to.', 'bigup-forms' ) }
 						__nextHasNoMarginBottom={ true }
 					/>
 					{ 'minlength' in validationAttrs &&
 						<TextControl
-							label={ __( 'Minimum length' ) }
+							label={ __( 'Minimum length', 'bigup-forms' ) }
 							type="number"
 							value={ minlength }
 							onChange={ ( newValue ) => { setAttributes( { minlength: newValue } ) } }
-							help={ __( 'Minimum length of the text.' ) }
+							help={ __( 'Minimum length of the text.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
 					{ 'maxlength' in validationAttrs &&
 						<TextControl
-							label={ __( 'Maximum length' ) }
+							label={ __( 'Maximum length', 'bigup-forms' ) }
 							type="number"
 							value={ maxlength }
 							onChange={ ( newValue ) => { setAttributes( { maxlength: newValue } ) } }
-							help={ __( 'Maximum length of the text.' ) }
+							help={ __( 'Maximum length of the text.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
 					{ 'min' in validationAttrs &&
 						<TextControl
-							label={ __( 'Minimum' ) }
+							label={ __( 'Minimum', 'bigup-forms' ) }
 							type="number"
 							value={ min }
 							onChange={ ( newValue ) => { setAttributes( { min: newValue } ) } }
-							help={ __( 'Minimum value.' ) }
+							help={ __( 'Minimum value.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
 					{ 'max' in validationAttrs &&
 						<TextControl
-							label={ __( 'Maximum' ) }
+							label={ __( 'Maximum', 'bigup-forms' ) }
 							type="number"
 							value={ max }
 							onChange={ ( newValue ) => { setAttributes( { max: newValue } ) } }
-							help={ __( 'Maximum value.' ) }
+							help={ __( 'Maximum value.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
 					{ 'step' in validationAttrs &&
 						<TextControl
-							label={ __( 'Step' ) }
+							label={ __( 'Step', 'bigup-forms' ) }
 							type="number"
 							value={ step }
 							onChange={ ( newValue ) => { setAttributes( { step: newValue } ) } }
-							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.' ) }
+							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
 					{ 'pattern' in validationAttrs &&
 						<TextControl
-							label={ __( 'Regular Expression (advanced)' ) }
+							label={ __( 'Regular Expression (advanced)', 'bigup-forms' ) }
 							value={ pattern }
 							onChange={ ( newValue ) => { setAttributes( { pattern: newValue } ) } }
-							help={ __( 'A regular expression pattern to validate the input against. Must be both PCRE2 and EMCA compatible.' ) }
+							help={ __( 'A regular expression pattern to validate the input against. Must be both PCRE2 and EMCA compatible.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom={ true }
 						/>
 					}
 				</PanelBody>
 			</InspectorControls>
 
-			<InspectorControls group="advanced">
-				<TextControl
-					label={ __( 'HTML Input Name' ) }
-					autoComplete="off"
-					value={ name }
-					onChange={ ( newValue ) => { setAttributes( { name: makeNameAttributeSafe( newValue ) } ) } }
-					help={ __( 'Identity of the field which must be unique on this form. Must consist of lowercase letters, numbers, hyphens, underscores and begin with a letter.' ) }
-					__nextHasNoMarginBottom={ true }
-				/>
-			</InspectorControls>
-
 			<div { ...blockProps } >
 				{ showLabel &&
 					<RichText
-						tagName="label"
+						id={ labelId }
 						className="bigup__form_inputLabel"
+						htmlFor={ name + blockIdSuffix }
+						tagName="label"
 						value={ label }
 						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
-						aria-label={ label ? __( 'Label' ) : __( 'Empty label' ) }
-						placeholder={ __( 'Add a label to this input' ) }
+						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
 				<InputWrap>
 					<InputTagName
 						name={ name }
+						id={ name + blockIdSuffix }
 						className={ 'bigup__form_input' }
-						title={ label }
-						aria-label={ label }
-						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
 						placeholder={ editPlaceholder }
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
+						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
 						autoComplete={ autocomplete }
 						{ ...conditionalProps }
-						required={ required ? 'required' : '' }
 					/>
 				</InputWrap>
 			</div>
@@ -311,6 +324,7 @@ Edit.propTypes = {
 	name: PropTypes.string,
 	attributes: PropTypes.object,
 	setAttributes: PropTypes.func,
+	clientId: PropTypes.string,
 	context: PropTypes.object,
 	variation: PropTypes.string,
 }

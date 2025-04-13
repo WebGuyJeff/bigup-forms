@@ -84,8 +84,8 @@ class Validate {
 				'types'       => array( 'textarea', 'text' ),
 				'error'       => __( 'Only letters, spaces and \' - , . allowed.', 'bigup-forms' ),
 				'rules'       => array(
-					// Use named back reference to avoid conversion to an octal character with '\1'.
-					'pattern'   => "/^[\p{L}](?:[\p{L}]|(?<punct>[- ',\.])(?!\k<punct>))*$/u",
+					// Escape back reference (\\2) to avoid conversion to an octal character.
+					'pattern'   => "/^[\p{L}](?:[\p{L}]|(?[- ',\.])(?!\k\\2))*$/u",
 					'maxlength' => 50,
 					'minlength' => 2,
 				),
@@ -141,8 +141,8 @@ class Validate {
 				'types'       => array( 'textarea', 'text' ),
 				'error'       => __( 'Only letters, numbers and non-consecutive _ - allowed.', 'bigup-forms' ),
 				'rules'       => array(
-					// Use named back reference to avoid conversion to an octal character with '\1'.
-					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|(?<separator>[_-])(?!\k<separator>))+[\p{L}\p{N}]$/u',
+					// Escape back reference (\\2) to avoid conversion to an octal character.
+					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|(?[_-])(?!\k\\2))+[\p{L}\p{N}]$/u',
 					'maxlength' => 20,
 					'minlength' => 0,
 				),

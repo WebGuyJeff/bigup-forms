@@ -64,23 +64,23 @@ function makeHumanReadable( string ) {
  * @param {*}	string	The string to clean.
  * @returns		string	Cleaned string, or false on no valid characters.
  */
-function makeNameAttributeSafe( string ) {
+function makeNameAttributeSafe( string = '' ) {
 	// Regex patterns.
 	const badChars         = /[^a-z0-9_-]/g
 	const extraSpaces      = /^\s*|\s(?=\s)|\s*$/g
 	const spaces           = /\s/g
 	const extraHyphens     = /-{2,}/g
 	const extraUnderscores = /_{2,}/g
-	const firsCharIsLetter = /^[A-Za-z]/g
+	const firsCharIsLetter = /^[a-z]/g
 	// Process strings.
-	const goodChars       = string ? string.replace( badChars, '' ) : false
-	const goodSpaces      = goodChars ? goodChars.replace( extraSpaces, '' ) : false
-	const hyphenSpaces    = goodSpaces ? goodSpaces.replace( spaces, '-' ) : false
-	const goodHyphens     = hyphenSpaces ? hyphenSpaces.replace( extraHyphens, '-' ) : false
-	const goodUnderscores = goodHyphens ? goodHyphens.replace( extraUnderscores, '_' ) : false
-	if ( ! goodUnderscores ) return false
+	const lowercase       = string.toLowerCase()
+	const goodChars       = lowercase.replace( badChars, '' )
+	const goodSpaces      = goodChars.replace( extraSpaces, '' )
+	const hyphenSpaces    = goodSpaces.replace( spaces, '-' )
+	const goodHyphens     = hyphenSpaces.replace( extraHyphens, '-' )
+	const goodUnderscores = goodHyphens.replace( extraUnderscores, '_' )
 	// Apply prefix if first char isn't a letter.
-	const cleanName = firsCharIsLetter.test( goodUnderscores ) ? goodUnderscores : type + '-' + goodUnderscores
+	const cleanName = firsCharIsLetter.test( goodUnderscores ) ? goodUnderscores : type + '_' + goodUnderscores
 	return cleanName
 }
 

@@ -14,28 +14,40 @@ import { InputWrap } from '../../components/InputWrap'
 export default function save( { attributes } ) {
 
 	const {
+		blockId,
 		validationAttrs,
 		label,
-		labelID,
 		showLabel,
 		required,
 		autocomplete,
 		rows,
 		type,
 		name,
-		placeholder,
-		step
+		placeholder
 	}                = attributes
 	const blockProps = useBlockProps.save()
 
-	// Set the HTML tag to either input or textarea.
-	const InputTagName = ( type === 'textarea' ) ? 'textarea' : 'input'
+	const blockIdSuffix = '-' + blockId
+	const labelId       = name + '-label' + blockIdSuffix
 
+	// Set the HTML tag to either input or textarea.
+	let InputTagName = ''
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
+		InputTagName = 'textarea'
 		conditionalProps.rows = rows
 	} else {
+		// All <input> elements set to type="text" to allow inline placeholder editing.
+		InputTagName = 'input'
 		conditionalProps.type = type
+	}
+	if ( required ) {
+		conditionalProps.required = 'required=""'
+	}
+	if ( showLabel ) {
+		conditionalProps[ 'aria-labelledby' ] = labelId
+	} else {
+		conditionalProps[ 'aria-label' ] = label
 	}
 
 	// Get the html input validation attributes.
@@ -49,10 +61,11 @@ export default function save( { attributes } ) {
 
 		<>
 			<div { ...blockProps }>
-				{ label && showLabel &&
+				{ showLabel &&
 					<label
-						htmlFor={ labelID }
+						id={ labelId }
 						className="bigup__form_inputLabel"
+						htmlFor={ name + blockIdSuffix }
 					>
 						{ label }
 					</label>
@@ -60,16 +73,13 @@ export default function save( { attributes } ) {
 				<InputWrap>
 					<InputTagName
 						name={ name }
+						id={ name + blockIdSuffix }
 						className={ 'bigup__form_input' }
-						id={ labelID }
-						title={ label }
-						aria-label={ label }
 						placeholder={ placeholder }
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autoComplete={ autocomplete }
 						{ ...conditionalProps }
-						required={ required ? 'required' : '' }
 					/>
 				</InputWrap>
 			</div>

@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
+import { BinIcon, FileIcon } from './svg'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -21,20 +22,20 @@ export default function save() {
 			<label className='bigup__customFileUpload_label'>
 				<input
 					className='bigup__customFileUpload_input'
-					title='Attach a File'
+					title={ __( 'Attach a File', 'bigup-forms' ) }
 					type='file'
 					name='files'
 					multiple={ true }
 				/>
 				<span className='bigup__customFileUpload_icon'>
-					{'[FILES ICON]'}
+					<FileIcon />
 				</span>	
-				{'Attach file'}
+				{ __( 'Attach File', 'bigup-forms' ) }
 			</label>
 			<div className='bigup__customFileUpload_output'></div>
 			<template>
 				<span className='bigup__customFileUpload_icon'>
-					{'[BIN ICON]'}
+					<BinIcon />
 				</span>	
 			</template>
 		</div>

@@ -12,6 +12,9 @@
 	"ancestor": [ "bigup-forms/form" ],
 	"usesContext": [ "bigup-forms/formID" ],
 	"attributes": {
+		"blockId": {
+			"type": "string"
+		},
 		"variation": {
 			"type": "string",
 			"default": "text"
@@ -32,13 +35,6 @@
 			"type": "rich-text",
 			"selector": "label",
 			"source": "text"
-		},
-		"labelID": {
-			"type": "string",
-			"selector": "label",
-			"source": "attribute",
-			"attribute": "id",
-			"default": "bigup-text"
 		},
 		"showLabel": {
 			"type": "boolean",
