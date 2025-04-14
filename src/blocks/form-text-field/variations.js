@@ -7,11 +7,12 @@ const { dataFormats } = bigupFormsInlinedVars
 const Variations = [
 	{
 		name: 'text',
-		title: __( 'Custom Text Field', 'bigup-forms' ),
+		title: __( 'Custom Text', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Customisable input field for any text type.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'text' ],
 		attributes: {
+			'InputTag': 'input',
 			'type': 'text',
 			'name': 'text',
 			'label': __( 'Text', 'bigup-forms' ),
@@ -29,11 +30,12 @@ const Variations = [
 	},
 	{
 		name: 'number',
-		title: __( 'Custom Number Field', 'bigup-forms' ),
+		title: __( 'Custom Number', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Customisable input field for any number type.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'number' ],
 		attributes: {
+			'InputTag': 'input',
 			'type': 'number',
 			'name': 'number',
 			'label': __( 'Number', 'bigup-forms' ),
@@ -51,11 +53,12 @@ const Variations = [
 	},
 	{
 		name: 'name',
-		title: __( 'Name Field', 'bigup-forms' ),
+		title: __( 'Name', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Name input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'name' ],
 		attributes: {
+			'InputTag': 'input',
 			'type': 'text',
 			'name': 'name',
 			'label': __( 'Name', 'bigup-forms' ),
@@ -74,11 +77,12 @@ const Variations = [
 	},
 	{
 		name: 'email',
-		title: __( 'Email Field', 'bigup-forms' ),
+		title: __( 'Email', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Email address input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'email' ],
 		attributes: {
+			'InputTag': 'input',
 			'type': 'email',
 			'name': 'email',
 			'label': __( 'Email', 'bigup-forms' ),
@@ -96,11 +100,12 @@ const Variations = [
 	},
 	{
 		name: 'tel',
-		title: __( 'Phone Field', 'bigup-forms' ),
+		title: __( 'Phone', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Phone number input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'phone' ],
 		attributes: {
+			'InputTag': 'input',
 			'type': 'tel',
 			'name': 'tel',
 			'label': __( 'Phone', 'bigup-forms' ),
@@ -118,11 +123,12 @@ const Variations = [
 	},
 	{
 		name: 'message',
-		title: __( 'Message Field', 'bigup-forms' ),
+		title: __( 'Message', 'bigup-forms' ),
 		icon: Logo,
 		description: __( 'Message input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'message' ],
 		attributes: {
+			'InputTag': 'textarea',
 			'type': 'textarea',
 			'name': 'message',
 			'label': __( 'Message', 'bigup-forms' ),
@@ -130,12 +136,13 @@ const Variations = [
 			'placeholder': __( 'Type your message...', 'bigup-forms' ),
 			'variation': 'message',
 			'format': 'any_text',
+			'rows': '8',
 			'required': true,
 			...dataFormats[ 'any_text' ].rules
 		},
 		validationAttrs: Object.keys( dataFormats[ 'any_text' ].rules ),
 		isActive: ( blockAttributes ) => { 
-			return blockAttributes.variation === 'text-large'
+			return blockAttributes.variation === 'message'
 		}
 	}
 ]

@@ -2,7 +2,7 @@
 	"apiVersion": 3,
 	"name": "bigup-forms/form-file-upload",
 	"version": "0.0.1",
-	"title": "Form File Upload",
+	"title": "File Upload",
 	"category": "widgets",
 	"icon": "forms",
 	"description": "File upload control for a form",

@@ -4,6 +4,7 @@ import { Logo } from './svg'
 import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
+import { Variations } from './variations'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 import './form.scss'
 
@@ -37,48 +38,7 @@ registerBlockType( metadata.name, {
 			label: __( 'Inset Light' )
 		}
 	],
-	variations: [
-		{
-			name: 'contact',
-			title: 'Contact',
-			icon: Logo,
-			description: __( 'Contact form.', 'bigup-forms' ),
-			keywords: [ 'form', 'contact' ],
-			attributes: {
-				'variation': 'contact',
-			},
-			// If isActive is not set, the Editor cannot distinguish between the original block and your variation, so the original block information will be displayed.
-			isActive: ( blockAttributes ) => { 
-				return blockAttributes.variation === 'contact'
-			}
-		},
-		{
-			name: 'signup',
-			title: 'Sign-up',
-			icon: Logo,
-			description: __( 'Sign-up form.', 'bigup-forms' ),
-			keywords: [ 'form', 'signup' ],
-			attributes: {
-				'variation': 'signup',
-			},
-			isActive: ( blockAttributes ) => { 
-				return blockAttributes.variation === 'signup'
-			}
-		},
-		{
-			name: 'login',
-			title: 'Login',
-			icon: Logo,
-			description: __( 'Login form.', 'bigup-forms' ),
-			keywords: [ 'form', 'login' ],
-			attributes: {
-				'variation': 'login',
-			},
-			isActive: ( blockAttributes ) => { 
-				return blockAttributes.variation === 'login'
-			}
-		}
-	],
+	variations: Variations,
 	edit: Edit,
 	save,
 } )

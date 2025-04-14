@@ -21,6 +21,7 @@ export default function save( { attributes } ) {
 		required,
 		autocomplete,
 		rows,
+		InputTag,
 		type,
 		name,
 		placeholder
@@ -30,15 +31,10 @@ export default function save( { attributes } ) {
 	const blockIdSuffix = '-' + blockId
 	const labelId       = name + '-label' + blockIdSuffix
 
-	// Set the HTML tag to either input or textarea.
-	let InputTagName = ''
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
-		InputTagName = 'textarea'
 		conditionalProps.rows = rows
 	} else {
-		// All <input> elements set to type="text" to allow inline placeholder editing.
-		InputTagName = 'input'
 		conditionalProps.type = type
 	}
 	if ( required ) {
@@ -71,7 +67,7 @@ export default function save( { attributes } ) {
 					/>
 				}
 				<InputWrap>
-					<InputTagName
+					<InputTag
 						name={ name }
 						id={ name + blockIdSuffix }
 						className={ 'bigup__form_input' }
@@ -79,6 +75,9 @@ export default function save( { attributes } ) {
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 						autoComplete={ autocomplete }
+						data-inputtagname={ InputTag }
+						data-type={ type }
+						data-rows={ rows }
 						{ ...conditionalProps }
 					/>
 				</InputWrap>

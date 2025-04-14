@@ -117,7 +117,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 						type="text"
 						value={ formName }
 						onChange={ ( newValue ) => { setAttributes( { formName: newValue } ) } }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<ButtonGroup>
 						<Button
@@ -139,7 +139,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 						value={ variation }
 						options={ variationOptions }
 						onChange={ ( newValue ) => { setAttributes( { variation: newValue } ) } }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 				<PanelBody
@@ -152,19 +152,19 @@ export default function Edit( { name, attributes, setAttributes } ) {
 						value={ title }
 						onChange={ ( newValue ) => { setAttributes( { title: newValue } ) } }
 						disabled={ ! showTitle }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
 						label={ __( 'Show title', 'bigup-forms' ) }
 						checked={ showTitle }
 						onChange={ ( newValue ) => { setAttributes( { showTitle: newValue } ) } }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
 						label={ __( 'Show reset button', 'bigup-forms' ) }
 						checked={ showResetButton }
 						onChange={ ( newValue ) => { setAttributes( { showResetButton: newValue } ) } }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 			</InspectorControls>

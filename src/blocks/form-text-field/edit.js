@@ -35,6 +35,7 @@ export default function Edit( props ) {
 		required, // Boolean flag to enable/disable HTML 'required' attribute.
 		autocomplete, // Boolean flag to enable/disable HTML 'autocomplete' attribute.
 		rows, // Number of rows displayed in a textarea field.
+		InputTag, // HTML 'tag' for the input element.
 		type, // HTML 'type' attribute for <input> elements.
 		name, // HTML name attribute. Must be unique on the form.
 		placeholder, // Text content of the field placeholder.
@@ -115,16 +116,11 @@ export default function Edit( props ) {
 	const blockIdSuffix = '-' + blockId
 	const labelId       = name + '-label' + blockIdSuffix
 
-
-	// Set the HTML tag to either input or textarea.
-	let InputTagName = ''
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
-		InputTagName = 'textarea'
 		conditionalProps.rows = rows
 	} else {
 		// All <input> elements set to type="text" to allow inline placeholder editing.
-		InputTagName = 'input'
 		conditionalProps.type = 'text'
 	}
 	if ( required ) {
@@ -160,7 +156,7 @@ export default function Edit( props ) {
 						value={ variation }
 						options={ variationOptions }
 						onChange={ ( newValue ) => onChangeVariation( newValue ) }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<TextControl
 						label={ __( 'Label', 'bigup-forms' ) }
@@ -168,26 +164,26 @@ export default function Edit( props ) {
 						value={ label }
 						onChange={ ( newValue ) => onChangeLabel( newValue ) }
 						help={ __( 'The field label must be unique on this form.', 'bigup-forms' ) }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
 						label={ __( 'Show Label', 'bigup-forms' ) }
 						checked={ showLabel }
 						onChange={ ( newValue ) => { setAttributes( { showLabel: newValue, } ) } }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
 						label={ __( 'Required', 'bigup-forms' ) }
 						checked={ required }
 						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
 						label={ __( 'Autocomplete', 'bigup-forms' ) }
 						checked={ ( autocomplete === "on" ) ? true : false }
 						onChange={ ( newValue ) => { setAttributes( { autocomplete: newValue ? "on" : "off", } ) } }
 						help={ __( 'Allow browser-assisted form-filling.', 'bigup-forms' ) }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					{ variation === 'any_text' || variation === 'any_number' &&
 						<SelectControl
@@ -197,7 +193,7 @@ export default function Edit( props ) {
 							value={ type }
 							options={ typeOptions }
 							onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 					{ type === 'textarea' &&
@@ -207,7 +203,7 @@ export default function Edit( props ) {
 							value={ rows }
 							onChange={ ( newValue ) => { setAttributes( { rows: newValue, } ) } }
 							help={ __( 'Height of the input in text rows.',	'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 				</PanelBody>
@@ -226,7 +222,7 @@ export default function Edit( props ) {
 						value={ format }
 						onChange={ ( newValue ) => onChangeFormat( newValue ) }
 						help={ __( 'The format you want the input to conform to.', 'bigup-forms' ) }
-						__nextHasNoMarginBottom={ true }
+						__nextHasNoMarginBottom
 					/>
 					{ 'minlength' in validationAttrs &&
 						<TextControl
@@ -235,7 +231,7 @@ export default function Edit( props ) {
 							value={ minlength }
 							onChange={ ( newValue ) => { setAttributes( { minlength: newValue } ) } }
 							help={ __( 'Minimum length of the text.', 'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 					{ 'maxlength' in validationAttrs &&
@@ -245,7 +241,7 @@ export default function Edit( props ) {
 							value={ maxlength }
 							onChange={ ( newValue ) => { setAttributes( { maxlength: newValue } ) } }
 							help={ __( 'Maximum length of the text.', 'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 					{ 'min' in validationAttrs &&
@@ -255,7 +251,7 @@ export default function Edit( props ) {
 							value={ min }
 							onChange={ ( newValue ) => { setAttributes( { min: newValue } ) } }
 							help={ __( 'Minimum value.', 'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 					{ 'max' in validationAttrs &&
@@ -265,7 +261,7 @@ export default function Edit( props ) {
 							value={ max }
 							onChange={ ( newValue ) => { setAttributes( { max: newValue } ) } }
 							help={ __( 'Maximum value.', 'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 					{ 'step' in validationAttrs &&
@@ -275,7 +271,7 @@ export default function Edit( props ) {
 							value={ step }
 							onChange={ ( newValue ) => { setAttributes( { step: newValue } ) } }
 							help={ __( 'Determine granularity by setting the step between allowed values. E.g. "30" for half-hour increments or "0.01" for a currency format.', 'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 					{ 'pattern' in validationAttrs &&
@@ -284,7 +280,7 @@ export default function Edit( props ) {
 							value={ pattern }
 							onChange={ ( newValue ) => { setAttributes( { pattern: newValue } ) } }
 							help={ __( 'A regular expression pattern to validate the input against. Must be both PCRE2 and EMCA compatible.', 'bigup-forms' ) }
-							__nextHasNoMarginBottom={ true }
+							__nextHasNoMarginBottom
 						/>
 					}
 				</PanelBody>
@@ -302,7 +298,7 @@ export default function Edit( props ) {
 					/>
 				}
 				<InputWrap>
-					<InputTagName
+					<InputTag
 						name={ name }
 						className={ 'bigup__form_input' }
 						placeholder={ editPlaceholder }
@@ -310,6 +306,9 @@ export default function Edit( props ) {
 						onBlur={ ( e ) => { e.target.value = '' } }
 						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
 						autoComplete={ autocomplete }
+						data-inputtagname={ InputTag }
+						data-type={ type }
+						data-rows={ rows }
 						{ ...conditionalProps }
 					/>
 				</InputWrap>

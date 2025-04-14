@@ -43,84 +43,91 @@
 		"name": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "name",
 			"default": "text"
+		},
+		"InputTag": {
+			"type": "string",
+			"source": "attribute",
+			"selector": ".bigup__form_input",
+			"attribute": "data-inputtagname",
+			"default": "input"
 		},
 		"type": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
-			"attribute": "type",
+			"selector": ".bigup__form_input",
+			"attribute": "data-type",
 			"default": "text"
 		},
 		"required": {
 			"type": "boolean",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "required",
 			"default": false
 		},
 		"autocomplete": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "autocomplete",
 			"default": "off"
 		},
 		"placeholder": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "placeholder",
 			"default": "Type here..."
 		},
 		"rows": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
-			"attribute": "rows",
+			"selector": ".bigup__form_input",
+			"attribute": "data-rows",
 			"default": "8"
 		},
 		"pattern": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "pattern",
 			"default": ""
 		},
 		"maxlength": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "maxlength",
 			"default": ""
 		},
 		"minlength": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "minlength",
 			"default": ""
 		},
 		"max": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "max",
 			"default": ""
 		},
 		"min": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "min",
 			"default": ""
 		},
 		"step": {
 			"type": "string",
 			"source": "attribute",
-			"selector": "input",
+			"selector": ".bigup__form_input",
 			"attribute": "step",
 			"default": ""
 		}
