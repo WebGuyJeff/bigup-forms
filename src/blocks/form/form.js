@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { registerBlockType } from '@wordpress/blocks'
-import { Logo } from './svg'
+import { LogoForm } from './svg'
 import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
@@ -18,7 +18,7 @@ if ( bigupFormsInlinedVars.debug ) {
  */
 registerBlockType( metadata.name, {
 	...metadata,
-	icon: Logo,
+	icon: LogoForm,
 	styles: [
 		{
 			name: 'default',

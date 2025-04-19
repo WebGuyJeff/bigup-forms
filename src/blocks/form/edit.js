@@ -11,6 +11,7 @@ import './form-editor.scss'
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-file-upload',
 	'bigup-forms/form-text-field',
+	'bigup-forms/form-select',
 	'core/buttons',
 	'core/columns',
 	'core/cover',

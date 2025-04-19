@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
-import { Logo } from './svg'
+import { LogoForm } from './svg'
 
 const { dataFormats } = bigupFormsInlinedVars
 
@@ -8,7 +8,7 @@ const Variations = [
 	{
 		name: 'contact',
 		title: 'Contact Form',
-		icon: Logo,
+		icon: LogoForm,
 		description: __( 'Contact form.', 'bigup-forms' ),
 		keywords: [ 'form', 'contact' ],
 		attributes: {
@@ -22,7 +22,7 @@ const Variations = [
 	{
 		name: 'signup',
 		title: 'Sign-up Form',
-		icon: Logo,
+		icon: LogoForm,
 		description: __( 'Sign-up form.', 'bigup-forms' ),
 		keywords: [ 'form', 'signup' ],
 		attributes: {
@@ -35,7 +35,7 @@ const Variations = [
 	{
 		name: 'login',
 		title: 'Login Form',
-		icon: Logo,
+		icon: LogoForm,
 		description: __( 'Login form.', 'bigup-forms' ),
 		keywords: [ 'form', 'login' ],
 		attributes: {

@@ -3,8 +3,7 @@ import { registerBlockType } from '@wordpress/blocks'
 import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
-import { Variations } from './variations'
-import { LogoText } from './svg'
+import { LogoSelect } from './svg'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 
 if ( bigupFormsInlinedVars.debug ) {
@@ -16,8 +15,7 @@ registerBlockType(
 	metadata.name,
 	{
 		...metadata,
-		icon: LogoText,
-		variations: Variations,
+		icon: LogoSelect,
 		edit: Edit,
 		save,
 	}

@@ -1,6 +1,14 @@
 import { __ } from '@wordpress/i18n'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
-import { Logo } from './svg'
+import {
+	LogoEmail,
+	LogoName,
+	LogoNumber,
+	LogoTel,
+	LogoText,
+	LogoTextarea,
+	LogoUrl
+} from './svg'
 
 const { dataFormats } = bigupFormsInlinedVars
 
@@ -8,7 +16,7 @@ const Variations = [
 	{
 		name: 'text',
 		title: __( 'Custom Text', 'bigup-forms' ),
-		icon: Logo,
+		icon: LogoText,
 		description: __( 'Customisable input field for any text type.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'text' ],
 		attributes: {
@@ -31,7 +39,7 @@ const Variations = [
 	{
 		name: 'number',
 		title: __( 'Custom Number', 'bigup-forms' ),
-		icon: Logo,
+		icon: LogoNumber,
 		description: __( 'Customisable input field for any number type.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'number' ],
 		attributes: {
@@ -54,7 +62,7 @@ const Variations = [
 	{
 		name: 'name',
 		title: __( 'Name', 'bigup-forms' ),
-		icon: Logo,
+		icon: LogoName,
 		description: __( 'Name input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'name' ],
 		attributes: {
@@ -78,7 +86,7 @@ const Variations = [
 	{
 		name: 'email',
 		title: __( 'Email', 'bigup-forms' ),
-		icon: Logo,
+		icon: LogoEmail,
 		description: __( 'Email address input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'email' ],
 		attributes: {
@@ -101,7 +109,7 @@ const Variations = [
 	{
 		name: 'tel',
 		title: __( 'Phone', 'bigup-forms' ),
-		icon: Logo,
+		icon: LogoTel,
 		description: __( 'Phone number input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'phone' ],
 		attributes: {
@@ -124,7 +132,7 @@ const Variations = [
 	{
 		name: 'message',
 		title: __( 'Message', 'bigup-forms' ),
-		icon: Logo,
+		icon: LogoTextarea,
 		description: __( 'Message input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'message' ],
 		attributes: {

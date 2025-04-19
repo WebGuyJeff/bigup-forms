@@ -1,0 +1,66 @@
+{
+	"apiVersion": 3,
+	"name": "bigup-forms/form-select",
+	"version": "0.0.1",
+	"title": "Select Dropdown",
+	"category": "widgets",
+	"description": "Customisable select dropdown",
+	"keywords": [ "form", "input", "select" ],
+	"textdomain": "bigup-forms",
+	"editorScript": "file:./form-select.js",
+	"viewScript": "file:./form-select-view.js",
+	"editorStyle": "file:./form-select-editor.css",
+	"ancestor": [ "bigup-forms/form" ],
+	"usesContext": [ "bigup-forms/formID" ],
+	"attributes": {
+		"blockId": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string",
+			"selector": ".bigup__form_inputLabel",
+			"source": "text"
+		},
+		"showLabel": {
+			"type": "boolean",
+			"default": true
+		},
+		"name": {
+			"type": "string",
+			"source": "attribute",
+			"selector": ".bigup__form_input",
+			"attribute": "name",
+			"default": "text"
+		},
+		"options": {
+			"type": "array",
+			"source": "text",
+			"selector": "option",
+			"default": [
+				"Option 1",
+				"Option 2"
+			]
+		},
+		"required": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": ".bigup__form_input",
+			"attribute": "required",
+			"default": false
+		},
+		"autocomplete": {
+			"type": "string",
+			"source": "attribute",
+			"selector": ".bigup__form_input",
+			"attribute": "autocomplete",
+			"default": "off"
+		},
+		"placeholder": {
+			"type": "string",
+			"source": "attribute",
+			"selector": ".bigup__form_input",
+			"attribute": "placeholder",
+			"default": "Type here..."
+		}
+	}
+}
