@@ -98,42 +98,46 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
-				<div className={ 'bigupForms__selectEditWrap' }>
-					<span className={ 'bigupForms__selectEditOptions' }></span>
 					{ isSelected &&
-						<>
-							<p>Type each option on a new line</p>
-							<RichText
-								tagName={ 'ul' }
-								onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
-							/>
-						</>
+						<div className={ 'bigupForms__selectEditWrap' }>
+							<span
+								className={ 'bigupForms__selectEditOptions' }
+							></span>
+							<small
+								className={ 'bigupForms__selectEditOptionsHelp' }
+							>Type each option on a new line</small>
+							<textarea
+								className={ 'bigupForms__selectEditOptionsList' }
+								onChange={ ( newValue ) => setAttributes( { options: newValue.target.value.split( '\n' ) } ) }
+							>
+								{ options.join( '\n' ) }
+							</textarea>
+						</div>
 					}
-					<select
-						name={ name }
-						className={ 'bigupForms__input' }
-						placeholder={ editPlaceholder }
-						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
-						onBlur={ ( e ) => { e.target.value = '' } }
-						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
-						{ ...conditionalProps }
-					>
-						{
-							options.length > 0 && (
-								options.map( ( option, index ) => {
-									return (
-										<option
-											key={ index }
-											value={ option }
-										>
-											{ option }
-										</option>
-									)
-								} )
-							)
-						}
-					</ select>
-				</div>
+				<select
+					name={ name }
+					className={ 'bigupForms__select' }
+					placeholder={ editPlaceholder }
+					onFocus={ ( e ) => { e.target.value = editPlaceholder } }
+					onBlur={ ( e ) => { e.target.value = '' } }
+					onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
+					{ ...conditionalProps }
+				>
+					{
+						options.length > 0 && (
+							options.map( ( option, index ) => {
+								return (
+									<option
+										key={ index }
+										value={ option }
+									>
+										{ option }
+									</option>
+								)
+							} )
+						)
+					}
+				</ select>
 			</div>
 		</>
 	)

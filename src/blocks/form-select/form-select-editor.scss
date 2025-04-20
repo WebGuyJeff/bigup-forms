@@ -31,3 +31,14 @@
 	height: 1em;
 	cursor: pointer;
 }
+
+.bigupForms__selectEditOptionsHelp {
+	display: block;
+	padding: var(--bigup_padding);
+}
+
+.bigupForms__selectEditOptionsList {
+	display: block;
+	padding: var(--bigup_padding);
+	width: 100%;
+}

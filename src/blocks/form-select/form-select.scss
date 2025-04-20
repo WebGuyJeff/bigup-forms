@@ -7,3 +7,27 @@
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
+
+ .bigupForms__select {
+
+	display: block;
+	position: relative;
+	transition: 0.2s;
+	margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
+	outline: none;
+	border: var( --bigup_border );
+	border-radius: var(--bigup_radius);
+	box-shadow: var(--bigup_shadow-inset);
+	background: var(--bigup_inputWrapBackground);
+	padding: var(--bigup_padding);
+	width: 100%;
+	min-width: 8em;
+	min-height: fit-content;
+	overflow: hidden;
+	resize: none;
+	color: var( --bigup_inputColor );
+
+	&:not(.bigupForms__form-locked *):hover {
+		cursor: pointer;
+	}
+ }
