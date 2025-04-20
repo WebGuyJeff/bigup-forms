@@ -37,8 +37,8 @@ async function submit( event ) {
 	}
 
 	const formData   = new FormData()
-	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( .saveTheBees, .bigup__customFileUpload_input )' )
-	const fileInput  = form.querySelector( '.bigup__customFileUpload_input' )
+	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( .saveTheBees, .bigupForms__customFileUpload_input )' )
+	const fileInput  = form.querySelector( '.bigupForms__customFileUpload_input' )
 
 	textInputs.forEach( input => {
 		formData.append(
@@ -110,7 +110,7 @@ async function submit( event ) {
 				// Remove inline errors.
 				const removeErrors = ( input ) => {
 					const errorBox = input?.nextElementSibling
-					if ( errorBox && errorBox.classList.contains( 'bigup__form_inlineErrors' ) ) {
+					if ( errorBox && errorBox.classList.contains( 'bigupForms__inlineErrors' ) ) {
 						errorBox.remove()
 						input.removeAttribute( 'aria-errormessage' )
 						input.removeAttribute( 'aria-invalid' )
@@ -129,7 +129,7 @@ async function submit( event ) {
 
 					// Attach errors to input.
 					let div = document.createElement( 'div' )
-					div.classList.add( 'bigup__form_inlineErrors' )
+					div.classList.add( 'bigupForms__inlineErrors' )
 					fieldErrors.forEach( error => {
 						let span = document.createElement( 'span' )
 						span.innerHTML = error
@@ -151,9 +151,9 @@ async function submit( event ) {
 
 		// Clean up form if email was sent.
 		if ( result.ok ) {
-			let inputs = form.querySelectorAll( '.bigup__form_input' )
+			let inputs = form.querySelectorAll( '.bigupForms__input' )
 			inputs.forEach( input => { input.value = '' } )
-			const fileList = form.querySelector( '.bigup__customFileUpload_output' )
+			const fileList = form.querySelector( '.bigupForms__customFileUpload_output' )
 			if ( fileList ) removeChildren( fileList )
 		}
 

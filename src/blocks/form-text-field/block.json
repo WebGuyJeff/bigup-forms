@@ -9,6 +9,7 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-text-field.js",
 	"viewScript": "file:./form-text-field-view.js",
+	"style": "file:./form-text-field.css",
 	"ancestor": [ "bigup-forms/form" ],
 	"usesContext": [ "bigup-forms/formID" ],
 	"attributes": {
@@ -33,7 +34,7 @@
 		},
 		"label": {
 			"type": "string",
-			"selector": ".bigup__form_inputLabel",
+			"selector": ".bigupForms__label",
 			"source": "text"
 		},
 		"showLabel": {
@@ -43,91 +44,91 @@
 		"name": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "name",
 			"default": "text"
 		},
 		"InputTag": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "data-inputtagname",
 			"default": "input"
 		},
 		"type": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "data-type",
 			"default": "text"
 		},
 		"required": {
 			"type": "boolean",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "required",
 			"default": false
 		},
 		"autocomplete": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "autocomplete",
 			"default": "off"
 		},
 		"placeholder": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "placeholder",
 			"default": "Type here..."
 		},
 		"rows": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "data-rows",
 			"default": "8"
 		},
 		"pattern": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "pattern",
 			"default": ""
 		},
 		"maxlength": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "maxlength",
 			"default": ""
 		},
 		"minlength": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "minlength",
 			"default": ""
 		},
 		"max": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "max",
 			"default": ""
 		},
 		"min": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "min",
 			"default": ""
 		},
 		"step": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "step",
 			"default": ""
 		}

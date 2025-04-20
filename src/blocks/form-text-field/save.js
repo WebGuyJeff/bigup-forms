@@ -60,7 +60,7 @@ export default function save( { attributes } ) {
 				{ showLabel &&
 					<RichText.Content
 						id={ labelId }
-						className={ 'bigup__form_inputLabel' }
+						className={ 'bigupForms__label' }
 						tagName={ 'label' }
 						htmlFor={ name + blockIdSuffix }
 						value={ label }
@@ -70,7 +70,7 @@ export default function save( { attributes } ) {
 					<InputTag
 						name={ name }
 						id={ name + blockIdSuffix }
-						className={ 'bigup__form_input' }
+						className={ 'bigupForms__input' }
 						placeholder={ placeholder }
 						onFocus={ ( e ) => { e.target.placeholder = '' } }
 						onBlur={ ( e ) => { e.target.placeholder = placeholder } }

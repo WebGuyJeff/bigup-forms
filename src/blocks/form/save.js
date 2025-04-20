@@ -16,7 +16,7 @@ export default function save( { attributes } ) {
 	} = attributes
 
 	const blockProps = useBlockProps.save( {
-		className: 'bigup__form',
+		className: 'bigupForms__form',
 		style: { textAlign: textAlign }
 	} )
 
@@ -38,13 +38,13 @@ export default function save( { attributes } ) {
 				}
 			</header>
 
-			<div className='bigup__form_section'>
+			<div className='bigupForms__section'>
 
 				<Honeypot />
 
 				<InnerBlocks.Content />
 
-				<div className='bigup__form_controls'>
+				<div className='bigupForms__controls'>
 					<SubmitButton />
 					{ showResetButton &&
 						<ResetButton />
@@ -54,7 +54,7 @@ export default function save( { attributes } ) {
 			</div>
 
 			<footer>
-				<div className='bigup__alert_output' style={{ display: 'none', opacity: 0 }}></div>
+				<div className='bigupForms__alerts' style={{ display: 'none', opacity: 0 }}></div>
 			</footer>
 
 		</form>

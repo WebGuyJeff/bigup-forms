@@ -1,4 +1,4 @@
-.bigup__alert_output {
+.bigupForms__alerts {
 
 	--bigup_padding: 0.5em 0.75em;
 
@@ -12,7 +12,7 @@
 	justify-content: center;
 	transition: opacity 150ms ease-in-out;
 
-	.bigup__alert {
+	.bigupForms__alert {
 		margin-block-end: 1.688em;
 		border: var(--bigup_border);
 		border-radius: var(--bigup_radius);

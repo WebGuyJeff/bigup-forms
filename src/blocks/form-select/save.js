@@ -44,7 +44,7 @@ export default function save( { attributes } ) {
 				{ showLabel &&
 					<RichText.Content
 						id={ labelId }
-						className={ 'bigup__form_inputLabel' }
+						className={ 'bigupForms__label' }
 						tagName={ 'label' }
 						htmlFor={ name + blockIdSuffix }
 						value={ label }
@@ -53,7 +53,7 @@ export default function save( { attributes } ) {
 				<InputWrap>
 					<select
 						name={ name }
-						className={ 'bigup__form_input' }
+						className={ 'bigupForms__input' }
 						placeholder={ placeholder }
 						{ ...conditionalProps }
 					>

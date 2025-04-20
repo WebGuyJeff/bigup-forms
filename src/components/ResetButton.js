@@ -1,8 +1,8 @@
 const ResetButton = () => {
 
 	return (
-		<div className='bigup__form_buttonWrap is-style-outline wp-block-button'>
-			<button className='button bigup__form_reset wp-element-button wp-block-button__link' disabled>
+		<div className='bigupForms__buttonWrap is-style-outline wp-block-button'>
+			<button className='button bigupForms__reset wp-element-button wp-block-button__link' disabled>
 				<span>
 					{'Reset'}
 				</span>

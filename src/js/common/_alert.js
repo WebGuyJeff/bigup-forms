@@ -11,7 +11,7 @@ import { removeChildren, makeHumanReadable } from './_util'
  */
 const alertsShow = async ( form, alerts ) => {
 
-	const output = form.querySelector( '.bigup__alert_output' )
+	const output = form.querySelector( '.bigupForms__alerts' )
 	if ( ! output ) return
 
 	// Show.
@@ -35,7 +35,7 @@ const alertsShow = async ( form, alerts ) => {
  */
 const alertsShowWaitHide = async ( form, alerts, wait ) => {
 
-	const output = form.querySelector( '.bigup__alert_output' )
+	const output = form.querySelector( '.bigupForms__alerts' )
 	if ( ! output ) return
 
 	// Show.
@@ -96,7 +96,7 @@ function isIterable( object ) {
  */
 function popoutsIntoDom( output, alerts ) {
 
-	const classBlock  = 'bigup__alert',
+	const classBlock  = 'bigupForms__alert',
 		classModifier = {
 		'danger': '-danger',
 		'success': '-success',

@@ -13,27 +13,27 @@ import { BinIcon, FileIcon } from './svg'
 export default function Edit() {
 
 	const blockProps = useBlockProps( {
-		className: 'bigup__customFileUpload'
+		className: 'bigupForms__customFileUpload'
 	} )
 
 	return (
 		<div { ...blockProps }>
-			<label className='bigup__customFileUpload_label'>
+			<label className='bigupForms__customFileUpload_label'>
 				<input
-					className='bigup__customFileUpload_input'
+					className='bigupForms__customFileUpload_input'
 					title={ __( 'Attach a File', 'bigup-forms' ) }
 					type='file'
 					name='files'
 					multiple={ true }
 				/>
-				<span className='bigup__customFileUpload_icon'>
+				<span className='bigupForms__customFileUpload_icon'>
 					<FileIcon />
 				</span>	
 				{ __( 'Attach File', 'bigup-forms' ) }
 			</label>
-			<div className='bigup__customFileUpload_output'></div>
+			<div className='bigupForms__customFileUpload_output'></div>
 			<template>
-				<span className='bigup__customFileUpload_icon'>
+				<span className='bigupForms__customFileUpload_icon'>
 					<BinIcon />
 				</span>	
 			</template>

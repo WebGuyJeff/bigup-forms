@@ -1,11 +1,11 @@
 const SubmitButton = () => {
 	return (
-		<div className='bigup__form_buttonWrap'>
-			<button className='button bigup__form_submit wp-element-button' type='submit' value='Submit' disabled>
-				<span className='bigup__form_submitLabel-ready'>
+		<div className='bigupForms__buttonWrap'>
+			<button className='button bigupForms__submit wp-element-button' type='submit' value='Submit' disabled>
+				<span className='bigupForms__submitLabel-ready'>
 					{'Submit'}
 				</span>
-				<span className='bigup__form_submitLabel-notReady'>
+				<span className='bigupForms__submitLabel-notReady'>
 					{'[please wait]'}
 				</span>
 			</button>

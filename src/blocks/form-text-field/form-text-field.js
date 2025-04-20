@@ -6,6 +6,7 @@ import metadata from './block.json'
 import { Variations } from './variations'
 import { LogoText } from './svg'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import './form-text-field.scss'
 
 if ( bigupFormsInlinedVars.debug ) {
 	console.log( metadata.name + ' BLOCK LOADED' )

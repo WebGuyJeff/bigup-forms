@@ -11,7 +11,7 @@ const init = () => {
 	const setupForms = () => {
 
 		// Attach listeners to the form(s)
-		document.querySelectorAll( '.bigup__form' ).forEach( form => {
+		document.querySelectorAll( '.bigupForms__form' ).forEach( form => {
 
 			// Ensure honeypot is hidden.
 			const honeypot = document.querySelector( '.saveTheBees' )
@@ -26,13 +26,13 @@ const init = () => {
 			formLock( form, false ) 
 
 			// File upload.
-			const filesInput = form.querySelector( '.bigup__customFileUpload_input' )
+			const filesInput = form.querySelector( '.bigupForms__customFileUpload_input' )
 			if ( filesInput ) {
 				filesInput.addEventListener( 'change', fileUpload )
 			}
 
 			// Enable reset button.
-			const resetButton = form.querySelector( '.bigup__form_reset' )
+			const resetButton = form.querySelector( '.bigupForms__reset' )
 			if ( resetButton ) {
 				resetButton.disabled = false
 				resetButton.addEventListener( 'click', formReset )

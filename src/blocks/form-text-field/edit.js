@@ -290,7 +290,7 @@ export default function Edit( props ) {
 				{ showLabel &&
 					<RichText
 						id={ labelId }
-						className={ 'bigup__form_inputLabel' }
+						className={ 'bigupForms__label' }
 						tagName={ 'label' }
 						value={ label }
 						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
@@ -300,7 +300,7 @@ export default function Edit( props ) {
 				<InputWrap>
 					<InputTag
 						name={ name }
-						className={ 'bigup__form_input' }
+						className={ 'bigupForms__input' }
 						placeholder={ editPlaceholder }
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }

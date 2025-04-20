@@ -10,8 +10,8 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form.js",
 	"viewScript": "file:./form-view.js",
-	"editorStyle": "file:./form-editor.css",
 	"style": "file:./form.css",
+	"editorStyle": "file:./form-editor.css",
 	"attributes": {
 		"formID": {
 			"type": "number",

@@ -5,6 +5,7 @@ import save from './save'
 import metadata from './block.json'
 import { LogoSelect } from './svg'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import './form-select.scss'
 
 if ( bigupFormsInlinedVars.debug ) {
 	console.log( metadata.name + ' BLOCK LOADED' )

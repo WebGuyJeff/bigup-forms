@@ -1,10 +1,10 @@
 const InputWrap = ( { children, props } ) => {
 
 	return (
-		<div className={ 'bigup__form_inputWrap' }>
+		<div className={ 'bigupForms__inputWrap' }>
 			{ children }
-			<span className='bigup__form_flag bigup__form_flag-hover'></span>
-			<span className='bigup__form_flag bigup__form_flag-focus'></span>
+			<span className='bigupForms__flag bigupForms__flag-hover'></span>
+			<span className='bigupForms__flag bigupForms__flag-focus'></span>
 		</div>
 	)
 }

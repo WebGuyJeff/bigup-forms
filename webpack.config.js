@@ -16,7 +16,7 @@ module.exports = {
 		...getWebpackEntryPoints(),
 
 		// Extend with new entrypoints.
-		'css/bigup-forms-public': path.join( __dirname, '/src/css/frontend.scss' ),
+		'css/bigup-forms-public': path.join( __dirname, '/src/css/legacy.scss' ),
 		'css/bigup-forms-admin': path.join( __dirname, '/src/css/admin.scss' ),
 		'js/bigup-forms-public': path.join( __dirname, '/src/js/frontend.js' ),
 		'js/bigup-forms-admin': path.join( __dirname, '/src/js/admin.js' ),

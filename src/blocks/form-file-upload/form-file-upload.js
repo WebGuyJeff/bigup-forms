@@ -5,6 +5,7 @@ import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import './form-file-upload.scss'
 
 if ( bigupFormsInlinedVars.debug ) {
 	console.log( metadata.name + ' BLOCK LOADED' )

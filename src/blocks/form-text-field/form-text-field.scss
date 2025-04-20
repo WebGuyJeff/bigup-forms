@@ -1,27 +1,7 @@
-/* Base styles for all themes */
-.bigup__form.is-style-inset-dark,
-.bigup__form.is-style-inset-light,
-.bigup__form.is-style-vanilla  {
+/* Wrap in form class to increase specificity */
+.bigupForms__form {
 
-	margin: 0 auto;
-	width: clamp(10em, 100%, 34em);
-	text-align: inherit;
-	font: inherit;
-
-	.bigup__form_section {
-		width: 100%;
-		transition: opacity 150ms ease-in-out;
-	}
-
-	&.bigup__form-locked .bigup__form_section {
-		opacity: 0.5;
-	}
-
-	.bigup__form_message {
-		margin: 1em 0 1.688em 0;
-	}
-
-	.bigup__form_inputWrap {
+	.bigupForms__inputWrap {
 		position: relative;
 		transition: 0.2s;
 		margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
@@ -40,7 +20,7 @@
 		}
 	}
 
-	.bigup__form_input {
+	.bigupForms__input {
 		margin-block-end: 0;
 		margin-block-start: 0;
 		display: block;
@@ -54,7 +34,7 @@
 		resize: vertical;
 		color: var( --bigup_inputColor );
 
-		&:not(.bigup__form-locked *):hover {
+		&:not(.bigupForms__form-locked *):hover {
 			cursor: text;
 		}
 
@@ -65,7 +45,7 @@
 		}
 	}
 
-	.bigup__form_flag {
+	.bigupForms__flag {
 		display: flex;
 		position: absolute;
 		top: -1.5em;
@@ -82,9 +62,9 @@
 		&-focus { background: var(--bigup_green); }
 	}
 
-	.bigup__form_inputWrap:not(.bigup__form-locked *) {
-		&:hover .bigup__form_flag-hover,
-		&:focus-within .bigup__form_flag-focus {
+	.bigupForms__inputWrap:not(.bigupForms__form-locked *) {
+		&:hover .bigupForms__flag-hover,
+		&:focus-within .bigupForms__flag-focus {
 			top: 0;
 		}
 	}

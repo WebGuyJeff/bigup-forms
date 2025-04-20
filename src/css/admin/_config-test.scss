@@ -1,10 +1,10 @@
-.bigup__form-locked * {
+.bigupForms__form-locked * {
 	cursor: default;
 	pointer-events: none !important;
 }
 
 
-.bigup__smtpTest_wrapper {
+.bigupForms__smtpTest_wrapper {
 	--bigup_white: #fff;
     --bigup_black: #262626;
     --bigup_orange: #ffb908;
@@ -17,15 +17,15 @@
 	--bigup_gutter: 0.5em;
     position: relative;
 
-	.bigup__form_submitLabel-notReady { display: none;}
-	.bigup__form_submitLabel-ready { display: inline;}
+	.bigupForms__submitLabel-notReady { display: none;}
+	.bigupForms__submitLabel-ready { display: inline;}
 
-	.bigup__smtpTest_button:disabled {
-		.bigup__form_submitLabel-notReady { display: inline;}
-		.bigup__form_submitLabel-ready { display: none;}
+	.bigupForms__smtpTest_button:disabled {
+		.bigupForms__submitLabel-notReady { display: inline;}
+		.bigupForms__submitLabel-ready { display: none;}
 	}
 
-	.bigup__alert_output {
+	.bigupForms__alerts {
 		position: absolute;
 		top: 0;
 		right: 0;

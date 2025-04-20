@@ -41,7 +41,7 @@ const disallowedTypes = {
 const removeFromFileList = ( event ) => {
 	event.preventDefault()
 	const button  = event.currentTarget,
-		input     = button.closest( '.bigup__customFileUpload' ).querySelector( 'input' ),
+		input     = button.closest( '.bigupForms__customFileUpload' ).querySelector( 'input' ),
 		{ files } = input,
 		filename  = button.nextElementSibling.innerText
 
@@ -63,8 +63,8 @@ const removeFromFileList = ( event ) => {
  */
 const updateFileList = async ( input ) => {
 	const { files }  = input,
-		wrapper      = input.closest( '.bigup__customFileUpload' ),
-		output       = wrapper.querySelector( '.bigup__customFileUpload_output' ),
+		wrapper      = input.closest( '.bigupForms__customFileUpload' ),
+		output       = wrapper.querySelector( '.bigupForms__customFileUpload_output' ),
 		form         = input.closest( 'form' ),
 		ul           = document.createElement( "ul" ),
 		iconTemplate = wrapper.querySelector( 'template' )
@@ -78,11 +78,11 @@ const updateFileList = async ( input ) => {
 		const file = files[ i ]
 
 		// Check for disallowed MIME types.
-		let className = 'bigup__goodFileType'
+		let className = 'bigupForms__goodFileType'
 		if ( ! allowedMimeTypes.includes( file.type ) ) {
 			disallowedTypes.detected = true
 			disallowedTypes.list.push( file.name.split( '.' ).pop() )
-			className = 'bigup__badFileType'
+			className = 'bigupForms__badFileType'
 		}
 
 		// Create list element for file.

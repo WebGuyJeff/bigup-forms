@@ -1,8 +1,9 @@
-.bigup__customFileUpload {
+.bigupForms__customFileUpload {
 	display: block;
 
 	&_label {
-		display: block;
+		display: inline-flex;
+		align-items: center;
 		margin: var(--bigup_gutter) 0 var(--bigup_gutter) 0;
 		border: var(--bigup_border);
 		border-radius: var(--bigup_radius);
@@ -20,10 +21,9 @@
 	}
 
 	&_icon {
-		display: inline-block;
+		display: inline-flex;
 		cursor: pointer;
 		width: 1.5em;
-		vertical-align: middle;
 		text-align: left;
 	}
 

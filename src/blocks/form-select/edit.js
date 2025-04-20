@@ -3,8 +3,7 @@ import { PropTypes } from 'prop-types'
 import React, { useEffect } from 'react'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
-import { InputWrap } from '../../components/InputWrap'
-import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import './form-select-editor.scss'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -14,7 +13,7 @@ import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit( { attributes, setAttributes, clientId } ) {
+export default function Edit( { attributes, setAttributes, isSelected, clientId } ) {
 
 	const {
 		blockId, // The block ID.
@@ -92,18 +91,27 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 				{ showLabel &&
 					<RichText
 						id={ labelId }
-						className={ 'bigup__form_inputLabel' }
+						className={ 'bigupForms__label' }
 						tagName={ 'label' }
 						value={ label }
 						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
-				<InputWrap>
-					<a className={ 'bigup__addOption' }></a>
+				<div className={ 'bigupForms__selectEditWrap' }>
+					<span className={ 'bigupForms__selectEditOptions' }></span>
+					{ isSelected &&
+						<>
+							<p>Type each option on a new line</p>
+							<RichText
+								tagName={ 'ul' }
+								onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
+							/>
+						</>
+					}
 					<select
 						name={ name }
-						className={ 'bigup__form_input' }
+						className={ 'bigupForms__input' }
 						placeholder={ editPlaceholder }
 						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 						onBlur={ ( e ) => { e.target.value = '' } }
@@ -125,7 +133,7 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 							)
 						}
 					</ select>
-				</InputWrap>
+				</div>
 			</div>
 		</>
 	)
@@ -134,5 +142,6 @@ export default function Edit( { attributes, setAttributes, clientId } ) {
 Edit.propTypes = {
 	attributes: PropTypes.object,
 	setAttributes: PropTypes.func,
+	isSelected: PropTypes.boolean,
 	clientId: PropTypes.string,
 }

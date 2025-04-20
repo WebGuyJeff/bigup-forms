@@ -33,7 +33,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 	} = attributes
 
 	const blockProps = useBlockProps( {
-		className: 'bigup__form',
+		className: 'bigupForms__form',
 		style: { textAlign: textAlign }
 	} )
 
@@ -200,11 +200,11 @@ export default function Edit( { name, attributes, setAttributes } ) {
 					}
 				</header>
 
-				<div className='bigup__form_section'>
+				<div className='bigupForms__section'>
 
 					<Honeypot />
 					<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
-					<div className='bigup__form_controls'>
+					<div className='bigupForms__controls'>
 						<SubmitButton />
 						{ showResetButton && <ResetButton /> }
 					</div>
@@ -212,7 +212,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 				</div>
 
 				<footer>
-					<div className='bigup__alert_output' style={{ display: 'none', opacity: 0 }}></div>
+					<div className='bigupForms__alerts' style={{ display: 'none', opacity: 0 }}></div>
 				</footer>
 
 			</form>

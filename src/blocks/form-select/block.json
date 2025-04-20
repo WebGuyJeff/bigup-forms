@@ -9,7 +9,8 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-select.js",
 	"viewScript": "file:./form-select-view.js",
-	"editorStyle": "file:./form-select-editor.css",
+	"style": "file:./form-select.css",
+	"editorStyle": "file:./form-select-editor.scss",
 	"ancestor": [ "bigup-forms/form" ],
 	"usesContext": [ "bigup-forms/formID" ],
 	"attributes": {
@@ -18,8 +19,9 @@
 		},
 		"label": {
 			"type": "string",
-			"selector": ".bigup__form_inputLabel",
-			"source": "text"
+			"selector": ".bigupForms__label",
+			"source": "text",
+			"default": "Select an Option"
 		},
 		"showLabel": {
 			"type": "boolean",
@@ -28,7 +30,7 @@
 		"name": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "name",
 			"default": "text"
 		},
@@ -44,21 +46,21 @@
 		"required": {
 			"type": "boolean",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "required",
 			"default": false
 		},
 		"autocomplete": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "autocomplete",
 			"default": "off"
 		},
 		"placeholder": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigup__form_input",
+			"selector": ".bigupForms__input",
 			"attribute": "placeholder",
 			"default": "Type here..."
 		}

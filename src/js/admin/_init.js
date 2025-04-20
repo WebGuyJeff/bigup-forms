@@ -7,7 +7,7 @@ import { bigupFormsInlinedVars } from '../common/_wp-inlined-script'
 const init = () => {
 
 	const setupTestButton = () => {
-		const button = document.querySelector( '.bigup__smtpTest_button' )
+		const button = document.querySelector( '.bigupForms__smtpTest_button' )
 		if ( ! button ) return
 
 		button.addEventListener( 'click', submitTest )
