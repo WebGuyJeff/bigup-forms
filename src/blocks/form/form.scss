@@ -76,11 +76,6 @@
 		vertical-align: top;
 	}
 
-	.bigupForms__input:invalid,
-	.bigupForms__input[ aria-invalid="true" ] {
-		border: solid #cf2e2e 1px;
-	}
-
 	.bigupForms__inlineErrors {
 		display: flex;
 		flex-flow: column;
