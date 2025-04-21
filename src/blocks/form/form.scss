@@ -23,6 +23,7 @@
 	--bigup_red: var( --wp--preset--color--vivid-red, #fd6a42 );
 	--bigup_blue: var( --wp--preset--color--vivid-cyan-blue, #70d3e5 );
     --bigup_lightGrey: #eee;
+	--bigup_placeholderColour: #0005;
 
 	--experimentalBaseGap: 1em;
 
@@ -51,6 +52,12 @@
 	select:hover:not(:disabled):not(.disabled),
 	textarea:hover:not(:disabled):not(.disabled) {
 		cursor: pointer;
+	}
+
+	::placeholder,
+	::-webkit-input-placeholder {
+		opacity: 1 !important;
+		color: var(--bigup_placeholderColour) !important;
 	}
 
 	.bigupForms__section {

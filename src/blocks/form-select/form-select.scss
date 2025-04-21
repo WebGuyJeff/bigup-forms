@@ -8,26 +8,34 @@
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 
- .bigupForms__select {
+ /* Wrap in form class to increase specificity */
+.bigupForms__form {
 
-	display: block;
-	position: relative;
-	transition: 0.2s;
-	margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
-	outline: none;
-	border: var( --bigup_border );
-	border-radius: var(--bigup_radius);
-	box-shadow: var(--bigup_shadow-inset);
-	background: var(--bigup_inputWrapBackground);
-	padding: var(--bigup_padding);
-	width: 100%;
-	min-width: 8em;
-	min-height: fit-content;
-	overflow: hidden;
-	resize: none;
-	color: var( --bigup_inputColor );
+	.bigupForms__select {
+		display: block;
+		position: relative;
+		transition: 0.2s;
+		margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
+		outline: none;
+		border: var( --bigup_border );
+		border-radius: var(--bigup_radius);
+		box-shadow: var(--bigup_shadow-inset);
+		background: var(--bigup_inputWrapBackground);
+		padding: var(--bigup_padding);
+		width: 100%;
+		min-width: 8em;
+		max-width: 100%;
+		min-height: fit-content;
+		line-height: normal;
+		color: var( --bigup_inputColor );
+		font-size: inherit;
 
-	&:not(.bigupForms__form-locked *):hover {
-		cursor: pointer;
+		&:not(.bigupForms__form-locked *):hover {
+			cursor: pointer;
+		}
+
+		&DefaultText {
+			color: var( --bigup_placeholderColour );
+		}
 	}
- }
+}

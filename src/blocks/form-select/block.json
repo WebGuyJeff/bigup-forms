@@ -43,26 +43,9 @@
 				"Option 2"
 			]
 		},
-		"required": {
-			"type": "boolean",
-			"source": "attribute",
-			"selector": ".bigupForms__input",
-			"attribute": "required",
-			"default": false
-		},
-		"autocomplete": {
+		"defaultText": {
 			"type": "string",
-			"source": "attribute",
-			"selector": ".bigupForms__input",
-			"attribute": "autocomplete",
-			"default": "off"
-		},
-		"placeholder": {
-			"type": "string",
-			"source": "attribute",
-			"selector": ".bigupForms__input",
-			"attribute": "placeholder",
-			"default": "Type here..."
+			"default": "Select an Option"
 		}
 	}
 }

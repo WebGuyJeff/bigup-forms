@@ -21,8 +21,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		showLabel, // Boolean flag to hide/show the label element.
 		name, // HTML name attribute. Must be unique on the form.
 		options, // Array of select options.
-		required, // Boolean flag to enable/disable HTML 'required' attribute.
-		placeholder // Default select text.
+		defaultText // Default select text.
 	} = attributes
 
 	const blockProps = useBlockProps()
@@ -45,16 +44,13 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 	const labelId       = name + '-label' + blockIdSuffix
 
 	const conditionalProps = {}
-	if ( required ) {
-		conditionalProps.required = 'required=""'
-	}
 	if ( showLabel ) {
 		conditionalProps[ 'aria-labelledby' ] = labelId
 	} else {
 		conditionalProps[ 'aria-label' ] = label
 	}
 
-	const editPlaceholder = placeholder ? placeholder : __( 'Type a placeholder...', 'bigup-forms' )
+	const editDefaultText = defaultText ? defaultText : __( 'Type default text...', 'bigup-forms' )
 
 	return (
 
@@ -78,16 +74,10 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						onChange={ ( newValue ) => { setAttributes( { showLabel: newValue, } ) } }
 						__nextHasNoMarginBottom
 					/>
-					<CheckboxControl
-						label={ __( 'Required', 'bigup-forms' ) }
-						checked={ required }
-						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
-						__nextHasNoMarginBottom
-					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<div { ...blockProps } >
+			<div { ...blockProps }>
 				{ showLabel &&
 					<RichText
 						id={ labelId }
@@ -98,46 +88,60 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
-					{ isSelected &&
-						<div className={ 'bigupForms__selectEditWrap' }>
-							<span
-								className={ 'bigupForms__selectEditOptions' }
-							></span>
-							<small
-								className={ 'bigupForms__selectEditOptionsHelp' }
-							>Type each option on a new line</small>
-							<textarea
-								className={ 'bigupForms__selectEditOptionsList' }
-								onChange={ ( newValue ) => setAttributes( { options: newValue.target.value.split( '\n' ) } ) }
-							>
-								{ options.join( '\n' ) }
-							</textarea>
-						</div>
-					}
-				<select
-					name={ name }
-					className={ 'bigupForms__select' }
-					placeholder={ editPlaceholder }
-					onFocus={ ( e ) => { e.target.value = editPlaceholder } }
-					onBlur={ ( e ) => { e.target.value = '' } }
-					onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
-					{ ...conditionalProps }
-				>
-					{
-						options.length > 0 && (
-							options.map( ( option, index ) => {
-								return (
-									<option
-										key={ index }
-										value={ option }
-									>
-										{ option }
-									</option>
-								)
-							} )
-						)
-					}
-				</ select>
+				{ isSelected &&
+					<div className={ 'bigupForms__selectEdit' }>
+						<small
+							className={ 'bigupForms__selectEditHelp' }
+						><span
+						className={ 'bigupForms__selectEditIcon' }
+						></span>{ __( 'Default text (leave empty to omit)', 'bigup-forms' ) }</small>
+						<input
+							type="text"
+							className={ 'bigupForms__selectEditOptionsDefault' }
+							onFocus={ ( e ) => { e.target.value = '' } }
+							onBlur={ ( e ) => { e.target.value = editDefaultText } }
+							onChange={ ( e ) => setAttributes( { defaultText: e.target.value } ) }
+							value={ defaultText }
+						/>
+						<small
+							className={ 'bigupForms__selectEditHelp' }
+						>{ __( 'Type each option on a new line', 'bigup-forms' ) }</small>
+						<textarea
+							className={ 'bigupForms__selectEditOptionsList' }
+							onChange={ ( newValue ) => setAttributes( { options: newValue.target.value.split( '\n' ) } ) }
+						>
+							{ options.join( '\n' ) }
+						</textarea>
+					</div>
+				}
+				{ ! isSelected &&
+					<select
+						name={ name }
+						className={ 'bigupForms__select' }
+						{ ...conditionalProps }
+					>
+						<option
+							className={ 'bigupForms__selectDefaultText' }
+							value={ defaultText }
+							disabled
+							selected
+						>{ defaultText }</option>
+						{
+							options.length > 0 && (
+								options.map( ( option, index ) => {
+									return (
+										<option
+											key={ index }
+											value={ option }
+										>
+											{ option }
+										</option>
+									)
+								} )
+							)
+						}
+					</ select>
+				}
 			</div>
 		</>
 	)

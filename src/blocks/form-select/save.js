@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps, RichText } from '@wordpress/block-editor'
-import { InputWrap } from '../../components/InputWrap'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -19,8 +18,7 @@ export default function save( { attributes } ) {
 		showLabel,
 		name,
 		options,
-		required,
-		placeholder
+		defaultText
 	}                = attributes
 	const blockProps = useBlockProps.save()
 
@@ -28,9 +26,6 @@ export default function save( { attributes } ) {
 	const labelId       = name + '-label' + blockIdSuffix
 
 	const conditionalProps = {}
-	if ( required ) {
-		conditionalProps.required = 'required=""'
-	}
 	if ( showLabel ) {
 		conditionalProps[ 'aria-labelledby' ] = labelId
 	} else {
@@ -38,42 +33,41 @@ export default function save( { attributes } ) {
 	}
 
 	return (
-
-		<>
-			<div { ...blockProps }>
-				{ showLabel &&
-					<RichText.Content
-						id={ labelId }
-						className={ 'bigupForms__label' }
-						tagName={ 'label' }
-						htmlFor={ name + blockIdSuffix }
-						value={ label }
-					/>
-				}
-				<InputWrap>
-					<select
-						name={ name }
-						className={ 'bigupForms__input' }
-						placeholder={ placeholder }
-						{ ...conditionalProps }
-					>
-						{
-							options.length > 0 && (
-								options.map( ( option, index ) => {
-									return (
-										<option
-											key={ index }
-											value={ option }
-										>
-											{ option }
-										</option>
-									)
-								} )
+		<div { ...blockProps }>
+			{ showLabel && label &&
+				<label
+					id={ labelId }
+					className={ 'bigupForms__label' }
+				>
+					{ label }
+				</label>
+			}
+			<select
+				name={ name }
+				className={ 'bigupForms__select' }
+				{ ...conditionalProps }
+			>
+				<option
+					className={ 'bigupForms__selectDefaultText' }
+					value={ defaultText }
+					disabled
+					selected
+				>{ defaultText }</option>
+				{
+					options.length > 0 && (
+						options.map( ( option, index ) => {
+							return (
+								<option
+									key={ index }
+									value={ option }
+								>
+									{ option }
+								</option>
 							)
-						}
-					</ select>
-				</InputWrap>
-			</div>
-		</>
+						} )
+					)
+				}
+			</ select>
+		</div>
 	)
 }
