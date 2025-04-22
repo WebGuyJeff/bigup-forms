@@ -50,7 +50,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		conditionalProps[ 'aria-label' ] = label
 	}
 
-	const editDefaultText = defaultText ? defaultText : __( 'Type default text...', 'bigup-forms' )
+	const defaultTextPlaceholder = __( 'Add optional default text', 'bigup-forms' )
 
 	return (
 
@@ -98,8 +98,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						<input
 							type="text"
 							className={ 'bigupForms__selectEditOptionsDefault' }
-							onFocus={ ( e ) => { e.target.value = '' } }
-							onBlur={ ( e ) => { e.target.value = editDefaultText } }
+							placeholder={ defaultTextPlaceholder }
 							onChange={ ( e ) => setAttributes( { defaultText: e.target.value } ) }
 							value={ defaultText }
 						/>
@@ -125,7 +124,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 							value={ defaultText }
 							disabled
 							selected
-						>{ defaultText }</option>
+						>{ defaultText ? defaultText : defaultTextPlaceholder }</option>
 						{
 							options.length > 0 && (
 								options.map( ( option, index ) => {

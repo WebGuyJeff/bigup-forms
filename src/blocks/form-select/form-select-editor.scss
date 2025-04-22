@@ -54,3 +54,8 @@
 		}
 	}
 }
+
+ /* Wrap in form class to increase specificity */
+ .bigupForms__form .bigupForms__select:first-child {
+	color: var( --bigup_placeholderColour );
+}
