@@ -1,3 +1,9 @@
 /**
  * Styles applied in the editor only.
  */
+
+:where( .bigupForms__form ) > .bigupForms__section > .block-editor-inner-blocks > div {
+	gap: var(--bigupForms_blockGap);
+	display: flex;
+	flex-flow: column;
+}

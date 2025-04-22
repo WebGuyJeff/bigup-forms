@@ -66,7 +66,7 @@ function makeHumanReadable( string ) {
  */
 function makeNameAttributeSafe( string = '' ) {
 	// Regex patterns.
-	const badChars         = /[^a-z0-9_-]/g
+	const badChars         = /[^a-z0-9_ ]/g
 	const extraSpaces      = /^\s*|\s(?=\s)|\s*$/g
 	const spaces           = /\s/g
 	const extraHyphens     = /-{2,}/g
@@ -77,10 +77,10 @@ function makeNameAttributeSafe( string = '' ) {
 	const goodChars       = lowercase.replace( badChars, '' )
 	const goodSpaces      = goodChars.replace( extraSpaces, '' )
 	const hyphenSpaces    = goodSpaces.replace( spaces, '-' )
-	const goodHyphens     = hyphenSpaces.replace( extraHyphens, '-' )
-	const goodUnderscores = goodHyphens.replace( extraUnderscores, '_' )
-	// Apply prefix if first char isn't a letter.
-	const cleanName = firsCharIsLetter.test( goodUnderscores ) ? goodUnderscores : type + '_' + goodUnderscores
+	const goodUnderscores = hyphenSpaces.replace( extraUnderscores, '-' )
+	const goodHyphens     = goodUnderscores.replace( extraHyphens, '-' )
+	const cleanName       = firsCharIsLetter.test( goodHyphens ) ? goodHyphens : 'name' + '-' + goodHyphens
+
 	return cleanName
 }
 

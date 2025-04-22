@@ -22,14 +22,14 @@
 }
 
 .bigupForms__form.is-style-vanilla {
-	--bigup_border: solid 1px;
-	--bigup_gutter: 0.5em;
-	--bigup_inputColor: inherit;
-	--bigup_inputWrapBackground: #0000;
-	--bigup_padding: 0.5em 0.75em;
-	--bigup_radius: 0;
-    --bigup_shadow-inset: none;
-	--bigup_flagShadow: none;
+	--bigupForms_border: solid 1px;
+	--bigupForms_gutter: 0.5em;
+	--bigupForms_inputColor: inherit;
+	--bigupForms_inputWrapBackground: #0000;
+	--bigupForms_padding: 0.5em 0.75em;
+	--bigupForms_radius: 0;
+    --bigupForms_shadow-inset: none;
+	--bigupForms_flagShadow: none;
 
 	/* Float the flag with some padding */
 	.bigupForms__flag {
@@ -46,32 +46,32 @@
 }
 
 .bigupForms__form.is-style-inset-dark {
-	--bigup_border: none;
-	--bigup_gutter: 0.5em;
-	--bigup_inputColor: var( --bigup_white );
-	--bigup_inputWrapBackground: var( --bigup_black );
-	--bigup_padding: 0.5em 0.75em;
-	--bigup_radius: 0.6em;
-	--bigup_shadow-inset: inset 0 1px 1px 0px #000a,
+	--bigupForms_border: none;
+	--bigupForms_gutter: 0.5em;
+	--bigupForms_inputColor: var( --bigupForms_white );
+	--bigupForms_inputWrapBackground: var( --bigupForms_black );
+	--bigupForms_padding: 0.5em 0.75em;
+	--bigupForms_radius: 0.6em;
+	--bigupForms_shadow-inset: inset 0 1px 1px 0px #000a,
                           inset 0 2px 2px 0px #000a,
                           inset 0 3px 5px 0px #000a,
                           inset 0 4px 6px 0px #000a,
                           inset 0 5px 8px 0px #000a;
-	--bigup_flagShadow: inset -4px 8px 7px -2px #000d;
-	--bigup_placeholderColour: #fff8;
+	--bigupForms_flagShadow: inset -4px 8px 7px -2px #000d;
+	--bigupForms_placeholderColour: #fff8;
 }
 
 .bigupForms__form.is-style-inset-light  {
-	--bigup_border: none;
-	--bigup_gutter: 0.5em;
-	--bigup_inputColor: var( --bigup_textBlack );
-	--bigup_inputWrapBackground: var( --bigup_white );
-	--bigup_padding: 0.5em 0.75em;
-	--bigup_radius: 0.6em;
-	--bigup_shadow-inset: inset 0 0px 1px 1px #0003,
+	--bigupForms_border: none;
+	--bigupForms_gutter: 0.5em;
+	--bigupForms_inputColor: var( --bigupForms_black );
+	--bigupForms_inputWrapBackground: var( --bigupForms_white );
+	--bigupForms_padding: 0.5em 0.75em;
+	--bigupForms_radius: 0.6em;
+	--bigupForms_shadow-inset: inset 0 0px 1px 1px #0003,
 	                      inset 0 2px 2px 1px #0003,
 	                      inset 0 4px 4px 1px #0003,
                           inset 0 6px 6px 1px #0003,
                           inset 0 8px 8px 1px #0003;
-	--bigup_flagShadow: inset -4px 8px 7px -2px #000a;
+	--bigupForms_flagShadow: inset -4px 8px 7px -2px #000a;
 }

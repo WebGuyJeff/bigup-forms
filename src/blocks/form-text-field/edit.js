@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { InputWrap } from '../../components/InputWrap'
-import { makeNameAttributeSafe, escapeRegex, unescapeRegex, stringToRegex } from '../../js/common/_util'
+import { makeNameAttributeSafe } from '../../js/common/_util'
 import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
 
 /**

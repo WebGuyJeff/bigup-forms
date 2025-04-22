@@ -1,7 +1,7 @@
 {
 	"apiVersion": 3,
 	"name": "bigup-forms/form-select",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"title": "Select Dropdown",
 	"category": "forms",
 	"description": "Customisable select dropdown",
@@ -30,22 +30,40 @@
 		"name": {
 			"type": "string",
 			"source": "attribute",
-			"selector": ".bigupForms__input",
+			"selector": ".bigupForms__select",
 			"attribute": "name",
-			"default": "option"
+			"default": "Select an Option"
 		},
 		"options": {
 			"type": "array",
-			"source": "text",
-			"selector": "option",
+			"source": "query",
+			"selector": "select option:not( [disabled] )",
+			"query": {
+				"text": {
+					"type": "string",
+					"source": "text"
+				},
+				"value": {
+					"type": "string",
+					"source": "attribute",
+					"attribute": "value"
+				}
+			},
 			"default": [
-				"Option 1",
-				"Option 2"
+				{ "text": "Option 1", "value": "Option 1" },
+				{ "text": "Option 2", "value": "Option 2" }
 			]
 		},
 		"defaultText": {
 			"type": "string",
 			"default": "Select an Option"
+		},
+		"required": {
+			"type": "boolean",
+			"source": "attribute",
+			"selector": ".bigupForms__select",
+			"attribute": "required",
+			"default": true
 		}
 	}
 }

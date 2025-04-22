@@ -14,14 +14,14 @@
 		margin-block-end: 1em;
 		margin-inline: auto;
 		z-index: 10;
-		border: var(--bigup_border);
-		border-radius: var(--bigup_radius);
+		border: var(--bigupForms_border);
+		border-radius: var(--bigupForms_radius);
 		box-shadow: 1px 3px 6px 1px #0008;
-		background: var(--bigup_lightGrey);
-		padding: var(--bigup_padding);
+		background: var(--bigupForms_lightGrey);
+		padding: var(--bigupForms_padding);
 		width: fit-content;
 		text-align: center;
-		color: var(--bigup_textBlack);
+		color: var(--bigupForms_black);
 		font-weight: 600;
 
 		&::before {
@@ -30,22 +30,22 @@
 		}
 
 		&-danger {
-			background:var(--bigup_red);
+			background:var(--bigupForms_red);
 			color:#fff;
 		}
 
 		&-success {
-			background:var(--bigup_green);
+			background:var(--bigupForms_green);
 			color:#fff;
 		}
 
 		&-info {
-			background:var(--bigup_blue);
+			background:var(--bigupForms_blue);
 			color:#fff;
 		}
 
 		&-warning {
-			background:var(--bigup_orange);
+			background:var(--bigupForms_orange);
 			color:#fff;
 		}
 

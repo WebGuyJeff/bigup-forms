@@ -4,11 +4,11 @@
 	.bigupForms__inputWrap {
 		position: relative;
 		transition: 0.2s;
-		margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
-		border: var( --bigup_border );
-		border-radius: var(--bigup_radius);
-		box-shadow: var(--bigup_shadow-inset);
-		background: var(--bigup_inputWrapBackground);
+		margin: var(--bigupForms_controlsMargin);
+		border: var( --bigupForms_border );
+		border-radius: var(--bigupForms_radius);
+		box-shadow: var(--bigupForms_shadow-inset);
+		background: var(--bigupForms_inputWrapBackground);
 		width: 100%;
 		min-width: 8em;
 		min-height: fit-content;
@@ -28,11 +28,11 @@
 		outline: none;
 		border: none;
 		background: #0000;
-		padding: var(--bigup_padding);
+		padding: var(--bigupForms_padding);
 		width: 100%;
 		height: 100%;
 		resize: vertical;
-		color: var( --bigup_inputColor );
+		color: var( --bigupForms_inputColor );
 
 		&:not(.bigupForms__form-locked *):hover {
 			cursor: text;
@@ -54,12 +54,12 @@
 		justify-content: center;
 		transition: top 0.15s;
 		border-radius: 0 0 0 1em;
-		box-shadow: var(--bigup_flagShadow);
+		box-shadow: var(--bigupForms_flagShadow);
 		width: 1.5em;
 		height: 1.5em;
 
-		&-hover { background: var(--bigup_orange); }
-		&-focus { background: var(--bigup_green); }
+		&-hover { background: var(--bigupForms_orange); }
+		&-focus { background: var(--bigupForms_green); }
 	}
 
 	.bigupForms__inputWrap:not(.bigupForms__form-locked *) {

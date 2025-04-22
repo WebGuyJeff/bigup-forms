@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n'
-import { useBlockProps, RichText } from '@wordpress/block-editor'
+import { useBlockProps } from '@wordpress/block-editor'
+import { SelectWrap } from '../../components/SelectWrap'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -18,9 +19,12 @@ export default function save( { attributes } ) {
 		showLabel,
 		name,
 		options,
-		defaultText
+		defaultText,
+		required
 	}                = attributes
 	const blockProps = useBlockProps.save()
+
+	console.log( 'options save: ', options )
 
 	const blockIdSuffix = '-' + blockId
 	const labelId       = name + '-label' + blockIdSuffix
@@ -30,6 +34,9 @@ export default function save( { attributes } ) {
 		conditionalProps[ 'aria-labelledby' ] = labelId
 	} else {
 		conditionalProps[ 'aria-label' ] = label
+	}
+	if ( required ) {
+		conditionalProps.required = 'required=""'
 	}
 
 	return (
@@ -42,32 +49,35 @@ export default function save( { attributes } ) {
 					{ label }
 				</label>
 			}
-			<select
-				name={ name }
-				className={ 'bigupForms__select' }
-				{ ...conditionalProps }
-			>
-				<option
-					className={ 'bigupForms__selectDefaultText' }
-					value={ defaultText }
-					disabled
-					selected
-				>{ defaultText }</option>
-				{
-					options.length > 0 && (
-						options.map( ( option, index ) => {
-							return (
-								<option
-									key={ index }
-									value={ option }
-								>
-									{ option }
-								</option>
-							)
-						} )
-					)
-				}
-			</ select>
+			<SelectWrap>
+				<select
+					name={ name }
+					className={ 'bigupForms__select' }
+					{ ...conditionalProps }
+				>
+					<option
+						className={ 'bigupForms__selectDefaultText' }
+						value=''
+						disabled
+						selected
+						hidden
+					>{ defaultText }</option>
+					{
+						Object.keys( options ).length > 0 && (
+							options.map( ( { value, text }, index ) => {
+								return (
+									<option
+										key={ index }
+										value={ value }
+									>
+										{ text }
+									</option>
+								)
+							} )
+						)
+					}
+				</ select>
+			</ SelectWrap>
 		</div>
 	)
 }

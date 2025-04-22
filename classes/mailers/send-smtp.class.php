@@ -81,10 +81,10 @@ class Send_SMTP {
 		$name      = isset( $fields['fields']['name'] ) ? $fields['fields']['name']['value'] : 'Anonymous user';
 		$email     = isset( $fields['fields']['email'] ) ? $fields['fields']['email']['value'] : null;
 
-		// Build plaintext email body.
+		// Build plain text email body.
 		$plaintext_fields_output = "\n\n";
 		foreach ( $fields as $name => $data ) {
-			$plaintext_fields_output .= ucfirst( $name ) . ': ' . $data['value'] . "\n";
+			$plaintext_fields_output .= ucfirst( str_replace( '-', ' ', $name ) ) . ': ' . $data['value'] . "\n";
 		}
 		$plaintext_fields_output .= "\n\n";
 		$plaintext                = <<<PLAIN
@@ -97,7 +97,7 @@ class Send_SMTP {
 		PLAIN;
 		$plaintext_cleaned        = wp_strip_all_tags( $plaintext );
 
-		// Build html email body.
+		// Build HTML email body.
 		$html = Util::include_with_vars(
 			BIGUPFORMS_PATH . 'parts/email.php',
 			array(

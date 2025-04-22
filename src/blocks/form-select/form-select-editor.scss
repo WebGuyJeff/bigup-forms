@@ -4,11 +4,11 @@
 
 .bigupForms__selectEdit {
 	position: relative;
-	margin: var(--bigup_gutter) auto var(--bigup_gutter) 0;
-	border: var( --bigup_border );
-	border-radius: var(--bigup_radius);
-	box-shadow: var(--bigup_shadow-inset);
-	background: var(--bigup_inputWrapBackground);
+	margin: var(--bigupForms_gutter) auto var(--bigupForms_gutter) 0;
+	border: var( --bigupForms_border );
+	border-radius: var(--bigupForms_radius);
+	box-shadow: var(--bigupForms_shadow-inset);
+	background: var(--bigupForms_inputWrapBackground);
 	width: 100%;
 	min-width: 8em;
 	min-height: fit-content;
@@ -32,8 +32,8 @@
 		gap: 0.25em;
 		display: inline-flex;
 		align-items: center;
-		background: #0001;
-		padding: var(--bigup_padding);
+		background: #0002;
+		padding: var(--bigupForms_padding);
 		width: 100%;
 	}
 	
@@ -43,7 +43,7 @@
 		border: none;
 		border-radius: 0;
 		background: none;
-		padding: var(--bigup_padding);
+		padding: var(--bigupForms_padding);
 		width: 100%;
 
 		&:focus,
@@ -53,9 +53,4 @@
 			box-shadow: none;
 		}
 	}
-}
-
- /* Wrap in form class to increase specificity */
- .bigupForms__form .bigupForms__select:first-child {
-	color: var( --bigup_placeholderColour );
 }

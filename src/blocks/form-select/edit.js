@@ -3,6 +3,8 @@ import { PropTypes } from 'prop-types'
 import React, { useEffect } from 'react'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
+import { SelectWrap } from '../../components/SelectWrap'
+import { makeNameAttributeSafe } from '../../js/common/_util'
 import './form-select-editor.scss'
 
 /**
@@ -21,8 +23,11 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		showLabel, // Boolean flag to hide/show the label element.
 		name, // HTML name attribute. Must be unique on the form.
 		options, // Array of select options.
-		defaultText // Default select text.
+		defaultText, // Default select text.
+		required // Field required boolean state.
 	} = attributes
+
+	console.log( 'options edit: ', options )
 
 	const blockProps = useBlockProps()
 
@@ -33,11 +38,20 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
     }, [] )
 
 	// Changing label updates name attribute to match (which must be uniquie on form).
-	const onChangeLabel = ( newLabel ) => {
+	const onChangeLabel = ( newValue ) => {
 		setAttributes( {
-			label: newLabel,
-			name: makeNameAttributeSafe( newLabel )
+			label: newValue,
+			name: makeNameAttributeSafe( newValue )
 		} )
+	}
+
+	const onChangeOptions = ( newValue ) => {
+		const newOptions = []
+		const optionsData = newValue.split( '\n' )
+		optionsData.forEach( option => {
+			newOptions.push( { text: option, value: option } )
+		} )
+		setAttributes( { options: newOptions } )
 	}
 
 	const blockIdSuffix = '-' + blockId
@@ -49,8 +63,20 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 	} else {
 		conditionalProps[ 'aria-label' ] = label
 	}
+	if ( required ) {
+		conditionalProps.required = 'required=""'
+	}
 
 	const defaultTextPlaceholder = __( 'Add optional default text', 'bigup-forms' )
+
+	const optionsText     = []
+	let optionsEditorText = ''
+	options.forEach( ( option ) => {
+		optionsText.push( option.text )
+		optionsEditorText = optionsText.join( '\n' )
+	} )
+
+	console.log( 'optionsEditorText: ', optionsEditorText )
 
 	return (
 
@@ -74,6 +100,12 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						onChange={ ( newValue ) => { setAttributes( { showLabel: newValue, } ) } }
 						__nextHasNoMarginBottom
 					/>
+					<CheckboxControl
+						label={ __( 'Required', 'bigup-forms' ) }
+						checked={ required }
+						onChange={ ( newValue ) => { setAttributes( { required: newValue, } ) } }
+						__nextHasNoMarginBottom
+					/>
 				</PanelBody>
 			</InspectorControls>
 
@@ -84,7 +116,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						className={ 'bigupForms__label' }
 						tagName={ 'label' }
 						value={ label }
-						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
+						onChange={ ( newValue ) => onChangeLabel( newValue ) }
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
@@ -107,39 +139,42 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						>{ __( 'Type each option on a new line', 'bigup-forms' ) }</small>
 						<textarea
 							className={ 'bigupForms__selectEditOptionsList' }
-							onChange={ ( newValue ) => setAttributes( { options: newValue.target.value.split( '\n' ) } ) }
+							onChange={ ( newValue ) => onChangeOptions( newValue.target.value ) }
 						>
-							{ options.join( '\n' ) }
+							{ optionsEditorText }
 						</textarea>
 					</div>
 				}
 				{ ! isSelected &&
-					<select
-						name={ name }
-						className={ 'bigupForms__select' }
-						{ ...conditionalProps }
-					>
-						<option
-							className={ 'bigupForms__selectDefaultText' }
-							value={ __( 'none selected', 'bigup-forms' ) }
-							disabled
-							selected
-						>{ defaultText ? defaultText : defaultTextPlaceholder }</option>
-						{
-							options.length > 0 && (
-								options.map( ( option, index ) => {
-									return (
-										<option
-											key={ index }
-											value={ option }
-										>
-											{ option }
-										</option>
-									)
-								} )
-							)
-						}
-					</ select>
+					<SelectWrap>
+						<select
+							name={ name }
+							className={ 'bigupForms__select' }
+							{ ...conditionalProps }
+						>
+							<option
+								className={ 'bigupForms__selectDefaultText' }
+								value={ __( 'none selected', 'bigup-forms' ) }
+								disabled
+								selected
+								hidden
+							>{ defaultText ? defaultText : defaultTextPlaceholder }</option>
+							{
+								Object.keys( options ).length > 0 && (
+									options.map( ( { value, text }, index ) => {
+										return (
+											<option
+												key={ index }
+												value={ value }
+											>
+												{ text }
+											</option>
+										)
+									} )
+								)
+							}
+						</ select>
+					</SelectWrap>
 				}
 			</div>
 		</>

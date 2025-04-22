@@ -17,7 +17,7 @@ namespace BigupWeb\Forms;
 $intro_html  = "This was submitted via the <b>{$form_name}</b> at {$site_url}.";
 $fields_html = "\n";
 foreach ( $fields as $name => $data ) {
-	$uc_name      = ucfirst( $name );
+	$uc_name      = ucfirst( str_replace( '-', ' ', $name ) );
 	$fields_html .= <<<HTML
 		<tr>
 			<td class="field-cell" style="font-family: Helvetica, sans-serif; font-size: 16px; vertical-align: top; padding-top: 3px; padding-bottom: 3px;" valign="top">
