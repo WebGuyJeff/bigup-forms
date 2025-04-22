@@ -24,8 +24,6 @@ export default function save( { attributes } ) {
 	}                = attributes
 	const blockProps = useBlockProps.save()
 
-	console.log( 'options save: ', options )
-
 	const blockIdSuffix = '-' + blockId
 	const labelId       = name + '-label' + blockIdSuffix
 

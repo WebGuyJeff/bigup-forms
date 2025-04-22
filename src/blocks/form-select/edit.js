@@ -27,8 +27,6 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		required // Field required boolean state.
 	} = attributes
 
-	console.log( 'options edit: ', options )
-
 	const blockProps = useBlockProps()
 
 	useEffect( () => {
@@ -75,8 +73,6 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		optionsText.push( option.text )
 		optionsEditorText = optionsText.join( '\n' )
 	} )
-
-	console.log( 'optionsEditorText: ', optionsEditorText )
 
 	return (
 
