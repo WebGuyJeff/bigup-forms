@@ -107,7 +107,7 @@ const Variations = [
 		}
 	},
 	{
-		name: 'tel',
+		name: 'phone',
 		title: __( 'Phone', 'bigup-forms' ),
 		icon: LogoTel,
 		description: __( 'Phone number input field.', 'bigup-forms' ),
@@ -115,18 +115,18 @@ const Variations = [
 		attributes: {
 			'InputTag': 'input',
 			'type': 'tel',
-			'name': 'tel',
+			'name': 'phone',
 			'label': __( 'Phone', 'bigup-forms' ),
 			'autocomplete': 'on',
 			'placeholder': __( 'Enter your phone number', 'bigup-forms' ),
-			'variation': 'tel',
+			'variation': 'phone',
 			'format': 'phone_number',
 			'required': true,
 			...dataFormats[ 'phone_number' ].rules
 		},
 		validationAttrs: Object.keys( dataFormats[ 'phone_number' ].rules ),
 		isActive: ( blockAttributes ) => { 
-			return blockAttributes.variation === 'tel'
+			return blockAttributes.variation === 'phone'
 		}
 	},
 	{

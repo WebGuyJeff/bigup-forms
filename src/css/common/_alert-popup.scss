@@ -1,9 +1,6 @@
 .bigupForms__alerts {
-
-	--bigup_padding: 0.5em 0.75em;
-
-	position: absolute;
-	top: 0;
+	padding-inline: 1em;
+	position: fixed;
 	right: 0;
 	bottom: 0;
 	left: 0;
@@ -11,14 +8,18 @@
 	align-items: center;
 	justify-content: center;
 	transition: opacity 150ms ease-in-out;
+	z-index: 10;
 
 	.bigupForms__alert {
-		margin-block-end: 1.688em;
+		margin-block-end: 1em;
+		margin-inline: auto;
+		z-index: 10;
 		border: var(--bigup_border);
 		border-radius: var(--bigup_radius);
 		box-shadow: 1px 3px 6px 1px #0008;
 		background: var(--bigup_lightGrey);
 		padding: var(--bigup_padding);
+		width: fit-content;
 		text-align: center;
 		color: var(--bigup_textBlack);
 		font-weight: 600;
@@ -49,7 +50,7 @@
 		}
 
 		&:last-child {
-			margin-block-end: 0;
+			margin-block-end: 2em;
 		}
 	}
 }

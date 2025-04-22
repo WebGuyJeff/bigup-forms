@@ -3,7 +3,7 @@
 	"name": "bigup-forms/form-select",
 	"version": "0.0.1",
 	"title": "Select Dropdown",
-	"category": "widgets",
+	"category": "forms",
 	"description": "Customisable select dropdown",
 	"keywords": [ "form", "input", "select" ],
 	"textdomain": "bigup-forms",
@@ -32,7 +32,7 @@
 			"source": "attribute",
 			"selector": ".bigupForms__input",
 			"attribute": "name",
-			"default": "text"
+			"default": "option"
 		},
 		"options": {
 			"type": "array",

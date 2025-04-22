@@ -3,7 +3,7 @@
 	"name": "bigup-forms/form-text-field",
 	"version": "0.0.1",
 	"title": "Text Field",
-	"category": "widgets",
+	"category": "forms",
 	"description": "Customisable input field for any text type",
 	"keywords": [ "form", "input", "text" ],
 	"textdomain": "bigup-forms",

@@ -80,12 +80,12 @@ class Validate {
 			),
 			'human_name'          => array(
 				'label'       => __( 'Name', 'bigup-forms' ),
-				'description' => __( 'Must only include letters and non-consecutive spaces or any of - \' , .' , 'bigup-forms' ),
+				'description' => __( 'Must only include letters and non-consecutive spaces or any of - \' , .', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
 				'error'       => __( 'Only letters, spaces and \' - , . allowed.', 'bigup-forms' ),
 				'rules'       => array(
-					// Escape back reference (\\2) to avoid conversion to an octal character.
-					'pattern'   => "/^[\p{L}](?:[\p{L}]|(?[- ',\.])(?!\k\\2))*$/u",
+					// Use \g1 backreference syntax to avoid conversion to octal with \k<name>.
+					'pattern'   => "/^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u",
 					'maxlength' => 50,
 					'minlength' => 2,
 				),
@@ -141,8 +141,8 @@ class Validate {
 				'types'       => array( 'textarea', 'text' ),
 				'error'       => __( 'Only letters, numbers and non-consecutive _ - allowed.', 'bigup-forms' ),
 				'rules'       => array(
-					// Escape back reference (\\2) to avoid conversion to an octal character.
-					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|(?[_-])(?!\k\\2))+[\p{L}\p{N}]$/u',
+					// Use \g1 backreference syntax to avoid conversion to octal with \k<name>.
+					'pattern'   => '/^[\p{L}\p{N}](?:[\p{L}\p{N}]|([_-])(?!\g1))+[\p{L}\p{N}]$/u',
 					'maxlength' => 20,
 					'minlength' => 0,
 				),

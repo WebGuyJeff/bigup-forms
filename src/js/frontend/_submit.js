@@ -36,11 +36,11 @@ async function submit( event ) {
 		window.location.replace( "https://en.wikipedia.org/wiki/Robot" )
 	}
 
-	const formData   = new FormData()
-	const textInputs = form.querySelectorAll( ':is( input, textarea ):not( .saveTheBees, .bigupForms__customFileUpload_input )' )
-	const fileInput  = form.querySelector( '.bigupForms__customFileUpload_input' )
+	const formData  = new FormData()
+	const inputs    = form.querySelectorAll( ':is( input, textarea, select ):not( .saveTheBees, .bigupForms__customFileUpload_input )' )
+	const fileInput = form.querySelector( '.bigupForms__customFileUpload_input' )
 
-	textInputs.forEach( input => {
+	inputs.forEach( input => {
 		formData.append(
 			input.name,
 			JSON.stringify( {
@@ -105,7 +105,7 @@ async function submit( event ) {
 		// If server has reported validation errors.
 		if ( result.formData?.has_errors ) {
 			// Check fields for errors.
-			textInputs.forEach( input => {
+			inputs.forEach( input => {
 
 				// Remove inline errors.
 				const removeErrors = ( input ) => {
@@ -151,7 +151,6 @@ async function submit( event ) {
 
 		// Clean up form if email was sent.
 		if ( result.ok ) {
-			let inputs = form.querySelectorAll( '.bigupForms__input' )
 			inputs.forEach( input => { input.value = '' } )
 			const fileList = form.querySelector( '.bigupForms__customFileUpload_output' )
 			if ( fileList ) removeChildren( fileList )

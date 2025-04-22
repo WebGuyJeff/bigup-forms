@@ -121,7 +121,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 					>
 						<option
 							className={ 'bigupForms__selectDefaultText' }
-							value={ defaultText }
+							value={ __( 'none selected', 'bigup-forms' ) }
 							disabled
 							selected
 						>{ defaultText ? defaultText : defaultTextPlaceholder }</option>

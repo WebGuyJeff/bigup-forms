@@ -21,6 +21,22 @@ class Blocks {
 	public function __construct() {
 		$dir_children = is_dir( self::BIGUPFORMS_BLOCKS_PATH ) ? scandir( self::BIGUPFORMS_BLOCKS_PATH ) : array();
 		$this->names  = array_filter( preg_replace( '/\..*/', '', $dir_children ) );
+		add_filter( 'block_categories_all', array( $this, 'add_plugin_category' ) );
+	}
+
+
+	/**
+	 * Block categories for this plugin.
+	 */
+	public function add_plugin_category( $categories ) {
+		$plugin_category[] = array(
+			'slug'  => 'forms',
+			'title' => 'Forms',
+			'icon'  => 'bigup-logo',
+		);
+		$position          = 2;
+		array_splice( $categories, $position, 0, $plugin_category );
+		return $categories;
 	}
 
 
@@ -51,7 +67,7 @@ class Blocks {
 
 
 	/**
-	 * Add inline script to form block frontend JS.
+	 * Add frontend inline script to pass form variables from backend.
 	 */
 	public function form_block_add_inline_script_frontend() {
 		wp_add_inline_script(
@@ -63,7 +79,7 @@ class Blocks {
 
 
 	/**
-	 * Add inline script to form block editor JS.
+	 * Add editor inline script to form block editor JS.
 	 */
 	public function form_block_add_inline_script_editor() {
 		wp_add_inline_script(

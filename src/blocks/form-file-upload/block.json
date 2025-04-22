@@ -3,7 +3,7 @@
 	"name": "bigup-forms/form-file-upload",
 	"version": "0.0.1",
 	"title": "File Upload",
-	"category": "widgets",
+	"category": "forms",
 	"icon": "forms",
 	"description": "File upload control for a form",
 	"keywords": [ "form", "input", "files" ],
