@@ -13,7 +13,7 @@ import { BinIcon, FileIcon } from './svg'
 export default function Edit() {
 
 	const blockProps = useBlockProps( {
-		className: 'bigupForms__customFileUpload'
+		className: 'bigupForms__customFileUpload bigupForms__blockWrap'
 	} )
 
 	return (

@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n'
-import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
 import {
 	LogoEmail,
 	LogoName,

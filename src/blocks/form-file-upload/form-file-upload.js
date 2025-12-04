@@ -4,8 +4,7 @@ import { LogoFile } from './svg'
 import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
-import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
-import './form-file-upload.scss'
+import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
 
 if ( bigupFormsInlinedVars.debug ) {
 	console.log( metadata.name + ' BLOCK LOADED' )

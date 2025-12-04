@@ -8,24 +8,22 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
 
-// Import PHPMailer classes into the global namespace.
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-// Load Composer's autoloader.
-require BIGUPFORMS_PATH . 'vendor/autoload.php';
-
 // WordPress Dependencies.
 use WP_REST_Request;
-use get_option;
+use function get_bloginfo;
+use function wp_parse_url;
 
 class Submit_Controller {
+
+	/**
+	 * Controller log.
+	 */
+	private $log = '';
 
 	/**
 	 * Receive form submissions.
@@ -34,7 +32,7 @@ class Submit_Controller {
 
 		// Check header is multipart/form-data.
 		if ( ! str_contains( $request->get_header( 'Content-Type' ), 'multipart/form-data' ) ) {
-			$this->send_json_response( array( 405, 'Sending your message failed due to a malformed request from your browser' ) );
+			HTTP_Response::send_json( array( 405, 'Sending your message failed due to a malformed request from your browser' ) );
 
 			// Request handlers should exit() when done.
 			exit;
@@ -96,23 +94,20 @@ class Submit_Controller {
 		$Validate            = new Validate();
 		$validated_form_data = $Validate->form_data( $form_data );
 		if ( $validated_form_data['has_errors'] ) {
-			$this->send_json_response( array( 400, __( 'Please correct your input and try again', 'bigup-forms' ) ), $validated_form_data );
+			HTTP_Response::send_json( array( 400, __( 'Please correct your input and try again', 'bigup-forms' ) ), $validated_form_data );
 
 			// Request handlers should exit() when done.
 			exit;
 		}
 
-		// Mail the form entry to the site owner.
-		$saved_settings   = get_option( 'bigup_forms_settings' );
-		$use_local_mailer = ( ! empty( $saved_settings['use_local_mail_server'] ) && true === $saved_settings['use_local_mail_server'] );
-		$mail_handler     = ( isset( $use_local_mailer ) && true === $use_local_mailer ) ? new Send_Local() : new Send_SMTP();
-		$result           = $mail_handler->compose_and_send_email( $form_data );
-		$this->send_json_response( $result );
+		// Send the email.
+		$result = $this->send_email( $form_data );
 
-		if ( 'test' !== $form_data['form']['name'] ) {
-			// Save the form entry to the database.
-			CPT_Form_Entry::log_form_entry( $form_data, $result );
-		}
+		// Respond to client.
+		HTTP_Response::send_json( $result );
+
+		// Save the form entry to the database.
+		CPT_Form_Entry::log_form_entry( $form_data, $result, $this->log );
 
 		// Request handlers should exit() when done.
 		exit;
@@ -120,35 +115,85 @@ class Submit_Controller {
 
 
 	/**
-	 * Send JSON response to client.
-	 *
-	 * Sets the response header to the passed http status code and a
-	 * response body containing an array of status code, status text
-	 * and human-readable description of the status or error.
-	 *
-	 * @param array $info: [ int(http-code), str(human readable message) ].
+	 * Send the email.
 	 */
-	private function send_json_response( $status, $form_data = array() ) {
+	public function send_email( $form_data ) {
 
-		if ( ! is_array( $status ) ) {
-			error_log( 'Bigup_Forms: send_json_response expects array but ' . gettype( $status ) . ' received.' );
-			$status = array( 500, 'Sending your message failed due to an unexpected error.' );
+		$smtp_settings  = Get_Settings::smtp();
+		$local_settings = Get_Settings::local_mail_server();
+
+		$this->log .= date("Y-m-d H:i:s") . ' SMTP settings ' . ( $smtp_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
+		$this->log .= date("Y-m-d H:i:s") . ' Local mailer settings ' . ( $local_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
+
+		if ( ! $smtp_settings && ! $local_settings ) {
+			$this->log .= date("Y-m-d H:i:s") . ' ERROR: No mail service configured.' . "\n";
+			return array( 503, 'Sending your message failed as no mail service has been configured' );
 		}
 
-		// Ensure response headers haven't already sent to browser.
-		if ( ! headers_sent() ) {
-			header( 'Content-Type: application/json; charset=utf-8' );
-			status_header( $status[0] );
+		$fields  = $form_data['fields'];
+		$compose = new Compose_Email_Body( $form_data );
+
+		$domain         = wp_parse_url( html_entity_decode( get_bloginfo( 'url' ) ), PHP_URL_HOST );
+		$from_name      = get_bloginfo( 'name' );
+		$reply_name     = isset( $fields['name'] ) ? $fields['name']['value'] : $from_name;
+		$reply_email    = isset( $fields['email'] ) ? $fields['email']['value'] : $this->smtp_settings['from_email'];
+		$subject        = 'New ' . strtolower( $form_data['form']['name'] ) . ' form submission from ' . $domain;
+		$html_body      = $compose->html();
+		$plaintext_body = $compose->plaintext();
+		$attachments    = isset( $form_data['files'] ) ? $form_data['files'] : false;
+
+		// Try send using SMTP.
+		if ( $smtp_settings ) {
+			$this->log .= date("Y-m-d H:i:s") . ' Attempt SMTP mail.' . "\n";
+
+			$mailer                    = new Mail_SMTP();
+			$result                    = $mailer->send(
+				$host                  = $smtp_settings['host'],
+				$port                  = $smtp_settings['port'],
+				$username              = $smtp_settings['username'],
+				$password              = $smtp_settings['password'],
+				$use_auth              = $smtp_settings['auth'],
+				$use_local_mail_server = $smtp_settings['use_local_mail_server'],
+				$to_email              = $smtp_settings['to_email'],
+				$from_email            = $smtp_settings['from_email'],
+				$from_name,
+				$reply_name,
+				$reply_email,
+				$subject,
+				$html_body,
+				$plaintext_body,
+				$attachments,
+				$domain,
+			);
+			if ( 200 !== $result[0] ) {
+				$this->log .= date("Y-m-d H:i:s") . ' SMTP mailer reported: "' . $result[1] . "\n";
+				error_log( 'Bigup Forms: SMTP mailer reported: "' . $result[1] . '"' );
+			}
 		}
 
-		// Create response body.
-		$response['ok']       = ( $status[0] < 300 ) ? true : false;
-		$response['output']   = $status[1];
-		$response['formData'] = $form_data;
+		// If SMTP fails and local mail is enabled, try send using PHP mail.
+		if ( 200 !== $result[0] && $local_settings && $local_settings['use_local_mail_server'] && function_exists( 'mail' ) ) {
+			$this->log .= date( "Y-m-d H:i:s" ) . ' Attempt local mail.' . "\n";
 
-		// PHPMailer debug ($mail->SMTPDebug) gets dumped to output buffer
-		// and breaks JSON response. Using ob_clean() before output prevents this.
-		ob_clean();
-		echo wp_json_encode( $response );
+			$mailer         = new Mail_Local();
+			$result         = $mailer->send(
+				$to_email   = $local_settings['to_email'],
+				$from_email = $local_settings['from_email'],
+				$from_name,
+				$reply_name,
+				$reply_email,
+				$subject,
+				$html_body,
+				$plaintext_body,
+				$attachments,
+			);
+			if ( 200 !== $result[0] ) {
+				$this->log .= date("Y-m-d H:i:s") . ' Local mailer reported: "' . $result[1] . "\n";
+				error_log( 'Bigup Forms: Local mailer reported: "' . $result[1] . '"' );
+			}
+		}
+
+		$this->log .= date("Y-m-d H:i:s") . ' send_email() result: "' . $result[1] . "\n";
+		return $result;
 	}
 }

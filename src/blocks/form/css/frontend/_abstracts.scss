@@ -1,0 +1,29 @@
+%hover-focus {
+	transition: 0.15s;
+
+	&:not(.bigupForms__form-locked *, :focus, :not(:invalid)):hover {
+		outline: solid 0.2em var(--bigupForms_yellow);
+		cursor: text;
+	}
+
+	&:focus {
+		outline: solid 0.2em var(--bigupForms_blue);
+	}
+
+	&[rows], /* textarea */
+	&[type=text],
+	&[type=url],
+	&[type=tel],
+	&[type=email],
+	&[type=date],
+	&[type=month],
+	&[type=week],
+	&[type=time],
+	&[type=datetime-local],
+	&[type=number],
+	&[type=password] {
+		&:not(:invalid) {
+			outline: solid 0.2em var(--bigupForms_green);
+		}
+	}
+}

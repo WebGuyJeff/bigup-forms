@@ -6,15 +6,15 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
 
 // Variables passed from caller.
-[ $form_name, $site_url, $fields ] = $variables;
+[ $form_name, $domain, $fields ] = $variables;
 
-$intro_html  = "This was submitted via the <b>{$form_name}</b> at {$site_url}.";
+$intro_html  = "This was submitted via the <b>{$form_name}</b> at {$domain}.";
 $fields_html = "\n";
 foreach ( $fields as $name => $data ) {
 	$uc_name      = ucfirst( str_replace( '-', ' ', $name ) );

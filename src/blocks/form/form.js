@@ -5,7 +5,7 @@ import Edit from './edit'
 import save from './save'
 import metadata from './block.json'
 import { Variations } from './variations'
-import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
 import './form.scss'
 
 if ( bigupFormsInlinedVars.debug ) {
@@ -21,13 +21,13 @@ registerBlockType( metadata.name, {
 	icon: LogoForm,
 	styles: [
 		{
-			name: 'default',
+			name: 'none',
 			label: __( 'None' ),
 			isDefault: true
 		},
 		{
-			name: 'vanilla',
-			label: __( 'Vanilla' )
+			name: 'outline',
+			label: __( 'Outline' )
 		},
 		{
 			name: 'inset-dark',

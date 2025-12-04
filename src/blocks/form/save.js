@@ -38,7 +38,7 @@ export default function save( { attributes } ) {
 				}
 			</header>
 
-			<div className='bigupForms__section'>
+			<div className='bigupForms__blockContainer'>
 
 				<Honeypot />
 
@@ -54,7 +54,9 @@ export default function save( { attributes } ) {
 			</div>
 
 			<footer>
-				<div className='bigupForms__alerts' style={{ display: 'none', opacity: 0 }}></div>
+				<div className='bigupForms__alertsContainer' style={{ display: 'none', opacity: 0 }}>
+					<div className='bigupForms__alerts'></div>
+				</div>
 			</footer>
 
 		</form>

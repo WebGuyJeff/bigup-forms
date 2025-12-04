@@ -3,9 +3,8 @@ import { PropTypes } from 'prop-types'
 import React, { useEffect } from 'react'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
-import { InputWrap } from '../../components/InputWrap'
-import { makeNameAttributeSafe } from '../../js/common/_util'
-import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
+import { makeNameAttributeSafe } from '../../common/_util'
+import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -23,7 +22,9 @@ export default function Edit( props ) {
 	const setAttributes   = props.setAttributes
 	const clientId        = props.clientId
 	const formID          = props.context[ 'bigup-forms/formID' ]
-	const blockProps      = useBlockProps()
+	const blockProps      = useBlockProps( {
+    	className: 'bigupForms__blockWrap',
+    } )
 	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
 	const {
 		blockId, // The block ID.
@@ -297,21 +298,19 @@ export default function Edit( props ) {
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
-				<InputWrap>
-					<InputTag
-						name={ name }
-						className={ 'bigupForms__input' }
-						placeholder={ editPlaceholder }
-						onFocus={ ( e ) => { e.target.value = editPlaceholder } }
-						onBlur={ ( e ) => { e.target.value = '' } }
-						onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
-						autoComplete={ autocomplete }
-						data-inputtagname={ InputTag }
-						data-type={ type }
-						data-rows={ rows }
-						{ ...conditionalProps }
-					/>
-				</InputWrap>
+				<InputTag
+					name={ name }
+					className={ 'bigupForms__input' }
+					placeholder={ editPlaceholder }
+					onFocus={ ( e ) => { e.target.value = editPlaceholder } }
+					onBlur={ ( e ) => { e.target.value = '' } }
+					onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
+					autoComplete={ autocomplete }
+					data-inputtagname={ InputTag }
+					data-type={ type }
+					data-rows={ rows }
+					{ ...conditionalProps }
+				/>
 			</div>
 		</>
 	)

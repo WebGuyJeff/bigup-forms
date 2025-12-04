@@ -1,11 +1,9 @@
 import { __ } from '@wordpress/i18n'
 import { PropTypes } from 'prop-types'
 import React, { useEffect } from 'react'
-import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
+import { PanelBody, TextControl, CheckboxControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
-import { SelectWrap } from '../../components/SelectWrap'
-import { makeNameAttributeSafe } from '../../js/common/_util'
-import './form-select-editor.scss'
+import { makeNameAttributeSafe } from '../../common/_util'
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -27,7 +25,9 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		required // Field required boolean state.
 	} = attributes
 
-	const blockProps = useBlockProps()
+	const blockProps = useBlockProps( {
+		className: 'bigupForms__blockWrap',
+	} )
 
 	useEffect( () => {
         if ( ! blockId ) {
@@ -116,6 +116,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
+
 				{ isSelected &&
 					<div className={ 'bigupForms__selectEdit' }>
 						<small
@@ -141,8 +142,9 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 						</textarea>
 					</div>
 				}
+
 				{ ! isSelected &&
-					<SelectWrap>
+					<div className={ 'bigupForms__selectWrap' }>
 						<select
 							name={ name }
 							className={ 'bigupForms__select' }
@@ -170,8 +172,9 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 								)
 							}
 						</ select>
-					</SelectWrap>
+					</div>
 				}
+
 			</div>
 		</>
 	)

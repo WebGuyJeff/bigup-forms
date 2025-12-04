@@ -45,7 +45,8 @@ class Blocks {
 	 */
 	public function register_all() {
 		if ( count( $this->names ) === 0 ) {
-			error_log( 'Bigup Forms ERROR: No child directories detected in block directory. Please check blocks exist in {self::BIGUPFORMS_BLOCKS_PATH}' );
+			$path = self::BIGUPFORMS_BLOCKS_PATH;
+			error_log( 'Bigup Forms ERROR: No child directories detected in block directory. Please check blocks exist in {$path}.' );
 			return;
 		}
 		foreach ( $this->names as $name ) {
@@ -55,7 +56,7 @@ class Blocks {
 			);
 
 			if ( false === $result ) {
-				error_log( "Bigup Forms ERROR: Block registration failed for '{$name}'" );
+				error_log( "Bigup Forms ERROR: Block registration failed for '{$name}.'" );
 
 			} elseif ( 'form' === $name ) {
 				// Enqueue script after register_block...() so script handle is valid.

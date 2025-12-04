@@ -9,7 +9,6 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-text-field.js",
 	"viewScript": "file:./form-text-field-view.js",
-	"style": "file:./form-text-field.css",
 	"ancestor": [ "bigup-forms/form" ],
 	"usesContext": [ "bigup-forms/formID" ],
 	"attributes": {

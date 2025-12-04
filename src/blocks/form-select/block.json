@@ -9,8 +9,6 @@
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-select.js",
 	"viewScript": "file:./form-select-view.js",
-	"style": "file:./form-select.css",
-	"editorStyle": "file:./form-select-editor.scss",
 	"ancestor": [ "bigup-forms/form" ],
 	"usesContext": [ "bigup-forms/formID" ],
 	"attributes": {

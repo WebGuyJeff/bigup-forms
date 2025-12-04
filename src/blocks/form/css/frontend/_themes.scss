@@ -1,0 +1,56 @@
+/* Keep specificity 0 */
+:where( .bigupForms__form ) {
+
+	--bigupForms_white: var( --wp--preset--color--white, #fff );
+    --bigupForms_black: var( --wp--preset--color--black, #000 );
+	--bigupForms_yellow: #feed01;
+    --bigupForms_orange: #f1cd01;
+    --bigupForms_green: #00d351;
+	--bigupForms_red: #e4481d;
+	--bigupForms_blue: #2b86ec;
+    --bigupForms_lightGrey: #eee;
+	--bigupForms_placeholderColour: #0008;
+	--bigupForms_controlsMargin: margin: 0 auto var(--bigupForms_gutter) 0;
+	--bigupForms_gap: 0.75rem;
+
+	&.is-style-outline {
+		--bigupForms_border: solid 1px;
+		--bigupForms_gutter: 0.5em;
+		--bigupForms_inputColor: inherit;
+		--bigupForms_inputWrapBackground: var( --bigupForms_white );
+		--bigupForms_padding: 0.5em 0.75em;
+		--bigupForms_radius: 0.25em;
+		--bigupForms_shadow-inset: none;
+		--bigupForms_flagShadow: none;
+
+	}
+
+	&.bigupForms__form.is-style-inset-dark {
+		--bigupForms_border: none;
+		--bigupForms_gutter: 0.5em;
+		--bigupForms_inputColor: var( --bigupForms_white );
+		--bigupForms_inputWrapBackground: var( --bigupForms_black );
+		--bigupForms_padding: 0.5em 0.75em;
+		--bigupForms_radius: 0.6em;
+		--bigupForms_shadow-inset: inset 0 1px 1px 0px #000a,
+							inset 0 2px 2px 0px #000a,
+							inset 0 3px 5px 0px #000a,
+							inset 0 4px 6px 0px #000a,
+							inset 0 5px 8px 0px #000a;
+		--bigupForms_placeholderColour: #fff8;
+	}
+
+	&.bigupForms__form.is-style-inset-light  {
+		--bigupForms_border: none;
+		--bigupForms_gutter: 0.5em;
+		--bigupForms_inputColor: var( --bigupForms_black );
+		--bigupForms_inputWrapBackground: var( --bigupForms_white );
+		--bigupForms_padding: 0.5em 0.75em;
+		--bigupForms_radius: 0.6em;
+		--bigupForms_shadow-inset: inset 0 0px 1px 1px #0003,
+							inset 0 2px 2px 1px #0003,
+							inset 0 4px 4px 1px #0003,
+							inset 0 6px 6px 1px #0003,
+							inset 0 8px 8px 1px #0003;
+	}
+}

@@ -1,0 +1,31 @@
+@use '../abstracts';
+
+:not( .is-style-none ).bigupForms__form {
+
+	.bigupForms__input {
+		@extend %hover-focus;
+
+		position: relative;
+		margin: var(--bigupForms_controlsMargin);
+		outline: none;
+		border: var( --bigupForms_border );
+		border-radius: var(--bigupForms_radius);
+		box-shadow: var(--bigupForms_shadow-inset);
+		background: var(--bigupForms_inputWrapBackground);
+		padding: var(--bigupForms_padding);
+		width: 100%;
+		min-width: 8em;
+		min-height: fit-content;
+		overflow: visible;
+		text-align: inherit;
+		color: var( --bigupForms_inputColor );
+
+		&textarea {
+			resize: vertical;
+		}
+
+		&:not(.bigupForms__form-locked *):hover {
+			cursor: text;
+		}
+	}
+}

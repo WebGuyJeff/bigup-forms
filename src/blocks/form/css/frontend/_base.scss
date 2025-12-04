@@ -1,0 +1,79 @@
+/* Keep specificity 0 */
+:where( .bigupForms__form ) {
+	gap: var( --bigupForms_gap );
+	box-sizing: border-box;
+	display: flex;
+    position: relative; // Parent to popup messages.
+	flex-flow: column;
+	align-items: stretch;
+	margin: 0 auto;
+	width: clamp(10em, 100%, 34em);
+	max-width: 100%;
+	text-align: inherit;
+	font: inherit;
+
+	// Hide the anti-bot honeypot.
+	.saveTheBees {
+		display: none;
+	}
+
+	.bigupForms__message {
+		margin: 1em 0 1.688em 0;
+	}
+
+	.bigupForms__blockContainer {
+		gap: inherit;
+		display: flex;
+		flex-flow: column;
+		transition: opacity 150ms ease-in-out;
+		width: 100%;
+
+		.bigupForms__blockWrap {
+			width: 100%;
+		}
+	}
+
+	.bigupForms__inlineErrors {
+		display: flex;
+		flex-flow: column;
+		margin: 0 2em;
+		border-radius: 0 0 0.6em 0.6em;
+		background:var(--bigupForms_red);
+		padding: 0.4em 0.7em;
+		color:#fff;
+		font-weight: 600;
+		font-variation-settings: "wght" 600;
+	}
+
+	.bigupForms__controls {
+		padding-top: var( --bigupForms_gap );
+
+		.bigupForms__buttonWrap {
+			display: inline-block;
+
+			&:not( :last-child ) {
+				margin-inline-end: var(--bigupForms_gap);
+			}
+		}
+	}
+
+	.bigupForms__submitLabel-notReady { display: none;}
+	.bigupForms__submitLabel-ready { display: inline;}
+
+	button:disabled {
+		.bigupForms__submitLabel-notReady { display: inline;}
+		.bigupForms__submitLabel-ready { display: none;}
+	}
+
+	&.bigupForms__form-locked {
+
+		& * {
+			cursor: default;
+			pointer-events: none !important;
+		}
+
+		& .bigupForms__blockContainer {
+			opacity: 0.5;
+		}
+	}
+}

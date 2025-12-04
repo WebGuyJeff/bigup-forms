@@ -85,6 +85,12 @@ class CPT_Form_Entry {
 			'description' => 'The response from the mailer.',
 			'type'        => 'text',
 		),
+		array(
+			'name'        => '_log',
+			'title'       => 'Log',
+			'description' => 'Technical log.',
+			'type'        => 'textarea',
+		),
 	);
 
 	/**
@@ -126,7 +132,87 @@ class CPT_Form_Entry {
 		add_action( 'admin_menu', array( &$this, 'register_custom_fields' ) );
 		add_action( 'save_post', array( &$this, 'save_custom_fields' ), 1, 2 );
 		add_action( 'do_meta_boxes', array( &$this, 'remove_default_custom_fields' ), 10, 3 );
+		// Post list custom columns.
+		add_filter( 'manage_bigup_form_entry_posts_columns', array( &$this, 'add_post_list_custom_columns' ), 10, 1 );
+		add_action( 'manage_bigup_form_entry_posts_custom_column', array( &$this, 'define_post_list_custom_columns_data' ), 10, 2 );
 	}
+
+
+	/**
+	 * Insert post list custom columns.
+	 */
+	public function add_post_list_custom_columns( $columns ) {
+		// Change post title column name to 'Date' (post names are set as the submit date).
+		$columns[ 'title' ] = 'Date';
+		// Define new columns.
+		$new_columns = array_merge(
+			$columns,
+			array(
+				'name'    => __( 'Name', 'bigup-forms' ),
+				'email'   => __( 'Email', 'bigup-forms' ),
+				'phone'   => __( 'Phone', 'bigup-forms' ),
+				'message' => __( 'Message', 'bigup-forms' ),
+				'sent'    => __( 'Email Sent', 'bigup-forms' ),
+			)
+		);
+		// Move built-in columns to the end by removing and re-adding to the array.
+		$categories = $new_columns[ 'categories' ];
+		$date = $new_columns[ 'date' ];
+		// Don't re-add 'categories' or 'date' as we don't want them.
+		unset( $new_columns[ 'categories' ] );
+		unset( $new_columns[ 'date' ] );
+
+		return $new_columns;
+	}
+
+
+	/**
+	 * Define data for post list custom columns.
+	 */
+	public function define_post_list_custom_columns_data( $column_key, $post_id ) {
+		switch ( $column_key ) {
+			case 'name':
+				$name = get_post_meta( $post_id, '_bufe__name', true );
+				if ( $name ) {
+					echo $name;
+				}
+				break;
+
+			case 'email':
+				$email = get_post_meta( $post_id, '_bufe__email', true );
+				if ( $email ) {
+					echo $email;
+				}
+				break;
+
+			case 'phone':
+				$phone = get_post_meta( $post_id, '_bufe__phone', true );
+				if ( $phone ) {
+					echo $phone;
+				}
+				break;
+
+			case 'message':
+				$message = get_post_meta( $post_id, '_bufe__message', true );
+				if ( $message ) {
+					if ( strlen( $message ) > 140 ) {
+						// truncate string
+						$message = substr( $message, 0, 140 ) . '...';
+					}
+					echo $message;
+				}
+				break;
+
+			case 'sent':
+				$sent = get_post_meta( $post_id, '_bufe__send-result', true );
+				if ( $sent ) {
+					$sent_icon = str_contains( $sent, '200' ) ? '✅' : '❌';
+					echo $sent_icon;
+				}
+				break;
+		}
+	}
+
 
 	/**
 	 * Remove default Custom Fields meta box
@@ -166,12 +252,12 @@ class CPT_Form_Entry {
 						case 'time':
 						case 'date':
 							echo '<label for="' . $this->prefix . $field['name'] . '"><b>' . $field['title'] . '</b></label>';
-							echo '<input type="' . $field['type'] . '" name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" value="' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '" />';
+							echo '<input type="' . $field['type'] . '" name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" value="' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '" disabled/>';
 							break;
 
 						case 'textarea': {
 							echo '<label for="' . $this->prefix . $field['name'] . '"><b>' . $field['title'] . '</b></label>';
-							echo '<textarea name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" columns="30" rows="3">' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '</textarea>';
+							echo '<textarea name="' . $this->prefix . $field['name'] . '" id="' . $this->prefix . $field['name'] . '" columns="30" rows="3" disabled>' . htmlspecialchars( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) ) . '</textarea>';
 							break;
 						}
 						case 'checkbox': {
@@ -180,7 +266,7 @@ class CPT_Form_Entry {
 							if ( get_post_meta( $post->ID, $this->prefix . $field['name'], true ) == 'yes' ) {
 								echo ' checked="checked"';
 							}
-							echo '" style="width: auto;" />';
+							echo '" style="width: auto;" disabled/>';
 							break;
 						}
 						default: {
@@ -228,7 +314,7 @@ class CPT_Form_Entry {
 	/**
 	 * Log a new form submission.
 	 */
-	public static function log_form_entry( $form_data, $send_result ) {
+	public static function log_form_entry( $form_data, $send_result, $log = '' ) {
 
 		$form   = $form_data['form'];
 		$fields = $form_data['fields'];
@@ -246,16 +332,17 @@ class CPT_Form_Entry {
 		$result = wp_insert_post(
 			array(
 				'post_type'   => 'bigup_form_entry',
-				'post_status' => 'publish',
-				'post_title'  => sanitize_title( strtolower( $form['name'] . '-' . $name ) ),
+				'post_status' => 'private',
+				'post_title'  => gmdate( 'Y/m/d H:i:s' ),
 				'meta_input'  => array(
-					'_bufe__form_name'   => $form['friendly_name'],
+					'_bufe__form_name'   => $form['name'],
 					'_bufe__name'        => $name,
 					'_bufe__email'       => isset( $fields['email'] ) ? $fields['email']['value'] : '',
 					'_bufe__phone'       => isset( $fields['phone'] ) ? $fields['phone']['value'] : '',
 					'_bufe__message'     => isset( $fields['message'] ) ? $fields['message']['value'] : '',
 					'_bufe__files'       => $file_info,
 					'_bufe__send-result' => implode( ' | ', $send_result ),
+					'_bufe__log'         => $log,
 				),
 			),
 			true

@@ -6,7 +6,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
@@ -18,20 +18,20 @@ namespace BigupWeb\Forms;
 $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 ?>
 
-<form name="signup" data-name="Signup Form" class="bigup__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
+<form name="signup" data-name="Signup Form" class="bigupForms__form <?php echo esc_attr( $classes ); ?>" method="post" accept-charset="utf-8" autocomplete="on">
 
 	<header>
 		<?php
-			$title   = ( $title ) ? '<h3 id="aria_form-title" class="bigup__form_title">' . $title . '</h3>' . "\n" : '';
-			$message = ( $message ) ? '<p id="aria_form-desc" class="bigup__form_message">' . $message . '</p>' . "\n" : '';
+			$title   = ( $title ) ? '<h3 id="aria_form-title" class="bigupForms__form_title">' . $title . '</h3>' . "\n" : '';
+			$message = ( $message ) ? '<p id="aria_form-desc" class="bigupForms__form_message">' . $message . '</p>' . "\n" : '';
 			echo $title . $message;
 		?>
 	</header>
 
-	<div class="bigup__form_section">
+	<div class="bigupForms__form_section">
 
 		<input
-			class="bigup__form_input saveTheBees"
+			class="bigupForms__form_input saveTheBees"
 			name="required_field"
 			type="text"
 			autocomplete="off"
@@ -39,11 +39,11 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 		>
 
 		<?php if ( $decorative_markup ) : ?>
-			<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
+			<div class="bigupForms__form_inputWrap bigupForms__form_inputWrap-short">
 		<?php endif ?>
 
 				<input
-					class="bigup__form_input"
+					class="bigupForms__form_input"
 					name="name"
 					type="text"
 					maxlength="100"
@@ -55,14 +55,14 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 				>
 
 		<?php if ( $decorative_markup ) : ?>
-				<span class="bigup__form_flag bigup__form_flag-hover"></span>
-				<span class="bigup__form_flag bigup__form_flag-focus"></span>
+				<span class="bigupForms__form_flag bigupForms__form_flag-hover"></span>
+				<span class="bigupForms__form_flag bigupForms__form_flag-focus"></span>
 			</div>
-			<div class="bigup__form_inputWrap bigup__form_inputWrap-short">
+			<div class="bigupForms__form_inputWrap bigupForms__form_inputWrap-short">
 		<?php endif ?>
 
 				<input
-					class="bigup__form_input"
+					class="bigupForms__form_input"
 					name="email" type="email"
 					maxlength="100" title="Email"
 					required aria-label="Email"
@@ -72,18 +72,18 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 				>
 
 		<?php if ( $decorative_markup ) : ?>
-				<span class="bigup__form_flag bigup__form_flag-hover"></span>
-				<span class="bigup__form_flag bigup__form_flag-focus"></span>
+				<span class="bigupForms__form_flag bigupForms__form_flag-hover"></span>
+				<span class="bigupForms__form_flag bigupForms__form_flag-focus"></span>
 			</div>
 		<?php endif ?>
 
-		<div className='bigup__form_controls'>
-			<div className='bigup__form_buttonWrap'>
-				<button class="button bigup__form_submit wp-element-button" type="submit" value="Submit" disabled>
-					<span class="bigup__form_submitLabel-ready">
+		<div className='bigupForms__form_controls'>
+			<div className='bigupForms__form_buttonWrap'>
+				<button class="button bigupForms__submit wp-element-button" type="submit" value="Submit" disabled>
+					<span class="bigupForms__submitLabel-ready">
 						<?php _e( 'Submit', 'bigup_forms' ); ?>
 					</span>
-					<span class="bigup__form_submitLabel-notReady">
+					<span class="bigupForms__submitLabel-notReady">
 						<?php _e( '[please wait]', 'bigup_forms' ); ?>
 					</span>
 				</button>
@@ -93,7 +93,7 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 	</div>
 
 	<footer>
-		<div class="bigup__alert_output" style="display:none; opacity:0;"></div>
+		<div class="bigupForms__alert_output" style="display:none; opacity:0;"></div>
 	</footer>
 
 </form>

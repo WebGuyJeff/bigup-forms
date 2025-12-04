@@ -1,15 +1,15 @@
 {
 	"name": "bigup-forms",
-	"version": "0.7.5",
+	"version": "0.8",
 	"dependencies": {
-		"@wordpress/block-editor": "^12.19.0",
-		"@wordpress/blocks": "^12.28.0",
-		"@wordpress/i18n": "^4.51.0",
+		"@wordpress/block-editor": "^15.8.0",
+		"@wordpress/blocks": "^15.8.0",
+		"@wordpress/i18n": "^6.8.0",
 		"prop-types": "^15.8.1"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "^26.13.0",
-		"browser-sync-webpack-plugin": "^2.3.0"
+		"@wordpress/scripts": "^31.0.0",
+		"browser-sync-webpack-plugin": "^2.4.0"
 	},
 	"scripts": {
 		"build": "webpack --mode production",

@@ -8,7 +8,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
@@ -26,7 +26,7 @@ class Store_Controller {
 
 		// Check header is multipart/form-data.
 		if ( ! str_contains( $request->get_header( 'Content-Type' ), 'multipart/form-data' ) ) {
-			$this->send_json_response( array( 405, 'Unexpected payload content-type' ) );
+			HTTP_Response::send_json( array( 405, 'Unexpected payload content-type' ) );
 			exit; // Request handlers should exit() when done.
 		}
 
@@ -45,33 +45,7 @@ class Store_Controller {
 			$tags
 		);
 
-		$this->send_json_response( ( $result ) ? 200 : 500, $result );
+		HTTP_Response::send_json( ( $result ) ? 200 : 500, $result );
 		exit; // Request handlers should exit() when done.
-	}
-
-
-	/**
-	 * Send JSON response to client.
-	 *
-	 * Sets the response header to the passed http status code and a
-	 * response body containing an array of status code, status text
-	 * and human-readable description of the status or error.
-	 *
-	 * @param array $info: [ int(http-code), str(human readable message) ].
-	 */
-	private function send_json_response( $status, $form_id ) {
-
-		// Ensure response headers haven't already sent to browser.
-		if ( ! headers_sent() ) {
-			header( 'Content-Type: application/json; charset=utf-8' );
-			status_header( $status );
-		}
-
-		$response = array(
-			'ok' => ( $status < 300 ) ? true : false,
-			'id' => $form_id,
-		);
-
-		echo wp_json_encode( $response );
 	}
 }

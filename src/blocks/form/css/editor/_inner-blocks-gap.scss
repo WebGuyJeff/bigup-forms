@@ -1,0 +1,5 @@
+:where( .bigupForms__form ) > .bigupForms__blockContainer > .block-editor-inner-blocks > div {
+	gap: var( --bigupForms_gap );
+	display: flex;
+	flex-flow: column;
+}

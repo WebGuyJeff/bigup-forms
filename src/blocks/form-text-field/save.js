@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps, RichText } from '@wordpress/block-editor'
-import { InputWrap } from '../../components/InputWrap'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -66,21 +65,19 @@ export default function save( { attributes } ) {
 						value={ label }
 					/>
 				}
-				<InputWrap>
-					<InputTag
-						name={ name }
-						id={ name + blockIdSuffix }
-						className={ 'bigupForms__input' }
-						placeholder={ placeholder }
-						onFocus={ ( e ) => { e.target.placeholder = '' } }
-						onBlur={ ( e ) => { e.target.placeholder = placeholder } }
-						autoComplete={ autocomplete }
-						data-inputtagname={ InputTag }
-						data-type={ type }
-						data-rows={ rows }
-						{ ...conditionalProps }
-					/>
-				</InputWrap>
+				<InputTag
+					name={ name }
+					id={ name + blockIdSuffix }
+					className={ 'bigupForms__input' }
+					placeholder={ placeholder }
+					onFocus={ ( e ) => { e.target.placeholder = '' } }
+					onBlur={ ( e ) => { e.target.placeholder = placeholder } }
+					autoComplete={ autocomplete }
+					data-inputtagname={ InputTag }
+					data-type={ type }
+					data-rows={ rows }
+					{ ...conditionalProps }
+				/>
 			</div>
 		</>
 	)

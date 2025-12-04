@@ -9,7 +9,5 @@
 	"keywords": [ "form", "input", "files" ],
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-file-upload.js",
-	"viewScript": "file:./form-file-upload-view.js",
-	"style": "file:./form-file-upload.css",
 	"ancestor": [ "bigup-forms/form" ]
 }

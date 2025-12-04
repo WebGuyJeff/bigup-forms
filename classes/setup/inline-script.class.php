@@ -8,7 +8,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
@@ -28,6 +28,7 @@ class Inline_Script {
 				'settingsOK'    => self::mail_settings_are_set(),
 				'restSubmitURL' => get_rest_url( null, 'bigup/forms/v1/submit' ),
 				'restStoreURL'  => get_rest_url( null, 'bigup/forms/v1/store' ),
+				'restTestURL'   => get_rest_url( null, 'bigup/forms/v1/test' ),
 				'restNonce'     => wp_create_nonce( 'wp_rest' ),
 				'debug'         => BIGUPFORMS_DEBUG,
 				'dataFormats'   => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_data_formats() : false,

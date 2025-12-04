@@ -10,7 +10,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup_custom_fields
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */

@@ -9,7 +9,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
@@ -105,16 +105,27 @@ class Admin_Settings {
 			<?php settings_errors(); // Display the form save notices here. ?>
 
 			<h2>
-				Usage
+				Notice
 			</h2>
 			<p>
-				With the settings below complete, you can either set a contact form in the widget
-				area using the customizer, or use the shortcode as below in your theme files or via
-				the shortcode block in the editor:
+				Complete these settings before making any contact forms live. Test the settings
+				using the button below, and test the form on your site once it is published to avoid
+				missed submissions.
 			</p>
-			<code style="margin: 1em 0 2em 0;display: block;width: fit-content;: 0.5em 0;">
-				[bigup_forms title="Contact Form" message="Complete this contact form to send me a message"]
-			</code>
+			<p>
+				It is recommended you complete the SMTP settings as well as allowing the local mail
+				server as a redundancy in case of SMTP errors. This will further reduce the chance
+				of missed submissions.
+			</p>
+			<p>
+				All form entries that are recieved by this website are logged in the 'Form Entries'
+				admin page, even when sending to your recipient email fails. It is however
+				impossible to account for errors that occur on user devices.
+			</p>
+			<p>
+				Thanks for using Bigup Forms!
+			</p>
+
 			<form method="post" action="options.php">
 
 				<?php
@@ -159,30 +170,19 @@ class Admin_Settings {
 			add_settings_field( 'port', 'Port', array( &$this, 'echo_field_port' ), $page, $section );
 			add_settings_field( 'auth', 'Authentication', array( &$this, 'echo_field_auth' ), $page, $section );
 
-		// Local mail server.
-		$section = 'section_local_mail_server';
-		add_settings_section( $section, 'Local Mail Server', null, $page );
-			add_settings_field( 'use_local_mail_server', 'Use Local Mail Server', array( &$this, 'echo_field_use_local_mail_server' ), $page, $section );
-
 		// Message Header.
 		$section = 'section_headers';
 		add_settings_section( $section, 'Message Headers', array( &$this, 'echo_intro_section_headers' ), $page );
-			add_settings_field( 'to_email', 'Recipient Email Address', array( &$this, 'echo_field_to_email' ), $page, $section );
 			add_settings_field( 'from_email', 'Sent-from Email Address', array( &$this, 'echo_field_from_email' ), $page, $section );
+			add_settings_field( 'to_email', 'Send-to Email Address', array( &$this, 'echo_field_to_email' ), $page, $section );
 
-		// Appearance.
-		$section = 'section_appearance';
-		add_settings_section( $section, 'Appearance', array( &$this, 'echo_intro_section_appearance' ), $page );
-			add_settings_field( 'styles', 'Fancy dark theme', array( &$this, 'echo_field_styles' ), $page, $section );
-			add_settings_field( 'nostyles', 'Remove plugin styles', array( &$this, 'echo_field_nostyles' ), $page, $section );
-
-		// Fields.
-		$section = 'section_fields';
-		add_settings_section( $section, 'Fields', array( &$this, 'echo_intro_section_fields' ), $page );
-			add_settings_field( 'files', 'Files', array( &$this, 'echo_field_files' ), $page, $section );
+		// Local mail server.
+		$section = 'section_local_mail_server';
+		add_settings_section( $section, 'Local Mail Server', array( &$this, 'echo_intro_section_local_mail_server' ), $page );
+			add_settings_field( 'use_local_mail_server', 'Use Local Mail Server', array( &$this, 'echo_field_use_local_mail_server' ), $page, $section );
 
 		// Developer.
-		$section = 'developer';
+		$section = 'section_developer';
 		add_settings_section( $section, 'Developer', array( &$this, 'echo_intro_section_developer' ), $page );
 			add_settings_field( 'debug', 'Enable debugging', array( &$this, 'echo_field_debug' ), $page, $section );
 	}
@@ -196,16 +196,18 @@ class Admin_Settings {
 	public function smtp_test_markup_callback() {
 		// The SMTP test button is enabled by JS once vaild saved settings are detected.
 		?>
-			<div class="bigup__smtpTest_wrapper">
-				<button class="button button-secondary bigup__form_submit bigup__smtpTest_button" type="submit" disabled>
-					<span class="bigup__form_submitLabel-ready">
-						<?php _e( 'Send test email', 'bigup_forms' ); ?>
+			<div class="bigupForms__smtpTest_wrapper">
+				<button class="button button-secondary bigupForms__submit bigupForms__smtpTest_button" type="submit" disabled>
+					<span class="bigupForms__submitLabel-ready">
+						<?php _e( 'Test Settings', 'bigup_forms' ); ?>
 					</span>
-					<span class="bigup__form_submitLabel-notReady">
-						<?php _e( 'Send test email [Check your configuration]', 'bigup_forms' ); ?>
+					<span class="bigupForms__submitLabel-notReady">
+						<?php _e( 'Test Settings [Check your configuration]', 'bigup_forms' ); ?>
 					</span>
 				</button>
-				<div class="bigup__alert_output" style="display:none; opacity:0;"></div>
+				<div class='bigupForms__alertsContainer' style="display:none;">
+					<div class='bigupForms__alerts'></div>
+				</div>
 			</div>
 		<?php
 	}
@@ -264,36 +266,11 @@ class Admin_Settings {
 
 
 	/**
-	 * Output Form Fields - Local mail server Settings
-	 */
-	public function echo_field_use_local_mail_server() {
-		$setting = 'bigup_forms_settings[use_local_mail_server]';
-		printf(
-			'<input type="checkbox" value="1" id="%s" name="%s" %s><label for="%s">%s</label><p><span style="font-weight:800;">WARNING: </span>%s</p>',
-			$setting,
-			$setting,
-			isset( $this->settings['use_local_mail_server'] ) ? checked( '1', $this->settings['use_local_mail_server'], false ) : '',
-			$setting,
-			'Try and use a local mail server instead of SMTP (overrides SMTP settings).',
-			'Depending on the hosting config, this may return false positives making it look like mail has sent. Please test-send an email to yourself via the contact form. SMTP is highly recommended as it will always alert the user of send failure!'
-		);
-	}
-
-
-	/**
 	 * Output Form Fields - Message Header Settings
 	 */
 	public function echo_intro_section_headers() {
-		echo '<p>These can be set to anything, however, setting <b>sent from</b> to an address that doesn&apos;t match the local domain will cause mail to fail SPF checks, not to mention being a form of forgery.</p>';
-	}
-	public function echo_field_to_email() {
-		$setting = 'bigup_forms_settings[to_email]';
-		printf(
-			'<input class="regular-text" type="email" id="%s" name="%s" value="%s">',
-			$setting,
-			$setting,
-			$this->settings['to_email'] ?? get_bloginfo( 'admin_email' )
-		);
+		echo '<p>To improve deliverability, the <code>sent from</code> email address should match your website domain, or at least the SMTP host domain.</p>';
+		echo '<p>Mail providers (Gmail, Microsoft, Yahoo, etc) heavily use <strong>DMARC</strong>, <strong>SPF</strong>, and <strong>DKIM</strong> to verify that mail is legitimately coming from the domain it claims to come from. Ensure these DNS entries are set correctly to authenticate the <code>sent from</code> domain.</p>';
 	}
 	public function echo_field_from_email() {
 		$setting = 'bigup_forms_settings[from_email]';
@@ -304,54 +281,42 @@ class Admin_Settings {
 			$this->settings['from_email'] ?? get_bloginfo( 'admin_email' )
 		);
 	}
-
-
-	/**
-	 * Output Form Fields - Appearance Settings
-	 */
-	public function echo_intro_section_appearance() {
-		echo '<p>These options determine the appearance of your form.</p>';
-	}
-	public function echo_field_styles() {
-		$setting = 'bigup_forms_settings[styles]';
+	public function echo_field_to_email() {
+		$setting = 'bigup_forms_settings[to_email]';
 		printf(
-			'<input type="checkbox" value="1" id="%s" name="%s" %s><label for="%s">%s</label>',
+			'<input class="regular-text" type="email" id="%s" name="%s" value="%s">',
 			$setting,
 			$setting,
-			isset( $this->settings['styles'] ) ? checked( '1', $this->settings['styles'], false ) : '',
-			$setting,
-			'Tick to use the fancy dark form theme.',
+			$this->settings['to_email'] ?? get_bloginfo( 'admin_email' )
 		);
 	}
-	public function echo_field_nostyles() {
-		$setting = 'bigup_forms_settings[nostyles]';
-		printf(
-			'<input type="checkbox" value="1" id="%s" name="%s" %s><label for="%s">%s</label>',
-			$setting,
-			$setting,
-			isset( $this->settings['nostyles'] ) ? checked( '1', $this->settings['nostyles'], false ) : '',
-			$setting,
-			'Tick to remove all style-related markup (overrides other style settings).',
-		);
-	}
+
 
 	/**
-	 * Output Form Fields - Fields Settings
+	 * Output Form Fields - Local mail server Settings
 	 */
-	public function echo_intro_section_fields() {
-		echo '<p>Customise the fields on the form.</p>';
+	public function echo_intro_section_local_mail_server() {
+		echo '<p>If present on the server, you can opt to try and use the local mail() package to send emails when using SMTP fails, or account settings are not configured.</p>';
+		echo '<p><span style="font-weight:800;color:blue;">Please note: </span>Depending on the hosting config, this may return false positives making it look like mail has sent. Please test-send an email to yourself via the contact form. SMTP is highly recommended as it will always alert the user of send failure!</p>';
+		if ( function_exists( 'mail' ) ) {
+			echo '<p>Status: <span style="font-weight:800;color:green;">OK </span>- mail() package is present.</p>';
+		} else {
+			echo '<p>Status: <span style="font-weight:800;color:red;">Not found. </span>- mail() package not detected. Option unavailable.</p>';
+		}
 	}
-	public function echo_field_files() {
-		$setting = 'bigup_forms_settings[files]';
+	public function echo_field_use_local_mail_server() {
+		$setting = 'bigup_forms_settings[use_local_mail_server]';
 		printf(
-			'<input type="checkbox" value="1" id="%s" name="%s" %s><label for="%s">%s</label>',
+			'<input type="checkbox" value="1" id="%s" name="%s" %s %s><label for="%s">%s</label>',
 			$setting,
 			$setting,
-			isset( $this->settings['files'] ) ? checked( '1', $this->settings['files'], false ) : '',
+			isset( $this->settings['use_local_mail_server'] ) ? checked( '1', $this->settings['use_local_mail_server'], false ) : '',
+			$disabled = function_exists( 'mail' ) ? '' : 'disabled',
 			$setting,
-			'Tick to enable the file select input so users can upload files.',
+			'Attempt sending with local mail when SMTP unavailable.',
 		);
 	}
+
 
 	/**
 	 * Output Form Fields - Developer Settings
@@ -408,18 +373,6 @@ class Admin_Settings {
 			$sanitised['from_email'] = sanitize_email( $input['from_email'] );
 		}
 
-		if ( isset( $input['styles'] ) ) {
-			$sanitised['styles'] = $this->sanitise_checkbox( $input['styles'] );
-		}
-
-		if ( isset( $input['nostyles'] ) ) {
-			$sanitised['nostyles'] = $this->sanitise_checkbox( $input['nostyles'] );
-		}
-
-		if ( isset( $input['files'] ) ) {
-			$sanitised['files'] = $this->sanitise_checkbox( $input['files'] );
-		}
-
 		if ( isset( $input['debug'] ) ) {
 			$sanitised['debug'] = $this->sanitise_checkbox( $input['debug'] );
 		}
@@ -459,7 +412,7 @@ class Admin_Settings {
 
 
 	/**
-	 * Validate a checkbox.
+	 * Sanitise a checkbox.
 	 */
 	private function sanitise_checkbox( $checkbox ) {
 		$bool_checkbox = (bool) $checkbox;
@@ -467,7 +420,7 @@ class Admin_Settings {
 	}
 
 	/**
-	 * Validate a checkbox.
+	 * Sanitise a password.
 	 */
 	private function sanitise_password( $password ) {
 		$trimmed_password = trim( $password );

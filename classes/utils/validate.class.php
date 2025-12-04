@@ -27,7 +27,7 @@ namespace BigupWeb\Forms;
  *
  * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
- * @copyright Copyright (c) 2024, Jefferson Real
+ * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
  * @link https://webguyjeff.com
  */
@@ -52,6 +52,8 @@ class Validate {
 	 * Get Validation Formats.
 	 *
 	 * Data format rules for use on front and back end for consistent validation.
+	 *
+	 * NOTE: Keep patterns very basic to avoid false positives in validation checks.
 	 */
 	public static function get_data_formats() {
 		return array(
@@ -80,12 +82,12 @@ class Validate {
 			),
 			'human_name'          => array(
 				'label'       => __( 'Name', 'bigup-forms' ),
-				'description' => __( 'Must only include letters and non-consecutive spaces or any of - \' , .', 'bigup-forms' ),
+				'description' => __( 'Must only include letters and non-consecutive spaces or any of - \' , .()', 'bigup-forms' ),
 				'types'       => array( 'textarea', 'text' ),
-				'error'       => __( 'Only letters, spaces and \' - , . allowed.', 'bigup-forms' ),
+				'error'       => __( 'Please enter a valid name.', 'bigup-forms' ),
 				'rules'       => array(
 					// Use \g1 backreference syntax to avoid conversion to octal with \k<name>.
-					'pattern'   => "/^[\p{L}](?:[\p{L}]|([- ',\.])(?!\g1))*$/u",
+					'pattern'   => "/^[\p{L}](?:[\p{L}]|([- ',\.()])(?!\g1)){1,50}$/u",
 					'maxlength' => 50,
 					'minlength' => 2,
 				),
@@ -94,9 +96,9 @@ class Validate {
 				'label'       => __( 'Phone Number', 'bigup-forms' ),
 				'description' => __( 'Common international phone number characters "+-()" and whitespace.', 'bigup-forms' ),
 				'types'       => array( 'tel' ),
-				'error'       => __( 'Only numbers, spaces and + - ( ) allowed.', 'bigup-forms' ),
+				'error'       => __( 'Please enter a valid phone number' ),
 				'rules'       => array(
-					'pattern'   => '^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$',
+					'pattern'   => '^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$',
 					'maxlength' => 20,
 					'minlength' => 5,
 				),
@@ -105,7 +107,7 @@ class Validate {
 				'label'       => __( 'Email', 'bigup-forms' ),
 				'description' => __( 'Email format allowed by most international email providers. A maximum of 254 characters, 64 of which must be before the "@". "_.+-" are allowed and must have a full-stop after the "@" for TLDs like "co.uk". The TLD may contain additional full-stops.', 'bigup-forms' ),
 				'types'       => array( 'email' ),
-				'error'       => __( 'Must be a valid email address.', 'bigup-forms' ),
+				'error'       => __( 'Please enter a valid email address.', 'bigup-forms' ),
 				'rules'       => array(
 					'pattern'   => '/^(?=.{6,254}$)[\p{L}\p{N}_.+-]{1,64}@[\p{L}\p{N}-]+\.[\p{L}\p{N}.-]+$/u',
 					'maxlength' => 254,
@@ -114,9 +116,9 @@ class Validate {
 			),
 			'domain_non_rfc'      => array( // See https://stackoverflow.com/questions/10306690/what-is-a-regular-expression-which-will-match-a-valid-domain-name-without-a-subd/30007882#answer-26987741.
 				'label'       => __( 'Domain', 'bigup-forms' ),
-				'description' => __( 'Must be a valid domain name.', 'bigup-forms' ),
+				'description' => __( 'Please enter a valid domain name.', 'bigup-forms' ),
 				'types'       => array( 'url' ),
-				'error'       => __( 'Must be a valid domain name.', 'bigup-forms' ),
+				'error'       => __( 'Please enter a valid domain name.', 'bigup-forms' ),
 				'rules'       => array(
 					'pattern'   => '/^(?=.{4,253}$)((?!-))(xn--)?[\p{L}\p{N}][\p{L}\p{N}-]{0,61}[\p{L}\p{N}]{0,1}\.(xn--)?([\p{L}\p{N}\-]{1,61}|[\p{L}\p{N}-]{1,30}\.[\p{L}]{2,})$/u',
 					'maxlength' => 253,

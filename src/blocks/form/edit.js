@@ -1,12 +1,12 @@
 import { __ } from '@wordpress/i18n'
 import { PropTypes } from 'prop-types'
 import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls, RichText } from '@wordpress/block-editor'
-import { PanelBody, SelectControl, CheckboxControl, TextControl, ButtonGroup, Button } from '@wordpress/components'
+import { PanelBody, SelectControl, CheckboxControl, TextControl, Button } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
-import { bigupFormsInlinedVars } from '../../js/common/_wp-inlined-script'
-import './form-editor.scss'
+import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script.js'
+import './form-editor.scss.js'
 
 const ALLOWED_BLOCKS = [
 	'bigup-forms/form-file-upload',
@@ -94,11 +94,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 			if ( result.ok && result[ 'id' ] !== formID ) {
 				setAttributes( { formID: result[ 'id' ] } )
 			} else {
-				const unknownError = {
-					message: 'Form save failure. Check WP logs',
-					result: result
-				}
-				console.error( unknownError )
+				throw result
 			}
 	
 		} catch ( error ) {
@@ -120,18 +116,16 @@ export default function Edit( { name, attributes, setAttributes } ) {
 						onChange={ ( newValue ) => { setAttributes( { formName: newValue } ) } }
 						__nextHasNoMarginBottom
 					/>
-					<ButtonGroup>
-						<Button
-							variant="primary"
-							onClick={ handleSave }
-							style={{
-								marginBottom: '12px',
-								marginRight: '12px'
-							}}
-						>
-							{ ( formID > 0 ) ? __( 'Update Form', 'bigup-forms' ) : __( 'Save Form', 'bigup-forms' ) }
-						</Button>
-					</ButtonGroup>
+					<Button
+						variant="primary"
+						onClick={ handleSave }
+						style={{
+							marginBottom: '12px',
+							marginRight: '12px'
+						}}
+					>
+						{ ( formID > 0 ) ? __( 'Update Form', 'bigup-forms' ) : __( 'Save Form', 'bigup-forms' ) }
+					</Button>
 					<span>{ formID > 0 ? 'ID: ' + formID : __( 'unsaved', 'bigup-forms' ) }</span>
 					<SelectControl
 						label={ __( 'Replace With', 'bigup-forms' ) }
@@ -200,7 +194,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 					}
 				</header>
 
-				<div className='bigupForms__section'>
+				<div className='bigupForms__blockContainer'>
 
 					<Honeypot />
 					<InnerBlocks allowedBlocks={ ALLOWED_BLOCKS } />
@@ -212,7 +206,9 @@ export default function Edit( { name, attributes, setAttributes } ) {
 				</div>
 
 				<footer>
-					<div className='bigupForms__alerts' style={{ display: 'none', opacity: 0 }}></div>
+					<div className='bigupForms__alertsContainer' style={{ display: 'none', opacity: 0 }}>
+						<div className='bigupForms__alerts'></div>
+					</div>
 				</footer>
 
 			</form>

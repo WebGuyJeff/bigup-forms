@@ -1,6 +1,5 @@
 import { __ } from '@wordpress/i18n'
 import { useBlockProps } from '@wordpress/block-editor'
-import { SelectWrap } from '../../components/SelectWrap'
 
 /**
  * The save function defines the way in which the different attributes should
@@ -47,7 +46,7 @@ export default function save( { attributes } ) {
 					{ label }
 				</label>
 			}
-			<SelectWrap>
+			<div className={ 'bigupForms__selectWrap' }>
 				<select
 					name={ name }
 					className={ 'bigupForms__select' }
@@ -75,7 +74,7 @@ export default function save( { attributes } ) {
 						)
 					}
 				</ select>
-			</ SelectWrap>
+			</div>
 		</div>
 	)
 }

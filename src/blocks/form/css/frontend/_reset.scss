@@ -1,0 +1,44 @@
+/* Keep specificity 0 */
+:where( .bigupForms__form ) {
+
+	input {
+		overflow: visible;
+	}
+	
+	input,
+	optgroup,
+	select,
+	textarea {
+		line-height: inherit;
+		font-family: inherit;
+		font-size: inherit;
+	}
+	
+	input:hover,
+	optgroup:hover,
+	select:hover,
+	textarea:hover {
+		cursor: pointer;
+
+		&:disabled,
+		&.disabled {
+			cursor: not-allowed;
+		}
+	}
+
+	// Remove the gap below textareas.
+	textarea {
+		vertical-align: top;
+	}
+
+	input:is( [ type="submit" ] ),
+	button {
+		font-size: inherit;
+	}
+
+	::placeholder,
+	::-webkit-input-placeholder {
+		opacity: 1 !important;
+		color: var(--bigupForms_placeholderColour) !important;
+	}
+}

@@ -1,0 +1,44 @@
+// Post list page.
+.edit-php.post-type-bigup_form_entry {
+
+	// Hide add new post button.
+	a.page-title-action {
+		display:none;
+	}
+
+	// Hide categories filter select.
+	select[name="cat"] {
+		display:none;
+	}
+
+	// Hide unwanted row actions.
+	.row-actions {
+		.edit,
+		.inline {
+			display:none;
+		}
+	}
+}
+
+// Post editor page.
+.post-php.post-type-bigup_form_entry {
+
+	// Hide add new post button.
+	a.page-title-action {
+		display:none;
+	}
+
+	// Hide unwanted metaboxes from the sidebar.
+	#publishing-action {
+		display:none;
+	}
+	#misc-publishing-actions {
+		display:none;
+	}
+	#categorydiv {
+		display:none;
+	}
+	#litespeed_meta_boxes {
+		display:none;
+	}
+}

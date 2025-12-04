@@ -1,0 +1,55 @@
+@use '../abstracts';
+
+.bigupForms__customFileUpload {
+	display: block;
+
+	&_label {
+		@extend %hover-focus;
+
+		display: inline-flex;
+		align-items: center;
+		margin: var(--bigupForms_gutter) 0 var(--bigupForms_gutter) 0;
+		border: var(--bigupForms_border);
+		border-radius: var(--bigupForms_radius);
+		cursor: pointer;
+		padding: var(--bigupForms_padding);
+		width: fit-content;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	&_input {
+		display: none;
+	}
+
+	&_icon {
+		display: inline-flex;
+		cursor: pointer;
+		width: 1.5em;
+		text-align: left;
+	}
+
+	&_output ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			border: var(--bigupForms_border);
+			border-radius: var(--bigupForms_radius);
+			padding: var(--bigupForms_padding);
+			margin: var(--bigupForms_gutter) 0 var(--bigupForms_gutter) 0;
+		}
+	}
+
+	button {
+		margin: 0;
+		border: 0;
+		background: none;
+		padding: 0;
+		color: inherit;
+		font-size: inherit;
+	}
+}
