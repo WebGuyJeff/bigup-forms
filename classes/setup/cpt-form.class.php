@@ -194,16 +194,16 @@ class CPT_Form {
 	/**
 	 * Log a new form submission.
 	 */
-	public static function save( $form_id, $form_name, $content, $tags ) {
+	public static function save( $post_id, $post_title, $content, $tags ) {
 
 		$form_title = date( 'd-m-Y_' ) . sanitize_title( strtolower( $form_name ) );
 
 		$result = wp_insert_post(
 			array(
-				'ID'           => $form_id,     // If equal to something other than 0, the post with that ID will be updated.
+				'ID'           => $post_id,     // If equal to something other than 0, the post with that ID will be updated.
 				'post_type'    => 'bigup_form',
 				'post_status'  => 'publish',
-				'post_title'   => $form_title,
+				'post_title'   => $post_title,
 				'post_content' => $content,
 				'tags_input'   => $tags,
 				'meta_input'   => array(

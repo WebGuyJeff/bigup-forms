@@ -7,7 +7,8 @@ import { ResetButton } from '../../components/ResetButton'
 export default function save( { attributes } ) {
 
 	const {
-		formID, // CPT Post ID for the saved form.
+		uniqueID, // ID unique to every form block.
+		formPostID, // CPT Post ID for the saved form.
 		formName,
 		textAlign,
 		title,
@@ -17,18 +18,17 @@ export default function save( { attributes } ) {
 
 	const blockProps = useBlockProps.save( {
 		className: 'bigupForms__form',
-		style: { textAlign: textAlign }
+		style: { textAlign: textAlign },
+		'data-unique-id': uniqueID,
+		'data-form-post-id': formPostID,
+		name: formName,
+		method: 'post',
+		acceptCharset: 'utf-8',
+		autoComplete: 'on'
 	} )
 
 	return (
-		<form
-			{ ...blockProps }
-			method='post'
-			acceptCharset='utf-8'
-			autoComplete='on'
-			name={ formName }
-			data-form-id={ formID }
-		>
+		<form { ...blockProps } >
 
 			<header>
 				{ title && showTitle &&
@@ -55,7 +55,7 @@ export default function save( { attributes } ) {
 
 			<footer>
 				<div className='bigupForms__alertsContainer' style={{ display: 'none', opacity: 0 }}>
-					<div className='bigupForms__alerts'></div>
+					<output className='bigupForms__alerts'></output>
 				</div>
 			</footer>
 

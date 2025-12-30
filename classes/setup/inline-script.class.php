@@ -25,15 +25,28 @@ class Inline_Script {
 	public static function get_frontend_form_variables() {
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
-				'settingsOK'    => self::mail_settings_are_set(),
-				'restSubmitURL' => get_rest_url( null, 'bigup/forms/v1/submit' ),
-				'restStoreURL'  => get_rest_url( null, 'bigup/forms/v1/store' ),
-				'restTestURL'   => get_rest_url( null, 'bigup/forms/v1/test' ),
-				'restNonce'     => wp_create_nonce( 'wp_rest' ),
-				'debug'         => BIGUPFORMS_DEBUG,
-				'dataFormats'   => ( ! is_admin() || Util::is_gutenberg_editor() ) ? Validate::get_data_formats() : false,
+				'settingsOK'            => self::mail_settings_are_set(),
+				'restSubmitURL'         => get_rest_url( null, 'bigup/forms/v1/submit' ),
+				'restStoreURL'          => get_rest_url( null, 'bigup/forms/v1/store' ),
+				'restTestURL'           => get_rest_url( null, 'bigup/forms/v1/test' ),
+				'restNonce'             => wp_create_nonce( 'wp_rest' ),
+				'debug'                 => BIGUPFORMS_DEBUG,
+				'validationDefinitions' => self::get_validation_definitions_for_frontend(),
 			)
 		);
+	}
+
+
+	/**
+	 * Get validation definitions ready for the front end.
+	 */
+	public static function get_validation_definitions_for_frontend() {
+		if ( ! is_admin() || Util::is_gutenberg_editor() ) {
+			$definitions = Validate::sanitise_patterns_for_frontend( Validate::get_definitions() );
+			return $definitions;
+		} else {
+			return false;
+		}
 	}
 
 

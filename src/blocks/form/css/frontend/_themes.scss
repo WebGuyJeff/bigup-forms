@@ -1,5 +1,4 @@
-/* Keep specificity 0 */
-:where( .bigupForms__form ) {
+.bigupForms__form {
 
 	--bigupForms_white: var( --wp--preset--color--white, #fff );
     --bigupForms_black: var( --wp--preset--color--black, #000 );
@@ -16,21 +15,32 @@
 	&.is-style-outline {
 		--bigupForms_border: solid 1px;
 		--bigupForms_gutter: 0.5em;
-		--bigupForms_inputColor: inherit;
-		--bigupForms_inputWrapBackground: var( --bigupForms_white );
-		--bigupForms_padding: 0.5em 0.75em;
+		--bigupForms_inputColor: var( --bigupForms_black );
+		--bigupForms_inputBackground: var( --bigupForms_white );
+		--bigupForms_paddingX: 0.5em;
+		--bigupForms_paddingY: 0.75em;
 		--bigupForms_radius: 0.25em;
 		--bigupForms_shadow-inset: none;
-		--bigupForms_flagShadow: none;
+	}
 
+	&.is-style-round {
+		--bigupForms_border: none;
+		--bigupForms_gutter: 0.5em;
+		--bigupForms_inputColor: var( --bigupForms_black );
+		--bigupForms_inputBackground: var( --bigupForms_white );
+		--bigupForms_paddingX: 0.75em;
+		--bigupForms_paddingY: 1em;
+		--bigupForms_radius: 2em;
+		--bigupForms_shadow-inset: none;
 	}
 
 	&.bigupForms__form.is-style-inset-dark {
 		--bigupForms_border: none;
 		--bigupForms_gutter: 0.5em;
 		--bigupForms_inputColor: var( --bigupForms_white );
-		--bigupForms_inputWrapBackground: var( --bigupForms_black );
-		--bigupForms_padding: 0.5em 0.75em;
+		--bigupForms_inputBackground: var( --bigupForms_black );
+		--bigupForms_paddingX: 0.5em;
+		--bigupForms_paddingY: 0.75em;
 		--bigupForms_radius: 0.6em;
 		--bigupForms_shadow-inset: inset 0 1px 1px 0px #000a,
 							inset 0 2px 2px 0px #000a,
@@ -44,8 +54,9 @@
 		--bigupForms_border: none;
 		--bigupForms_gutter: 0.5em;
 		--bigupForms_inputColor: var( --bigupForms_black );
-		--bigupForms_inputWrapBackground: var( --bigupForms_white );
-		--bigupForms_padding: 0.5em 0.75em;
+		--bigupForms_inputBackground: var( --bigupForms_white );
+		--bigupForms_paddingX: 0.5em;
+		--bigupForms_paddingY: 0.75em;
 		--bigupForms_radius: 0.6em;
 		--bigupForms_shadow-inset: inset 0 0px 1px 1px #0003,
 							inset 0 2px 2px 1px #0003,

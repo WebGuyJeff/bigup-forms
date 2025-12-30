@@ -3,7 +3,17 @@
 .bigupForms__customFileUpload {
 	display: block;
 
-	&_label {
+	// Set a default style for this custom input, even when no theme is applied.
+	--bigupForms_border: solid 1px;
+	--bigupForms_gutter: 0.5em;
+	--bigupForms_padding: 0.5em 0.75em;
+	--bigupForms_radius: 0.25em;
+
+	&_input {
+		display: none;
+	}
+
+	&_button {
 		@extend %hover-focus;
 
 		display: inline-flex;
@@ -11,45 +21,68 @@
 		margin: var(--bigupForms_gutter) 0 var(--bigupForms_gutter) 0;
 		border: var(--bigupForms_border);
 		border-radius: var(--bigupForms_radius);
-		cursor: pointer;
-		padding: var(--bigupForms_padding);
 		width: fit-content;
+		color: inherit;
 
 		&:hover {
 			text-decoration: underline;
 		}
 	}
 
-	&_input {
+	&_output {
 		display: none;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		border-collapse: collapse;
+
+		thead {
+			border-bottom: var(--bigupForms_border);
+		}
+
+		th:nth-child( 4 ),
+		td:nth-child( 4 ) {
+			text-align: end;
+		}
+
+		.bigupForms__badFileType {
+			background-color: var(--bigupForms_red);
+		}
+
+		button {
+			@extend %hover-focus;
+
+			display: inline-flex;
+			align-items: center;
+			margin: 0;
+			border: 0;
+			border-radius: var(--bigupForms_radius);
+			background: none;
+			cursor: pointer;
+			padding: 0;
+			color: inherit;
+			font-size: inherit;
+
+			// Try to counteract external hover styling.
+			&:hover {
+				// Outline handled by %hover-focus.
+				transform: none;
+				border: 0;
+				border-radius: var(--bigupForms_radius);
+				box-shadow: none;
+			}
+		}
 	}
 
 	&_icon {
 		display: inline-flex;
-		cursor: pointer;
-		width: 1.5em;
+		padding: var(--bigupForms_paddingX) var(--bigupForms_paddingY);
 		text-align: left;
 	}
 
-	&_output ul {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-
-		li {
-			border: var(--bigupForms_border);
-			border-radius: var(--bigupForms_radius);
-			padding: var(--bigupForms_padding);
-			margin: var(--bigupForms_gutter) 0 var(--bigupForms_gutter) 0;
-		}
-	}
-
-	button {
-		margin: 0;
-		border: 0;
-		background: none;
-		padding: 0;
-		color: inherit;
-		font-size: inherit;
+	&_label {
+		padding: var(--bigupForms_paddingX) var(--bigupForms_paddingY);
+		padding-left: .25em;
+		display: inline-block;
 	}
 }

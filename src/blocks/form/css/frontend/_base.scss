@@ -1,5 +1,4 @@
-/* Keep specificity 0 */
-:where( .bigupForms__form ) {
+.bigupForms__form {
 	gap: var( --bigupForms_gap );
 	box-sizing: border-box;
 	display: flex;
@@ -33,16 +32,34 @@
 		}
 	}
 
+	.bigupForms__input[aria-invalid="true"] {
+		outline: solid 0.2em var(--bigupForms_red);
+	}
+
 	.bigupForms__inlineErrors {
 		display: flex;
 		flex-flow: column;
-		margin: 0 2em;
-		border-radius: 0 0 0.6em 0.6em;
+		margin: 0;
+		border-radius: 0;
 		background:var(--bigupForms_red);
-		padding: 0.4em 0.7em;
+		padding: 0;
 		color:#fff;
 		font-weight: 600;
 		font-variation-settings: "wght" 600;
+		height: 0 !important;
+
+		&.hasErrors {
+			margin: 0 2em;
+			border-radius: 0 0 0.6em 0.6em;
+			padding: 0.2em 0.7em;
+			height: fit-content !important;
+		}
+
+		.regexRejectHighlight {
+			padding-inline:0.2em;
+			background:var(--bigupForms_yellow);
+			color:var(--bigupForms_black);
+		}
 	}
 
 	.bigupForms__controls {

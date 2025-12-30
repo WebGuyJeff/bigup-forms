@@ -1,6 +1,6 @@
 {
 	"name": "bigup-forms",
-	"version": "0.8",
+	"version": "0.8.0",
 	"dependencies": {
 		"@wordpress/block-editor": "^15.8.0",
 		"@wordpress/blocks": "^15.8.0",

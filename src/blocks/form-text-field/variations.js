@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n'
-import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
+import { validationDefinitions } from '../../common/_wp-inlined-script'
 import {
 	LogoEmail,
 	LogoName,
@@ -10,51 +10,49 @@ import {
 	LogoUrl
 } from './svg'
 
-const { dataFormats } = bigupFormsInlinedVars
-
 const Variations = [
 	{
-		name: 'text',
+		name: 'custom_text',
 		title: __( 'Custom Text', 'bigup-forms' ),
 		icon: LogoText,
-		description: __( 'Customisable input field for any text type.', 'bigup-forms' ),
+		description: __( 'Custom text input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'text' ],
 		attributes: {
-			'InputTag': 'input',
+			'HTMLTag': 'input',
 			'type': 'text',
-			'name': 'text',
-			'label': __( 'Text', 'bigup-forms' ),
+			'formFieldKey': 'custom_text',
+			'label': __( 'Custom Text', 'bigup-forms' ),
 			'autocomplete': 'off',
 			'placeholder': __( 'Type here', 'bigup-forms' ),
-			'variation': 'text',
-			'format': 'any_text',
+			'variation': 'custom_text',
+			'validationDefinition': 'custom_text',
 			'required': true,
-			...dataFormats[ 'any_text' ].rules
+			...validationDefinitions[ 'custom_text' ].rules
 		},
-		validationAttrs: Object.keys( dataFormats[ 'any_text' ].rules ),
+		validationAttrs: Object.keys( validationDefinitions[ 'custom_text' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'text'
 		}
 	},
 	{
 		name: 'number',
-		title: __( 'Custom Number', 'bigup-forms' ),
+		title: __( 'Number', 'bigup-forms' ),
 		icon: LogoNumber,
-		description: __( 'Customisable input field for any number type.', 'bigup-forms' ),
+		description: __( 'Number input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'number' ],
 		attributes: {
-			'InputTag': 'input',
+			'HTMLTag': 'input',
 			'type': 'number',
-			'name': 'number',
+			'formFieldKey': 'number',
 			'label': __( 'Number', 'bigup-forms' ),
 			'autocomplete': 'off',
-			'placeholder': __( 'Type here', 'bigup-forms' ),
+			'placeholder': __( 'Enter a number', 'bigup-forms' ),
 			'variation': 'number',
-			'format': 'any_number',
+			'validationDefinition': 'number',
 			'required': true,
-			...dataFormats[ 'any_number' ].rules
+			...validationDefinitions[ 'number' ].rules
 		},
-		validationAttrs: Object.keys( dataFormats[ 'any_number' ].rules ),
+		validationAttrs: Object.keys( validationDefinitions[ 'number' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'number'
 		}
@@ -66,19 +64,18 @@ const Variations = [
 		description: __( 'Name input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'name' ],
 		attributes: {
-			'InputTag': 'input',
+			'HTMLTag': 'input',
 			'type': 'text',
-			'name': 'name',
+			'formFieldKey': 'name',
 			'label': __( 'Name', 'bigup-forms' ),
 			'autocomplete': 'on',
-			'placeholder': __( 'Enter your name', 'bigup-forms' ),
+			'placeholder': __( 'Enter a name', 'bigup-forms' ),
 			'variation': 'name',
-			'format': 'human_name',
+			'validationDefinition': 'name',
 			'required': true,
-			...dataFormats[ 'human_name' ].rules
+			...validationDefinitions[ 'name' ].rules
 		},
-		validationAttrs: Object.keys( dataFormats[ 'human_name' ].rules ),
-		// If isActive is not set, the Editor cannot distinguish between the original block and your variation, so the original block information will be displayed.
+		validationAttrs: Object.keys( validationDefinitions[ 'name' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'name'
 		}
@@ -90,20 +87,43 @@ const Variations = [
 		description: __( 'Email address input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'email' ],
 		attributes: {
-			'InputTag': 'input',
+			'HTMLTag': 'input',
 			'type': 'email',
-			'name': 'email',
+			'formFieldKey': 'email',
 			'label': __( 'Email', 'bigup-forms' ),
 			'autocomplete': 'on',
-			'placeholder': __( 'Enter your email', 'bigup-forms' ),
+			'placeholder': __( 'Enter an email', 'bigup-forms' ),
 			'variation': 'email',
-			'format': 'email_non_rfc',
+			'validationDefinition': 'email',
 			'required': true,
-			...dataFormats[ 'email_non_rfc' ].rules
+			...validationDefinitions[ 'email' ].rules
 		},
-		validationAttrs: Object.keys( dataFormats[ 'email_non_rfc' ].rules ),
+		validationAttrs: Object.keys( validationDefinitions[ 'email' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'email'
+		}
+	},
+	{
+		name: 'url',
+		title: __( 'URL', 'bigup-forms' ),
+		icon: LogoUrl,
+		description: __( 'URL input field.', 'bigup-forms' ),
+		keywords: [ 'form', 'input', 'url' ],
+		attributes: {
+			'HTMLTag': 'input',
+			'type': 'url',
+			'formFieldKey': 'url',
+			'label': __( 'URL', 'bigup-forms' ),
+			'autocomplete': 'on',
+			'placeholder': __( 'Enter a URL', 'bigup-forms' ),
+			'variation': 'url',
+			'validationDefinition': 'url',
+			'required': true,
+			...validationDefinitions[ 'url' ].rules
+		},
+		validationAttrs: Object.keys( validationDefinitions[ 'url' ].rules ),
+		isActive: ( blockAttributes ) => { 
+			return blockAttributes.variation === 'url'
 		}
 	},
 	{
@@ -113,18 +133,18 @@ const Variations = [
 		description: __( 'Phone number input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'phone' ],
 		attributes: {
-			'InputTag': 'input',
+			'HTMLTag': 'input',
 			'type': 'tel',
-			'name': 'phone',
+			'formFieldKey': 'phone',
 			'label': __( 'Phone', 'bigup-forms' ),
 			'autocomplete': 'on',
-			'placeholder': __( 'Enter your phone number', 'bigup-forms' ),
+			'placeholder': __( 'Enter a phone number', 'bigup-forms' ),
 			'variation': 'phone',
-			'format': 'phone_number',
+			'validationDefinition': 'phone',
 			'required': true,
-			...dataFormats[ 'phone_number' ].rules
+			...validationDefinitions[ 'phone' ].rules
 		},
-		validationAttrs: Object.keys( dataFormats[ 'phone_number' ].rules ),
+		validationAttrs: Object.keys( validationDefinitions[ 'phone' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'phone'
 		}
@@ -136,19 +156,19 @@ const Variations = [
 		description: __( 'Message input field.', 'bigup-forms' ),
 		keywords: [ 'form', 'input', 'message' ],
 		attributes: {
-			'InputTag': 'textarea',
+			'HTMLTag': 'textarea',
 			'type': 'textarea',
-			'name': 'message',
+			'formFieldKey': 'message',
 			'label': __( 'Message', 'bigup-forms' ),
 			'autocomplete': 'off',
 			'placeholder': __( 'Type your message...', 'bigup-forms' ),
 			'variation': 'message',
-			'format': 'any_text',
+			'validationDefinition': 'message_body',
 			'rows': '8',
 			'required': true,
-			...dataFormats[ 'any_text' ].rules
+			...validationDefinitions[ 'message_body' ].rules
 		},
-		validationAttrs: Object.keys( dataFormats[ 'any_text' ].rules ),
+		validationAttrs: Object.keys( validationDefinitions[ 'message_body' ].rules ),
 		isActive: ( blockAttributes ) => { 
 			return blockAttributes.variation === 'message'
 		}

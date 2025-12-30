@@ -38,29 +38,26 @@ class Submit_Controller {
 			exit;
 		}
 
-		// Patch for classic (non-Gutenberg) forms.
-		$classic_form_formats = array(
-			'name'    => 'human_name',
-			'email'   => 'email_non_rfc',
-			'message' => 'message_text_legacy',
-		);
-
 		// Get and sort text data between fields and form.
 		$body_params = $request->get_body_params();
 		$fields      = array();
 		$form        = array();
-		foreach ( $body_params as $name => $json_data ) {
+		foreach ( $body_params as $key => $json_data ) {
 			$data = json_decode( $json_data, true );
-			if ( 'formMeta' === $name ) {
+			if ( 'formMeta' === $key ) {
 				$form = array(
 					'name' => $data['name'],
 					'id'   => $data['id'],
 				);
 			} else {
-				$fields[ $name ] = array(
-					'value'  => $data['value'],
-					'type'   => $data['type'],
-					'format' => $classic_form_formats[ $name ],
+				if ( empty( $data['value'] ) && $data['required'] === false ) {
+					continue;
+				}
+				$fields[ $key ] = array(
+					'value'                => $data['value'],
+					'type'                 => $data['type'],
+					'id'                   => $data['id'],
+					'validationDefinition' => $data['validationDefinition'],
 				);
 			}
 		}
@@ -122,11 +119,11 @@ class Submit_Controller {
 		$smtp_settings  = Get_Settings::smtp();
 		$local_settings = Get_Settings::local_mail_server();
 
-		$this->log .= date("Y-m-d H:i:s") . ' SMTP settings ' . ( $smtp_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
-		$this->log .= date("Y-m-d H:i:s") . ' Local mailer settings ' . ( $local_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
+		$this->log .= date( 'Y-m-d H:i:s' ) . ' SMTP settings ' . ( $smtp_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
+		$this->log .= date( 'Y-m-d H:i:s' ) . ' Local mailer settings ' . ( $local_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
 
 		if ( ! $smtp_settings && ! $local_settings ) {
-			$this->log .= date("Y-m-d H:i:s") . ' ERROR: No mail service configured.' . "\n";
+			$this->log .= date( 'Y-m-d H:i:s' ) . ' ERROR: No mail service configured.' . "\n";
 			return array( 503, 'Sending your message failed as no mail service has been configured' );
 		}
 
@@ -144,7 +141,7 @@ class Submit_Controller {
 
 		// Try send using SMTP.
 		if ( $smtp_settings ) {
-			$this->log .= date("Y-m-d H:i:s") . ' Attempt SMTP mail.' . "\n";
+			$this->log .= date( 'Y-m-d H:i:s' ) . ' Attempt SMTP mail.' . "\n";
 
 			$mailer                    = new Mail_SMTP();
 			$result                    = $mailer->send(
@@ -166,14 +163,14 @@ class Submit_Controller {
 				$domain,
 			);
 			if ( 200 !== $result[0] ) {
-				$this->log .= date("Y-m-d H:i:s") . ' SMTP mailer reported: "' . $result[1] . "\n";
+				$this->log .= date( 'Y-m-d H:i:s' ) . ' SMTP mailer reported: "' . $result[1] . "\n";
 				error_log( 'Bigup Forms: SMTP mailer reported: "' . $result[1] . '"' );
 			}
 		}
 
 		// If SMTP fails and local mail is enabled, try send using PHP mail.
 		if ( 200 !== $result[0] && $local_settings && $local_settings['use_local_mail_server'] && function_exists( 'mail' ) ) {
-			$this->log .= date( "Y-m-d H:i:s" ) . ' Attempt local mail.' . "\n";
+			$this->log .= date( 'Y-m-d H:i:s' ) . ' Attempt local mail.' . "\n";
 
 			$mailer         = new Mail_Local();
 			$result         = $mailer->send(
@@ -188,12 +185,12 @@ class Submit_Controller {
 				$attachments,
 			);
 			if ( 200 !== $result[0] ) {
-				$this->log .= date("Y-m-d H:i:s") . ' Local mailer reported: "' . $result[1] . "\n";
+				$this->log .= date( 'Y-m-d H:i:s' ) . ' Local mailer reported: "' . $result[1] . "\n";
 				error_log( 'Bigup Forms: Local mailer reported: "' . $result[1] . '"' );
 			}
 		}
 
-		$this->log .= date("Y-m-d H:i:s") . ' send_email() result: "' . $result[1] . "\n";
+		$this->log .= date( 'Y-m-d H:i:s' ) . ' send_email() result: "' . $result[1] . "\n";
 		return $result;
 	}
 }

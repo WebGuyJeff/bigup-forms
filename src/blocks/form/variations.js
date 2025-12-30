@@ -1,5 +1,4 @@
 import { __ } from '@wordpress/i18n'
-import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
 import { LogoForm } from './svg'
 
 const Variations = [

@@ -95,7 +95,7 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 			?>
 
 			<div class="bigupForms__customFileUpload">
-				<label class="bigupForms__customFileUpload_label">
+				<label class="bigupForms__customFileUpload_button">
 					<input
 						class="bigupForms__customFileUpload_input"
 						title="Attach a File"
@@ -122,7 +122,7 @@ $decorative_markup = ! str_contains( $classes, 'is-style-nostyles' );
 
 		<div className='bigupForms__form_controls'>
 			<div className='bigupForms__form_buttonWrap'>
-				<button class="button bigupForms__submit wp-element-button" type="submit" value="Submit" disabled>
+				<button class="button bigupForms__button-submit wp-element-button" type="submit" value="Submit" disabled>
 					<span class="bigupForms__submitLabel-ready">
 						<?php _e( 'Submit', 'bigup_forms' ); ?>
 					</span>

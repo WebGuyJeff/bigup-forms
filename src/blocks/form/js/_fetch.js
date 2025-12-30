@@ -30,14 +30,22 @@ async function fetchHttpRequest( url, options ) {
 		return result
 
 	} catch ( error ) {
-		if ( error.name === 'TimeoutError' ) {
+		if ( error?.code === 'rest_cookie_invalid_nonce' ) {
+			// Invalid nonce.
+			error.output = [ 'Security token expired, please refresh the page and try again.' ]
+			error.ok = false
+		} else if ( error?.code === 'internal_server_error' ) {
+			// Unhandled plugin/website error.
+			error.output = [ 'Unknown server error, please try again. If the issue persists, please report to the website owner.' ]
+			error.ok = false
+		} else if ( error?.name === 'TimeoutError' ) {
 			// Request timed out.
 			error.output = [ 'The request timed out, please try again. If the issue persists, please report to the plugin maintainer.' ]
 			error.ok = false
 			console.error( error )
 		} else if ( ! error.output ) {
 			// Likely no server response, so display a generic error to the user.
-			error.output = [ 'There was a problem communicating with the server, please try again. If the issue persists, please report to the plugin maintainer.' ]
+			error.output = [ 'There was an unknown problem, please try again. If the issue persists, please report to the website owner.' ]
 			error.ok = false
 			console.error( error )
 		}

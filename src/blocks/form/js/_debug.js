@@ -1,9 +1,4 @@
-import { bigupFormsInlinedVars } from '../../../common/_wp-inlined-script'
-
-/**
- * Set 'debug = true' and output will be sent to the console.
- */
-let debug = bigupFormsInlinedVars.debug
+import { debug } from '../../../common/_wp-inlined-script'
 
 /**
  * Holds the start time of the script.

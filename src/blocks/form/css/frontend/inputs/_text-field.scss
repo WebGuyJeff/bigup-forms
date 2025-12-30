@@ -11,8 +11,8 @@
 		border: var( --bigupForms_border );
 		border-radius: var(--bigupForms_radius);
 		box-shadow: var(--bigupForms_shadow-inset);
-		background: var(--bigupForms_inputWrapBackground);
-		padding: var(--bigupForms_padding);
+		background: var(--bigupForms_inputBackground);
+		padding: var(--bigupForms_paddingX) var(--bigupForms_paddingY);
 		width: 100%;
 		min-width: 8em;
 		min-height: fit-content;
@@ -22,10 +22,6 @@
 
 		&textarea {
 			resize: vertical;
-		}
-
-		&:not(.bigupForms__form-locked *):hover {
-			cursor: text;
 		}
 	}
 }

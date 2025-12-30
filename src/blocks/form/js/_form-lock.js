@@ -8,18 +8,18 @@ import { debug, stopwatch } from './_debug'
  */
 function formLock( form, shouldLock ) {
 	const inputs = form.querySelectorAll( ':is( input, textarea )' ),
-		button   = form.querySelector( '.bigupForms__submit' )
+		buttons  = form.querySelectorAll( '.bigupForms__button' )
 
 	if ( shouldLock ) {
 		if( debug ) console.log( `${stopwatch()} |START| formLock | Locked` )
 		form.classList.add( 'bigupForms__form-locked' )
 		inputs.forEach( input => { input.disabled = true } )
-		button.disabled = true
+		buttons.forEach( button => { button.disabled = true } )
 
 	} else {
 		form.classList.remove( 'bigupForms__form-locked' )
 		inputs.forEach( input => { input.disabled = false } )
-		button.disabled = false
+		buttons.forEach( button => { button.disabled = false } )
 		if( debug ) console.log( `${stopwatch()} | END | formLock | Unlocked` )
 	}
 }

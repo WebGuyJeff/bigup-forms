@@ -9,5 +9,16 @@
 	"keywords": [ "form", "input", "files" ],
 	"textdomain": "bigup-forms",
 	"editorScript": "file:./form-file-upload.js",
-	"ancestor": [ "bigup-forms/form" ]
+	"ancestor": [ "bigup-forms/form" ],
+	"attributes": {
+		"uniqueID": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string",
+			"selector": ".bigupForms__label",
+			"source": "text",
+			"default": "Attach Files"
+		}
+	}
 }

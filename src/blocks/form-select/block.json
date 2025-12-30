@@ -10,9 +10,9 @@
 	"editorScript": "file:./form-select.js",
 	"viewScript": "file:./form-select-view.js",
 	"ancestor": [ "bigup-forms/form" ],
-	"usesContext": [ "bigup-forms/formID" ],
+	"usesContext": [ "bigup-forms/formPostID" ],
 	"attributes": {
-		"blockId": {
+		"uniqueID": {
 			"type": "string"
 		},
 		"label": {

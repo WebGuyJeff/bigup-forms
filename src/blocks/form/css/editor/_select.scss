@@ -4,7 +4,7 @@
 	border: var( --bigupForms_border );
 	border-radius: var(--bigupForms_radius);
 	box-shadow: var(--bigupForms_shadow-inset);
-	background: var(--bigupForms_inputWrapBackground);
+	background: var(--bigupForms_inputBackground);
 	width: 100%;
 	min-width: 8em;
 	min-height: fit-content;
@@ -25,7 +25,7 @@
 		display: inline-flex;
 		align-items: center;
 		background: #0002;
-		padding: var(--bigupForms_padding);
+		padding: var(--bigupForms_paddingX) var(--bigupForms_paddingY);
 		width: 100%;
 	}
 	
@@ -35,7 +35,7 @@
 		border: none;
 		border-radius: 0;
 		background: none;
-		padding: var(--bigupForms_padding);
+		padding: var(--bigupForms_paddingX) var(--bigupForms_paddingY);
 		width: 100%;
 
 		&:focus,

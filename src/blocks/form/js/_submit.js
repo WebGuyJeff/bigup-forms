@@ -1,9 +1,12 @@
+import { __ } from '@wordpress/i18n'
 import { debug, start, stopwatch } from './_debug'
 import { fetchHttpRequest } from './_fetch'
 import { disallowedTypes } from './_file-upload'
 import { removeChildren } from '../../../common/_util'
 import { alertsShow, alertsUpdateWaitHide, alertsShowWaitHide } from './_alert'
-import { bigupFormsInlinedVars } from '../../../common/_wp-inlined-script'
+import { restSubmitURL, restNonce } from '../../../common/_wp-inlined-script'
+import { formReset } from './_form-reset'
+
 
 /**
  * Handle frontend form submissions.
@@ -37,16 +40,18 @@ async function submit( event ) {
 	}
 
 	const formData  = new FormData()
-	const inputs    = form.querySelectorAll( ':is( input, textarea, select ):not( .saveTheBees, .bigupForms__customFileUpload_input )' )
+	const inputs    = form.querySelectorAll( ':is( .bigupForms__input, input, textarea, select ):not( .saveTheBees, .bigupForms__customFileUpload_input )' )
 	const fileInput = form.querySelector( '.bigupForms__customFileUpload_input' )
 
 	inputs.forEach( input => {
 		formData.append(
 			input.name,
 			JSON.stringify( {
-				'value': input.value,
-				'type': input.type,
-				'id': ( input.id ) ? input.id : false,
+				'value'                : input.value,
+				'type'                 : input.type,
+				'id'                   : ( input.id ) ? input.id : false,
+				'required'             : typeof input.getAttribute( 'required' ) === 'string' ? true : false,
+				'validationDefinition' : input.getAttribute( 'data-validation-definition' ),
 			} )
 		)
 	} )
@@ -54,7 +59,8 @@ async function submit( event ) {
 		'formMeta',
 		JSON.stringify( {
 			'name': form.getAttribute( 'name' ),
-			'id': form.getAttribute( 'data-form-id' )
+			'id'  : form.getAttribute( 'data-form-post-id' ),
+			'url' : window.location.href,
 		} )
 	)
 
@@ -82,7 +88,6 @@ async function submit( event ) {
 	}
 
 	// Fetch params.
-	const { restSubmitURL, restNonce } = bigupFormsInlinedVars
 	const fetchOptions = {
 		method: "POST",
 		headers: {
@@ -107,39 +112,60 @@ async function submit( event ) {
 			// Check fields for errors.
 			inputs.forEach( input => {
 
-				// Remove inline errors.
-				const removeErrors = ( input ) => {
-					const errorBox = input?.nextElementSibling
-					if ( errorBox && errorBox.classList.contains( 'bigupForms__inlineErrors' ) ) {
-						errorBox.remove()
-						input.removeAttribute( 'aria-errormessage' )
-						input.removeAttribute( 'aria-invalid' )
-					}
+				// Get the output element.
+				let output
+				const nextEl = input?.nextElementSibling
+				if ( nextEl && nextEl.classList.contains( 'bigupForms__inlineErrors' ) ) {
+					output = nextEl
+				} else {
+					console.error( 'Could not find inline error element.' )
+					return
 				}
-
-				// Remove errors on user focus.
-				const onFocus = ( { target } ) => removeErrors( target )
-				input.addEventListener( 'focus', onFocus, { once: true } )
-
+		
 				const fieldErrors = result.data.fields[ input.name ]?.errors
 				if ( fieldErrors ) {
 
 					// Remove old errors.
 					removeErrors( input )
 
-					// Attach errors to input.
-					let div = document.createElement( 'div' )
-					div.classList.add( 'bigupForms__inlineErrors' )
+					// Build RegExp for server-side regex rejections.
+					const regexRejects = result.data.fields[ input.name ]?.rejects
+					if ( regexRejects ) {
+						let regexes = []
+						regexRejects.forEach( reject => {
+							const escapedReject = RegExp.escape( reject )
+							regexes.push( escapedReject )
+						} )
+						const reString = '(?:' + regexes.join( ')|(?:' ) + ')'
+						const re       = new RegExp( reString, 'g' )
+						// Store the RegExp for the input event listener.
+						input.rejectsRegexp = re
+					}
+
+					// Attach regex rejects message to output.
+					if ( input?.rejectsRegexp ) {
+						let span = document.createElement( 'span' )
+						span.classList.add( 'regexRejects' )
+						output.appendChild( span )
+
+						// MAKE THIS.
+						doRegexRejectsMessage( input )
+					}
+
+					// Attach errors to output.
 					fieldErrors.forEach( error => {
 						let span = document.createElement( 'span' )
 						span.innerHTML = error
-						div.appendChild( span )
+						output.appendChild( span )
 					} )
-					const errorID = input.name + '-error'
-					div.setAttribute( 'id', errorID )
+					const errorID = 'error-' + input.id
+					output.setAttribute( 'id', errorID )
 					input.setAttribute( 'aria-errormessage', errorID )
 					input.setAttribute( 'aria-invalid', true )
-					input.after( div )
+					output.classList.add( 'hasErrors' )
+					input.after( output )
+
+					input.addEventListener( 'keyup', onKeyup )
 				}
 			} )
 		}
@@ -150,11 +176,7 @@ async function submit( event ) {
 		alertsUpdateWaitHide( form, postFetchAlerts, 5000 )
 
 		// Clean up form if email was sent.
-		if ( result.ok ) {
-			inputs.forEach( input => { input.value = '' } )
-			const fileList = form.querySelector( '.bigupForms__customFileUpload_output' )
-			if ( fileList ) removeChildren( fileList )
-		}
+		result.ok && formReset( event )
 
 	} catch ( error ) {
 		console.error( error )
@@ -162,6 +184,66 @@ async function submit( event ) {
 		if( debug ) console.log( stopwatch() + ' | END | handleSubmit' )
 	}
 
+}
+
+/**
+ * Update the outputof regex rejects message.
+ *
+ * @param { Element } input - The target input element.
+ */
+const doRegexRejectsMessage = ( input ) => {
+
+	let rejectsMessage = ''
+	const reResult = input.value.matchAll( input.rejectsRegexp )
+	let reMatches  = []
+	reResult.forEach( match => {
+		reMatches.push( match[ 0 ] )
+	} )
+
+	if ( reMatches.length === 0 ) {
+		return false
+	}
+
+	// Build a HTML string of error message content.
+	reMatches.forEach( match => {
+		// Use Option() to make the browser escape HTML.
+		const matchEsc  = new Option( match ).innerHTML
+		rejectsMessage += '<span class="regexRejectHighlight">' + matchEsc + '</span> '
+	} )
+	// Remove last space.
+	rejectsMessage = rejectsMessage.slice( 0, -1 )
+
+	const span = input?.nextElementSibling?.querySelector( '.regexRejects' )
+	span.innerHTML = __( 'Remove invalid text: ', 'bigup-forms' ) + '<br />' + rejectsMessage
+
+	return true
+}
+
+
+/**
+ * Handle input state on keyup event.
+ *
+ * @param { Element } target - The target element passed by the event handler.
+ */
+const onKeyup = ( { target } ) => {
+	const areMatches = doRegexRejectsMessage( target )
+	if ( ! areMatches ) {
+		removeErrors( target )
+	}
+}
+
+
+/**
+ *  Remove inline errors.
+ */
+const removeErrors = ( input ) => {
+	const output = input?.nextElementSibling
+	if ( output && output.classList.contains( 'bigupForms__inlineErrors' ) ) {
+		output.classList.remove( 'hasErrors' )
+		removeChildren( output )
+		input.removeAttribute( 'aria-errormessage' )
+		input.removeAttribute( 'aria-invalid' )
+	}
 }
 
 

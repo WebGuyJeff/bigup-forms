@@ -5,9 +5,9 @@ import save from './save'
 import metadata from './block.json'
 import { Variations } from './variations'
 import { LogoText } from './svg'
-import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
+import { debug } from '../../common/_wp-inlined-script'
 
-if ( bigupFormsInlinedVars.debug ) {
+if ( debug ) {
 	console.log( metadata.name + ' BLOCK LOADED' )
 	// RUN IN CONSOLE TO SEE REGISTERED BLOCKS: wp.blocks.getBlockTypes() 
 }

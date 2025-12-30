@@ -10,16 +10,16 @@
 	"editorScript": "file:./form-text-field.js",
 	"viewScript": "file:./form-text-field-view.js",
 	"ancestor": [ "bigup-forms/form" ],
-	"usesContext": [ "bigup-forms/formID" ],
+	"usesContext": [ "bigup-forms/formPostID" ],
 	"attributes": {
-		"blockId": {
+		"uniqueID": {
 			"type": "string"
 		},
 		"variation": {
 			"type": "string",
 			"default": "text"
 		},
-		"format": {
+		"validationDefinition": {
 			"type": "string",
 			"default": "any_text"
 		},
@@ -40,18 +40,18 @@
 			"type": "boolean",
 			"default": true
 		},
-		"name": {
+		"formFieldKey": {
 			"type": "string",
 			"source": "attribute",
 			"selector": ".bigupForms__input",
 			"attribute": "name",
 			"default": "text"
 		},
-		"InputTag": {
+		"HTMLTag": {
 			"type": "string",
 			"source": "attribute",
 			"selector": ".bigupForms__input",
-			"attribute": "data-inputtagname",
+			"attribute": "data-html-tag",
 			"default": "input"
 		},
 		"type": {

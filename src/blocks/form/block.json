@@ -13,7 +13,10 @@
 	"style": "file:./form.css",
 	"editorStyle": "file:./form-editor.css",
 	"attributes": {
-		"formID": {
+		"uniqueID": {
+			"type": "string"
+		},
+		"formPostID": {
 			"type": "number",
 			"default": 0
 		},
@@ -44,7 +47,7 @@
 		}
 	},
 	"providesContext": {
-		"bigup-forms/formID": "formID"
+		"bigup-forms/formPostID": "formPostID"
 	},
 	"supports": {
 		"html": false,

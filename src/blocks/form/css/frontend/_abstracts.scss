@@ -1,29 +1,98 @@
+%background-tick { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="%231cc327" stroke-linecap="round" stroke-linejoin="round" stroke-width="16.7" d="m8.3 50 27.8 27.8 55.6-55.6" /></svg>'); }
+%background-cross { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="none" stroke="%23ef0a0a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16.7" d="m22.2 77.8 55.6-55.6M22.2 22.2l55.6 55.6" /></svg>'); }
+%background-exclamation { background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 100 100"><path fill="%23efc30a" stroke="%23efc30a" stroke-linecap="round" stroke-linejoin="round" stroke-width="16.7" d="M10 84.2h80L50 15.8Z" /><g fill="%23000"><path d="M50 27c-3.8 0-6.8 3-6.8 6.8l1.6 24.6c0 3.8 1.4 6.8 5.2 6.8 3.8 0 5.2-3 5.2-6.8l1.6-24.6c0-3.7-3-6.8-6.8-6.8Z" /><circle cx="50" cy="76.2" r="6.8"/></g></svg>'); }
+
 %hover-focus {
 	transition: 0.15s;
 
-	&:not(.bigupForms__form-locked *, :focus, :not(:invalid)):hover {
-		outline: solid 0.2em var(--bigupForms_yellow);
-		cursor: text;
+	&:is(
+		/* Free-text inputs */
+		[rows], /* textarea */
+		[type=text],
+		[type=url],
+		[type=tel],
+		[type=email],
+		[type=number],
+		[type=password] ) {
+
+		--iconSize: 1em;
+		padding-inline-end: calc( var(--iconSize) + calc( var(--bigupForms_paddingY) * 2 ) );
+		background-origin: padding-box;
+		background-position: center right var(--bigupForms_paddingX);
+		background-repeat: no-repeat;
+		background-size: var(--iconSize) var(--iconSize);
+
+		&:is( textarea ) {
+			background-position: top var(--bigupForms_paddingY) right var(--bigupForms_paddingX);
+		}
 	}
 
-	&:focus {
+	// Focused, overridden by valid or invalid.
+	&:focus:not( :user-valid, :user-invalid ) {
 		outline: solid 0.2em var(--bigupForms_blue);
 	}
 
-	&[rows], /* textarea */
-	&[type=text],
-	&[type=url],
-	&[type=tel],
-	&[type=email],
-	&[type=date],
-	&[type=month],
-	&[type=week],
-	&[type=time],
-	&[type=datetime-local],
-	&[type=number],
-	&[type=password] {
-		&:not(:invalid) {
-			outline: solid 0.2em var(--bigupForms_green);
+	// Hover, overridden by disabled or focused.
+	&:hover:not( .bigupForms__form-locked *, form[disabled] *, [disabled], :disabled, :focus ) {
+		outline: solid 0.2em var(--bigupForms_yellow);
+
+		// Selectable input cursor.
+		cursor: pointer;
+		
+		// Typed input cursor.
+		&:is(
+			[rows], /* textarea */
+			[type=text],
+			[type=url],
+			[type=tel],
+			[type=email],
+			[type=date],
+			[type=month],
+			[type=week],
+			[type=time],
+			[type=datetime-local],
+			[type=number],
+			[type=password] ) {
+
+			cursor: text;
+		}
+	}
+
+	// Valid after user input.
+	&:user-valid {
+		/* All inputs */
+		outline: solid 0.2em var(--bigupForms_green);
+
+		&:is(
+		/* Free-text inputs */
+		[rows], /* textarea */
+		[type=text],
+		[type=url],
+		[type=tel],
+		[type=email],
+		[type=number],
+		[type=password] ) {
+
+			@extend %background-tick;
+		}
+	}
+
+	&:user-invalid,
+	&[aria-invalid="true"] {
+		/* All inputs */
+		outline: solid 0.2em var(--bigupForms_red);
+
+		&:is(
+		/* Free-text inputs */
+		[rows], /* textarea */
+		[type=text],
+		[type=url],
+		[type=tel],
+		[type=email],
+		[type=number],
+		[type=password] ) {
+
+			@extend %background-exclamation;
 		}
 	}
 }

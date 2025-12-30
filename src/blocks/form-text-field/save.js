@@ -13,22 +13,27 @@ import { useBlockProps, RichText } from '@wordpress/block-editor'
 export default function save( { attributes } ) {
 
 	const {
-		blockId,
+		uniqueID,
 		validationAttrs,
+		validationDefinition,
 		label,
 		showLabel,
 		required,
 		autocomplete,
 		rows,
-		InputTag,
+		HTMLTag,
 		type,
-		name,
+		formFieldKey,
 		placeholder
-	}                = attributes
-	const blockProps = useBlockProps.save()
+	} = attributes
 
-	const blockIdSuffix = '-' + blockId
-	const labelId       = name + '-label' + blockIdSuffix
+	const blockProps = useBlockProps.save( {
+		'data-unique-id': uniqueID,
+		className: 'bigupForms__blockWrap',
+	} )
+
+	const inputID = 'input-' + uniqueID
+	const labelID = 'label-' + uniqueID
 
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
@@ -36,13 +41,14 @@ export default function save( { attributes } ) {
 	} else {
 		conditionalProps.type = type
 	}
-	if ( required ) {
-		conditionalProps.required = 'required=""'
-	}
 	if ( showLabel ) {
-		conditionalProps[ 'aria-labelledby' ] = labelId
+		conditionalProps[ 'aria-labelledby' ] = labelID
 	} else {
 		conditionalProps[ 'aria-label' ] = label
+	}
+	if ( required ) {
+		conditionalProps[ 'required' ] = 'required'
+		conditionalProps[ 'aria-required' ] = 'true'
 	}
 
 	// Get the html input validation attributes.
@@ -56,28 +62,35 @@ export default function save( { attributes } ) {
 
 		<>
 			<div { ...blockProps }>
-				{ showLabel &&
+				{ showLabel && label &&
 					<RichText.Content
-						id={ labelId }
+						id={ labelID }
 						className={ 'bigupForms__label' }
 						tagName={ 'label' }
-						htmlFor={ name + blockIdSuffix }
+						htmlFor={ inputID }
 						value={ label }
 					/>
 				}
-				<InputTag
-					name={ name }
-					id={ name + blockIdSuffix }
+				<HTMLTag
+					name={ formFieldKey }
+					id={ inputID }
 					className={ 'bigupForms__input' }
 					placeholder={ placeholder }
 					onFocus={ ( e ) => { e.target.placeholder = '' } }
 					onBlur={ ( e ) => { e.target.placeholder = placeholder } }
 					autoComplete={ autocomplete }
-					data-inputtagname={ InputTag }
+					data-html-tag={ HTMLTag }
 					data-type={ type }
 					data-rows={ rows }
+					data-validation-definition={ validationDefinition }
 					{ ...conditionalProps }
 				/>
+				<output
+					className={ 'bigupForms__inlineErrors' }
+					htmlFor={ inputID }
+					role={ 'alert' }
+					aria-live={ 'polite' }
+				></output>
 			</div>
 		</>
 	)

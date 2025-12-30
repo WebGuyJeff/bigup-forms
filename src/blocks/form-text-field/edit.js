@@ -4,7 +4,10 @@ import React, { useEffect } from 'react'
 import { PanelBody, TextControl, CheckboxControl, SelectControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { makeNameAttributeSafe } from '../../common/_util'
-import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
+import { validationDefinitions } from '../../common/_wp-inlined-script'
+
+// For storing unique block IDs.
+const uniqueIDs = []
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -14,31 +17,24 @@ import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script'
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit( props ) {
+export default function Edit( { name, attributes, setAttributes, isSelected, context } ) {
 
 	// Don't destructure props to avoid clash between block name and input name.
-	const blockName       = props.name
-	const attributes      = props.attributes
-	const setAttributes   = props.setAttributes
-	const clientId        = props.clientId
-	const formID          = props.context[ 'bigup-forms/formID' ]
-	const blockProps      = useBlockProps( {
-    	className: 'bigupForms__blockWrap',
-    } )
-	const blockVariations = Object.values( wp.blocks.getBlockType( blockName ).variations )
+	const formPostID      = context[ 'bigup-forms/formPostID' ]
+	const blockVariations = Object.values( wp.blocks.getBlockType( name ).variations )
 	const {
-		blockId, // The block ID.
+		uniqueID, // Unique ID for the block within the post/page context.
+		formFieldKey, // HTML name - Must be unique within form as it acts as the form field key.
 		variation, // The block variation name.
 		validationAttrs, // An object of validation rules used on front and back end for consistency.
-		format, // Name of the data format which determines the default validation rules.
+		validationDefinition, // A definition of validation rules.
 		label, // Text content for the field label element.
 		showLabel, // Boolean flag to hide/show the label element.
 		required, // Boolean flag to enable/disable HTML 'required' attribute.
 		autocomplete, // Boolean flag to enable/disable HTML 'autocomplete' attribute.
 		rows, // Number of rows displayed in a textarea field.
-		InputTag, // HTML 'tag' for the input element.
-		type, // HTML 'type' attribute for <input> elements.
-		name, // HTML name attribute. Must be unique on the form.
+		HTMLTag, // HTML 'tag' for the input element.
+		type, // Input type or 'textarea'.
 		placeholder, // Text content of the field placeholder.
 		pattern, // Input validation regex pattern.
 		maxlength, // Input validation max string length.
@@ -46,16 +42,34 @@ export default function Edit( props ) {
 		max, // Input validation max number.
 		min, // Input validation min number.
 		step // Input validation number step.
-	}                     = attributes
+	} = attributes
+
+	console.log( 'variation', variation )
+
+	const blockProps = useBlockProps( {
+		'data-unique-id': uniqueID,
+    	className: 'bigupForms__blockWrap',
+    } )
 
 	useEffect( () => {
-        if ( ! blockId ) {
-            setAttributes( { blockId: clientId } )
-        }
-    }, [] )
+		// Catch uniqueID in a new variable to avoid infinite loop with setAttributes.
+		let newUniqueID = uniqueID
+		const getUiniqueID = () => Math.random().toString( 36 ).substring( 2, 8 )
+		while ( newUniqueID === null || newUniqueID === undefined || newUniqueID === '' || uniqueIDs.includes( newUniqueID ) ) {
+			newUniqueID = getUiniqueID()
+		}
+		if ( uniqueID !== newUniqueID ) {
+			setAttributes( { uniqueID: newUniqueID } )
+			uniqueIDs.push( newUniqueID )
+		} else {
+			uniqueIDs.push( uniqueID )
+		}
+	}, [] )
+ 
+	const inputID = 'input-' + uniqueID
+	const labelID = 'label-' + uniqueID
 
-	const { dataFormats } = bigupFormsInlinedVars // Predefined validation formats from the server.
-	const inputTypes      = [
+	const inputTypes = [
 		'textarea',
 		'text',
 		'email',
@@ -67,13 +81,13 @@ export default function Edit( props ) {
 		'time'
 	]
 
-	// Changing (data) format sets validation rules.
-	const onChangeFormat = ( newFormat ) => {
-		const rules = dataFormats[ newFormat ].rules
+	// Changing validation definition sets validation rules.
+	const onChangeDefinition = ( newDefinition ) => {
+		const rules            = validationDefinitions[ newDefinition ].rules,
+			newValidationAttrs = Object.keys( rules )
 		setAttributes( {
-			format: newFormat,
-			// Track the valid validation attributes to control which settings are shown.
-			validationAttrs: Object.keys( rules ),
+			validationDefinition: newDefinition,
+			validationAttrs: newValidationAttrs,
 			...rules
 		} )
 	}
@@ -90,11 +104,23 @@ export default function Edit( props ) {
 		} )
 	}
 
-	// Changing label updates name attribute to match (which must be uniquie on form).
+	// Changing label updates formFieldKey to match (which must be uniquie on form).
 	const onChangeLabel = ( newLabel ) => {
 		setAttributes( {
 			label: newLabel,
-			name: makeNameAttributeSafe( newLabel )
+			formFieldKey: makeNameAttributeSafe( newLabel )
+		} )
+	}
+
+	// Changing type updates HTMLTag if necessary.
+	const onChangeType = ( newType ) => {
+		let newHTMLTag = 'input'
+		if ( newType === 'textarea' ) {
+			newHTMLTag = 'textarea'
+		}
+		setAttributes( {
+			type: newType,
+			HTMLTag: newHTMLTag
 		} )
 	}
 
@@ -106,31 +132,26 @@ export default function Edit( props ) {
 	const typeOptions = []
 	inputTypes.forEach( type => typeOptions.push( { value: type, label: type } ) )
 
-	// Validation format select control values.
-	const formatOptions = []
-	Object.entries( dataFormats ).forEach( ( [ key, val ] ) => {
+	// Validation definition select control values.
+	const validationDefinitionOptions = []
+	Object.entries( validationDefinitions ).forEach( ( [ key, val ] ) => {
 		if ( val.types.includes( type ) ) {
-			formatOptions.push( { value: key, label: val.label } )
+			validationDefinitionOptions.push( { value: key, label: val.label } )
 		}
 	} )
-
-	const blockIdSuffix = '-' + blockId
-	const labelId       = name + '-label' + blockIdSuffix
 
 	const conditionalProps = {}
 	if ( type === 'textarea' ) {
 		conditionalProps.rows = rows
-	} else {
-		// All <input> elements set to type="text" to allow inline placeholder editing.
-		conditionalProps.type = 'text'
-	}
-	if ( required ) {
-		conditionalProps.required = 'required=""'
 	}
 	if ( showLabel ) {
-		conditionalProps[ 'aria-labelledby' ] = labelId
+		conditionalProps[ 'aria-labelledby' ] = labelID
 	} else {
 		conditionalProps[ 'aria-label' ] = label
+	}
+	if ( required ) {
+		conditionalProps[ 'required' ] = 'required'
+		conditionalProps[ 'aria-required' ] = 'true'
 	}
 
 	// Get the html input validation attributes.
@@ -141,6 +162,7 @@ export default function Edit( props ) {
 	} )
 
 	const editPlaceholder = placeholder ? placeholder : __( 'Type a placeholder...', 'bigup-forms' )
+
 
 	return (
 
@@ -159,6 +181,17 @@ export default function Edit( props ) {
 						onChange={ ( newValue ) => onChangeVariation( newValue ) }
 						__nextHasNoMarginBottom
 					/>
+					{ variation === 'custom_text' &&
+						<SelectControl
+							label={ __( 'HTML Input Type', 'bigup-forms' ) }
+							labelPosition="top"
+							title={ __( 'HTML Input Type', 'bigup-forms' ) }
+							value={ type }
+							options={ typeOptions }
+							onChange={ ( newValue ) => onChangeType( newValue ) }
+							__nextHasNoMarginBottom
+						/>
+					}
 					<TextControl
 						label={ __( 'Label', 'bigup-forms' ) }
 						type="text"
@@ -186,17 +219,6 @@ export default function Edit( props ) {
 						help={ __( 'Allow browser-assisted form-filling.', 'bigup-forms' ) }
 						__nextHasNoMarginBottom
 					/>
-					{ variation === 'any_text' || variation === 'any_number' &&
-						<SelectControl
-							label={ __( 'HTML Type', 'bigup-forms' ) }
-							labelPosition="top"
-							title={ __( 'HTML Type', 'bigup-forms' ) }
-							value={ type }
-							options={ typeOptions }
-							onChange={ ( newValue ) => { setAttributes( { type: newValue, } ) } }
-							__nextHasNoMarginBottom
-						/>
-					}
 					{ type === 'textarea' &&
 						<TextControl
 							label={ __( 'Line rows', 'bigup-forms' ) }
@@ -216,16 +238,16 @@ export default function Edit( props ) {
 					initialOpen={ true }
 				>
 					<SelectControl
-						label={ __( 'Data Format', 'bigup-forms' ) }
+						label={ __( 'Expected Input', 'bigup-forms' ) }
 						labelPosition="top"
-						title={ __( 'Data Format', 'bigup-forms' ) }
-						options={ formatOptions }
-						value={ format }
-						onChange={ ( newValue ) => onChangeFormat( newValue ) }
-						help={ __( 'The format you want the input to conform to.', 'bigup-forms' ) }
+						title={ __( 'Expected Input', 'bigup-forms' ) }
+						options={ validationDefinitionOptions }
+						value={ validationDefinition }
+						onChange={ ( newValue ) => onChangeDefinition( newValue ) }
+						help={ __( 'How the input should be validated.', 'bigup-forms' ) }
 						__nextHasNoMarginBottom
 					/>
-					{ 'minlength' in validationAttrs &&
+					{ validationAttrs.includes( 'minlength' ) &&
 						<TextControl
 							label={ __( 'Minimum length', 'bigup-forms' ) }
 							type="number"
@@ -235,7 +257,7 @@ export default function Edit( props ) {
 							__nextHasNoMarginBottom
 						/>
 					}
-					{ 'maxlength' in validationAttrs &&
+					{ validationAttrs.includes( 'maxlength' ) &&
 						<TextControl
 							label={ __( 'Maximum length', 'bigup-forms' ) }
 							type="number"
@@ -245,7 +267,7 @@ export default function Edit( props ) {
 							__nextHasNoMarginBottom
 						/>
 					}
-					{ 'min' in validationAttrs &&
+					{ validationAttrs.includes( 'min' ) &&
 						<TextControl
 							label={ __( 'Minimum', 'bigup-forms' ) }
 							type="number"
@@ -255,7 +277,7 @@ export default function Edit( props ) {
 							__nextHasNoMarginBottom
 						/>
 					}
-					{ 'max' in validationAttrs &&
+					{ validationAttrs.includes( 'max' ) &&
 						<TextControl
 							label={ __( 'Maximum', 'bigup-forms' ) }
 							type="number"
@@ -265,7 +287,7 @@ export default function Edit( props ) {
 							__nextHasNoMarginBottom
 						/>
 					}
-					{ 'step' in validationAttrs &&
+					{ validationAttrs.includes( 'step' ) &&
 						<TextControl
 							label={ __( 'Step', 'bigup-forms' ) }
 							type="number"
@@ -275,12 +297,12 @@ export default function Edit( props ) {
 							__nextHasNoMarginBottom
 						/>
 					}
-					{ 'pattern' in validationAttrs &&
+					{ validationAttrs.includes( 'pattern' ) &&
 						<TextControl
 							label={ __( 'Regular Expression (advanced)', 'bigup-forms' ) }
 							value={ pattern }
 							onChange={ ( newValue ) => { setAttributes( { pattern: newValue } ) } }
-							help={ __( 'A regular expression pattern to validate the input against. Must be both PCRE2 and EMCA compatible.', 'bigup-forms' ) }
+							help={ __( 'Must be a regular expression compatible with the HTML pattern attribute.', 'bigup-forms' ) }
 							__nextHasNoMarginBottom
 						/>
 					}
@@ -290,27 +312,38 @@ export default function Edit( props ) {
 			<div { ...blockProps } >
 				{ showLabel &&
 					<RichText
-						id={ labelId }
+						id={ labelID }
 						className={ 'bigupForms__label' }
 						tagName={ 'label' }
+						htmlFor={ inputID }
 						value={ label }
 						onChange={ ( newValue ) => setAttributes( { label: newValue } ) }
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
 					/>
 				}
-				<InputTag
-					name={ name }
+
+				<HTMLTag
+					name={ formFieldKey }
+					id={ inputID }
 					className={ 'bigupForms__input' }
 					placeholder={ editPlaceholder }
 					onFocus={ ( e ) => { e.target.value = editPlaceholder } }
 					onBlur={ ( e ) => { e.target.value = '' } }
 					onChange={ ( e ) => setAttributes( { placeholder: e.target.value } ) }
 					autoComplete={ autocomplete }
-					data-inputtagname={ InputTag }
+					data-html-tag={ HTMLTag }
 					data-type={ type }
 					data-rows={ rows }
+					type={ ! isSelected ? type : [ 'text', 'url', 'tel', 'email', 'number', 'password' ].includes( type ) ? 'text' : type }
+					data-validation-definition={ validationDefinition }
 					{ ...conditionalProps }
 				/>
+				<output
+					className={ 'bigupForms__inlineErrors' }
+					htmlFor={ inputID }
+					role={ 'alert' }
+					aria-live={ 'polite' }
+				></output>
 			</div>
 		</>
 	)
@@ -320,7 +353,6 @@ Edit.propTypes = {
 	name: PropTypes.string,
 	attributes: PropTypes.object,
 	setAttributes: PropTypes.func,
-	clientId: PropTypes.string,
+	isSelected: PropTypes.boolean,
 	context: PropTypes.object,
-	variation: PropTypes.string,
 }

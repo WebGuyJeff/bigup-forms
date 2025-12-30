@@ -5,6 +5,8 @@ import { PanelBody, TextControl, CheckboxControl } from '@wordpress/components'
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor'
 import { makeNameAttributeSafe } from '../../common/_util'
 
+const uniqueIDs = []
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -16,7 +18,7 @@ import { makeNameAttributeSafe } from '../../common/_util'
 export default function Edit( { attributes, setAttributes, isSelected, clientId } ) {
 
 	const {
-		blockId, // The block ID.
+		uniqueID, // Unique ID for the block within the post/page context.
 		label, // Text content for the field label element.
 		showLabel, // Boolean flag to hide/show the label element.
 		name, // HTML name attribute. Must be unique on the form.
@@ -26,14 +28,24 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 	} = attributes
 
 	const blockProps = useBlockProps( {
+		'data-unique-id': uniqueID,
 		className: 'bigupForms__blockWrap',
 	} )
 
 	useEffect( () => {
-        if ( ! blockId ) {
-            setAttributes( { blockId: clientId } )
-        }
-    }, [] )
+		// Catch uniqueID in a new variable to avoid infinite loop with setAttributes.
+		let newUniqueID = uniqueID
+		const getUiniqueID = () => Math.random().toString( 36 ).substring( 2, 8 )
+		while ( newUniqueID === null || newUniqueID === undefined || newUniqueID === '' || uniqueIDs.includes( newUniqueID ) ) {
+			newUniqueID = getUiniqueID()
+		}
+		if ( uniqueID !== newUniqueID ) {
+			setAttributes( { uniqueID: newUniqueID } )
+			uniqueIDs.push( newUniqueID )
+		} else {
+			uniqueIDs.push( uniqueID )
+		}
+	}, [] )
 
 	// Changing label updates name attribute to match (which must be uniquie on form).
 	const onChangeLabel = ( newValue ) => {
@@ -52,17 +64,18 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 		setAttributes( { options: newOptions } )
 	}
 
-	const blockIdSuffix = '-' + blockId
-	const labelId       = name + '-label' + blockIdSuffix
+	const selectID = 'select-' + uniqueID
+	const labelID  = 'label-' + uniqueID
 
 	const conditionalProps = {}
 	if ( showLabel ) {
-		conditionalProps[ 'aria-labelledby' ] = labelId
+		conditionalProps[ 'aria-labelledby' ] = labelID
 	} else {
 		conditionalProps[ 'aria-label' ] = label
 	}
 	if ( required ) {
-		conditionalProps.required = 'required=""'
+		conditionalProps[ 'required' ] = 'required'
+		conditionalProps[ 'aria-required' ] = 'true'
 	}
 
 	const defaultTextPlaceholder = __( 'Add optional default text', 'bigup-forms' )
@@ -108,9 +121,10 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 			<div { ...blockProps }>
 				{ showLabel &&
 					<RichText
-						id={ labelId }
+						id={ labelID }
 						className={ 'bigupForms__label' }
 						tagName={ 'label' }
+						htmlFor={ selectID }
 						value={ label }
 						onChange={ ( newValue ) => onChangeLabel( newValue ) }
 						placeholder={ __( 'Add a label to this input', 'bigup-forms' ) }
@@ -146,6 +160,7 @@ export default function Edit( { attributes, setAttributes, isSelected, clientId 
 				{ ! isSelected &&
 					<div className={ 'bigupForms__selectWrap' }>
 						<select
+							id={ selectID }
 							name={ name }
 							className={ 'bigupForms__select' }
 							{ ...conditionalProps }

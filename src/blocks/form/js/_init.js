@@ -32,9 +32,8 @@ const init = () => {
 			}
 
 			// Enable reset button.
-			const resetButton = form.querySelector( '.bigupForms__reset' )
+			const resetButton = form.querySelector( '.bigupForms__button-reset' )
 			if ( resetButton ) {
-				resetButton.disabled = false
 				resetButton.addEventListener( 'click', formReset )
 			}
 		} )

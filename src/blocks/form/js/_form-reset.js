@@ -1,3 +1,5 @@
+import { updateFileList } from './_file-upload'
+
 /**
  * Reset (clear) a form of all user input.
  * 
@@ -9,6 +11,10 @@ const formReset = ( event ) => {
 
 	const form = event.target.closest( 'form' )
 	form.reset()
+
+	// Remove the file list table if present.
+	const filesInput = form.querySelector( '.bigupForms__customFileUpload' )?.querySelector( 'input' )
+	filesInput && updateFileList( filesInput )
 }
 
 export { formReset }

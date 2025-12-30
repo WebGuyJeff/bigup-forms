@@ -1,28 +1,51 @@
-/* Keep specificity 0 */
-:where( .bigupForms__form ) {
+.bigupForms__form {
 
-	input {
-		overflow: visible;
-	}
-	
-	input,
-	optgroup,
-	select,
+	// Typing inputs.
+	input[type=email],
+	input[type=number],
+	input[type=password],
+	input[type=search],
+	input[type=tel],
+	input[type=text],
+	input[type=url],
+	input[type=week],
 	textarea {
+		overflow: visible;
 		line-height: inherit;
 		font-family: inherit;
 		font-size: inherit;
+
+		&:hover {
+			cursor: text;
+
+			&:disabled,
+			&.disabled {
+				cursor: not-allowed;
+			}
+		}
 	}
 	
-	input:hover,
-	optgroup:hover,
-	select:hover,
-	textarea:hover {
-		cursor: pointer;
+	// Selectable inputs.
+	input[type=color],
+	input[type=date],
+	input[type=datetime-local],
+	input[type=datetime],
+	input[type=month],
+	input[type=time],
+	input[type=week],
+	select,
+	optgroup {
+		line-height: inherit;
+		font-family: inherit;
+		font-size: inherit;
 
-		&:disabled,
-		&.disabled {
-			cursor: not-allowed;
+		&:hover {
+			cursor: pointer;
+
+			&:disabled,
+			&.disabled {
+				cursor: not-allowed;
+			}
 		}
 	}
 
@@ -31,9 +54,18 @@
 		vertical-align: top;
 	}
 
-	input:is( [ type="submit" ] ),
+	input[type=submit],
 	button {
 		font-size: inherit;
+
+		&:hover {
+			cursor: pointer;
+
+			&:disabled,
+			&.disabled {
+				cursor: not-allowed;
+			}
+		}
 	}
 
 	::placeholder,

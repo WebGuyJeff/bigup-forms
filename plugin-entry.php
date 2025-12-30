@@ -5,7 +5,7 @@ namespace BigupWeb\Forms;
  * Plugin Name: Bigup Web: Bigup Forms
  * Plugin URI: https://webguyjeff.com
  * Description: A customisable form plugin for WordPress Gutenberg Editor.
- * Version: 0.8
+ * Version: 0.8.0
  * Author: Jefferson Real
  * Author URI: https://webguyjeff.com
  * License: GPL2

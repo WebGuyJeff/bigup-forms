@@ -43,7 +43,7 @@ const removeFromFileList = ( event ) => {
 	const button  = event.currentTarget,
 		input     = button.closest( '.bigupForms__customFileUpload' ).querySelector( 'input' ),
 		{ files } = input,
-		filename  = button.nextElementSibling.innerText
+		filename  = button.closest( 'tr' ).querySelector( '.bigupForms__customFileUpload_fileName' ).innerText
 
 	// Create a new file list and append it to the input.
 	const dt = new DataTransfer()
@@ -62,13 +62,14 @@ const removeFromFileList = ( event ) => {
  * Update the visible list with selected files.
  */
 const updateFileList = async ( input ) => {
-	const { files }  = input,
-		wrapper      = input.closest( '.bigupForms__customFileUpload' ),
-		output       = wrapper.querySelector( '.bigupForms__customFileUpload_output' ),
-		form         = input.closest( 'form' ),
-		ul           = document.createElement( "ul" ),
-		iconTemplate = wrapper.querySelector( 'template' )
-	removeChildren( output )
+	const { files } = input,
+		wrapper     = input.closest( '.bigupForms__customFileUpload' ),
+		form        = input.closest( 'form' ),
+		table       = wrapper.querySelector( 'table' ),
+		tbody       = wrapper.querySelector( 'tbody' ),
+		rowTemplate = wrapper.querySelector( 'template' )
+
+	removeChildren( tbody )
 
 	disallowedTypes.detected = false
 	disallowedTypes.list = []
@@ -85,23 +86,29 @@ const updateFileList = async ( input ) => {
 			className = 'bigupForms__badFileType'
 		}
 
-		// Create list element for file.
-		const li   = document.createElement( 'li' ),
-			span   = document.createElement( 'span' ),
-			button = document.createElement( 'button' ),
-			icon   = iconTemplate.content.cloneNode( true )
-		button.appendChild( icon )
-		span.innerText = file.name
-		li.classList.add( className )
-		li.appendChild( button )
-		li.appendChild( span )
-		ul.appendChild( li )
-		output.appendChild( ul )
+		// Create table row for file.
+		const row    = rowTemplate.content.cloneNode( true ),
+			tr       = row.querySelector( 'tr' ),
+			cellName = row.querySelector( '.bigupForms__customFileUpload_fileName' ),
+			cellType = row.querySelector( '.bigupForms__customFileUpload_fileType' ),
+			cellSize = row.querySelector( '.bigupForms__customFileUpload_fileSize' ),
+			button   = row.querySelector( 'button' ),
+			sizeInMB = file.size / 1000000
+
+		cellName.innerText = file.name
+		cellType.innerText = file.type
+		cellSize.innerText = Number.parseFloat( sizeInMB ).toFixed( 2 ) + ' MB'
+
+		tr.classList.add( className )
+		tbody.appendChild( tr )
 		button.addEventListener( 'click', removeFromFileList )
 	}
 
-	// Insert list into DOM.
-	output.appendChild( ul )
+	if ( files.length > 0 ) {
+		table.style.display = 'table'
+	} else {
+		table.style.display = 'none'
+	}
 
 	// Alert user of any disallowed MIME types.
 	if ( disallowedTypes.detected ) {
@@ -122,4 +129,4 @@ const fileUpload = ( event ) => {
 }
 
 
-export { fileUpload, disallowedTypes }
+export { fileUpload, disallowedTypes, updateFileList }

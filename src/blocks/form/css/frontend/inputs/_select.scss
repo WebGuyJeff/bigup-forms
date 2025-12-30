@@ -10,7 +10,7 @@
 		border: var( --bigupForms_border );
 		border-radius: var(--bigupForms_radius);
 		box-shadow: none;
-		background: var(--bigupForms_inputWrapBackground);
+		background: var(--bigupForms_inputBackground);
 		width: 100%;
 		min-width: 8em;
 		min-height: fit-content;
@@ -54,7 +54,7 @@
 		outline: none;
 		border: none;
 		background: #0000;
-		padding: var(--bigupForms_padding);
+		padding: var(--bigupForms_paddingX) var(--bigupForms_paddingY);
 		width: 100%;
 		height: 100%;
 		resize: vertical;
@@ -62,10 +62,6 @@
 		line-height: normal;
 		color: var( --bigupForms_inputColor );
 		font-size: inherit;
-
-		&:not(.bigupForms__form-locked *):hover {
-			cursor: pointer;
-		}
 
 		&DefaultText,
 		&:invalid:not( :active ) {

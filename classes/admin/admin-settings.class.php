@@ -197,7 +197,7 @@ class Admin_Settings {
 		// The SMTP test button is enabled by JS once vaild saved settings are detected.
 		?>
 			<div class="bigupForms__smtpTest_wrapper">
-				<button class="button button-secondary bigupForms__submit bigupForms__smtpTest_button" type="submit" disabled>
+				<button class="button button-secondary bigupForms__button-submit bigupForms__smtpTest_button" type="submit" disabled>
 					<span class="bigupForms__submitLabel-ready">
 						<?php _e( 'Test Settings', 'bigup_forms' ); ?>
 					</span>

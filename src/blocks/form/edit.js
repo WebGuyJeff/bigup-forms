@@ -1,11 +1,12 @@
 import { __ } from '@wordpress/i18n'
 import { PropTypes } from 'prop-types'
+import React, { useEffect } from 'react'
 import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls, RichText } from '@wordpress/block-editor'
 import { PanelBody, SelectControl, CheckboxControl, TextControl, Button } from '@wordpress/components'
 import { Honeypot } from '../../components/Honeypot'
 import { SubmitButton } from '../../components/SubmitButton'
 import { ResetButton } from '../../components/ResetButton'
-import { bigupFormsInlinedVars } from '../../common/_wp-inlined-script.js'
+import { restStoreURL, restNonce } from '../../common/_wp-inlined-script'
 import './form-editor.scss.js'
 
 const ALLOWED_BLOCKS = [
@@ -20,10 +21,19 @@ const ALLOWED_BLOCKS = [
 	'core/spacer'
 ]
 
-export default function Edit( { name, attributes, setAttributes } ) {
+const uniqueIDs = []
+
+export default function Edit( props ) {
 
 	const {
-		formID, // CPT Post ID for the saved form.
+		name,
+		attributes,
+		setAttributes,
+		clientId
+	} = props
+	const {
+		uniqueID, // Unique ID for the block within the post/page context.
+		formPostID, // Form custom post ID for the saved form.
 		formName,
 		textAlign,
 		variation,
@@ -34,13 +44,29 @@ export default function Edit( { name, attributes, setAttributes } ) {
 
 	const blockProps = useBlockProps( {
 		className: 'bigupForms__form',
-		style: { textAlign: textAlign }
+		style: { textAlign: textAlign },
+		'data-unique-id': uniqueID,
+		'data-form-post-id': formPostID,
+		name: formName,
+		method: 'post',
+		acceptCharset: 'utf-8',
+		autoComplete: 'on'
 	} )
 
-	const {
-		restStoreURL,
-		restNonce
-	} = bigupFormsInlinedVars
+	useEffect( () => {
+		// Catch uniqueID in a new variable to avoid infinite loop with setAttributes.
+		let newUniqueID = uniqueID
+		const getUiniqueID = () => Math.random().toString( 36 ).substring( 2, 8 )
+		while ( newUniqueID === null || newUniqueID === undefined || newUniqueID === '' || uniqueIDs.includes( newUniqueID ) ) {
+			newUniqueID = getUiniqueID()
+		}
+		if ( uniqueID !== newUniqueID ) {
+			setAttributes( { uniqueID: newUniqueID } )
+			uniqueIDs.push( newUniqueID )
+		} else {
+			uniqueIDs.push( uniqueID )
+		}
+	}, [] )
 
 	// Select control values.
 	const blockVariations  = wp.blocks.getBlockType( name ).variations
@@ -51,29 +77,30 @@ export default function Edit( { name, attributes, setAttributes } ) {
 
 	/*
 	 * 1. Scrape the form block and all children (will become pattern).
-	 * 2. Fetch request to save/update the form CPT.
-	 * 3. Catch the returned ID and save to attribute - form is now 'hard linked' to the post/pattern.
+	 * 2. Fetch request to save/update the form custom post.
+	 * 3. Catch the returned post ID and save to ID block attribute - form is now 'hard linked' to the post/pattern.
 	 */
 	const handleSave = async ( event ) => {
 		event.preventDefault()
 
-		const formBlock = wp.data.select( 'core/block-editor' ).getSelectedBlock()
-		console.log( 'formBlock', formBlock )
-	
-		const testContent = wp.data.select( "core/editor" ).getEditedPostContent()
-		console.log( 'testContent', testContent )
+		// Scrape form blocks from post content.
+		const postContentHTML = wp.data.select( "core/editor" ).getEditedPostContent()
+		const formBlocks      = scrapeFormBlocksFromHTML( postContentHTML )
 
-		const parsedBlocks = wp.blocks.parse( testContent )
-		console.log( 'parsedBlocks', parsedBlocks )
 
-		// Build formData.
+
+		// DEBUG.
+		console.log( 'formBlocks', formBlocks )
+
+
+		if ( ! formBlocks.length ) {
+			return
+		}
+
+		// Build fetch payload.
 		const formData = new FormData()
-		formData.append( 'content', testContent )
-		formData.append( 'id', formID )
-		formData.append( 'name', formName )
-		formData.append( 'tags', [ 'tag1', 'tag2' ] )
-	
-		const fetchOptions = {
+		formData.append( 'content', JSON.stringify( formBlocks ) )
+		const options = {
 			method: "POST",
 			headers: {
 				"X-WP-Nonce" : restNonce,
@@ -82,17 +109,13 @@ export default function Edit( { name, attributes, setAttributes } ) {
 			body: formData,
 		}
 	
+		// Fetch request.
 		try {
-	
-			const controller = new AbortController()
-			const abort      = setTimeout( () => controller.abort(), 10000 )
-			const response   = await fetch( restStoreURL, { ...fetchOptions, signal: controller.signal } )
-			clearTimeout( abort )
+			const response   = await fetch( restStoreURL, { ...options, signal: AbortSignal.timeout( 10000 ) } )
+			const result     = await response.json()
 
-			const result = await response.json()
-
-			if ( result.ok && result[ 'id' ] !== formID ) {
-				setAttributes( { formID: result[ 'id' ] } )
+			if ( result.ok && result?.output && result.output !== formPostID ) {
+				setAttributes( { formPostID: result.output } )
 			} else {
 				throw result
 			}
@@ -101,6 +124,56 @@ export default function Edit( { name, attributes, setAttributes } ) {
 			console.error( error )
 		}
 	}
+
+
+	/**
+	 * Scrape form blocks from HTML.
+	 * 
+	 * Returns all wp:bigup-forms/form blocks found in a single HTML string.
+	 * Each result includes the full block string and the parsed formPostID.
+	 */
+	function scrapeFormBlocksFromHTML( html ) {
+		if ( typeof html !== 'string' ) throw new TypeError( 'html must be a string' )
+
+		const results = []
+
+		/*
+		 * 1) Full block (opening comment -> closing comment) in group 1.
+		 * 2) JSON attrs from opening comment in group 2.
+		 */
+		const regex = /(<!--\s*wp:bigup-forms\/form\s*(\{[\s\S]*?\})\s*-->[\s\S]*?<!--\s*\/wp:bigup-forms\/form\s*-->)/gi
+
+		for ( const match of html.matchAll( regex ) ) {
+			const blockString = match[ 1 ]
+			const attrsJson   = match[ 2 ]
+
+			let attrs      = null
+			let uniqueID   = null
+			let formPostID = null
+			let formName   = null
+
+			try {
+				attrs = JSON.parse( attrsJson )
+				uniqueID = attrs?.uniqueID ?? null
+				formPostID = attrs?.formPostID ?? null
+				formPostID = attrs?.formPostID ?? null
+				formName = attrs?.formName ?? null
+			} catch {
+				// Keep nulls; still return the block string.
+			}
+
+			results.push( {
+				block: blockString,
+				uniqueID,
+				formPostID,
+				formName,
+				attrs, // Useful if we want other fields later.
+			} )
+		}
+
+		return results
+	}
+
 
 	return (
 		<>
@@ -124,9 +197,9 @@ export default function Edit( { name, attributes, setAttributes } ) {
 							marginRight: '12px'
 						}}
 					>
-						{ ( formID > 0 ) ? __( 'Update Form', 'bigup-forms' ) : __( 'Save Form', 'bigup-forms' ) }
+						{ ( formPostID > 0 ) ? __( 'Update Form', 'bigup-forms' ) : __( 'Save Form', 'bigup-forms' ) }
 					</Button>
-					<span>{ formID > 0 ? 'ID: ' + formID : __( 'unsaved', 'bigup-forms' ) }</span>
+					<span>{ formPostID > 0 ? 'ID: ' + formPostID : __( 'unsaved', 'bigup-forms' ) }</span>
 					<SelectControl
 						label={ __( 'Replace With', 'bigup-forms' ) }
 						labelPosition="top"
@@ -173,14 +246,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 				</BlockControls>
 			}
 
-			<form
-				{ ...blockProps }
-				method='post'
-				acceptCharset='utf-8'
-				autoComplete='on'
-				name={ formName }
-				data-form-id={ formID }
-			>
+			<form { ...blockProps } >
 
 				<header>
 					{ showTitle &&
@@ -207,7 +273,7 @@ export default function Edit( { name, attributes, setAttributes } ) {
 
 				<footer>
 					<div className='bigupForms__alertsContainer' style={{ display: 'none', opacity: 0 }}>
-						<div className='bigupForms__alerts'></div>
+						<output className='bigupForms__alerts'></output>
 					</div>
 				</footer>
 
@@ -220,4 +286,5 @@ Edit.propTypes = {
 	name: PropTypes.string,
 	attributes: PropTypes.object,
 	setAttributes: PropTypes.func,
+	clientId: PropTypes.string
 }

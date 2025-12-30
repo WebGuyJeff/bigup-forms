@@ -8,7 +8,7 @@ namespace BigupWeb\Forms;
  * if not, create it. A hook is created for child pages to add to this parent.
  * This class should be used accross all Bigup plugins and themes.
  *
- * @package bigup_custom_fields
+ * @package bigup-forms
  * @author Jefferson Real <jeff@webguyjeff.com>
  * @copyright Copyright (c) 2026, Jefferson Real
  * @license GPL3+
