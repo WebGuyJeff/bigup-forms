@@ -63,14 +63,13 @@
 	}
 
 	.bigupForms__controls {
+		gap: var(--bigupForms_gap);
+		display: flex;
+		flex-flow: row wrap;
 		padding-top: var( --bigupForms_gap );
 
 		.bigupForms__buttonWrap {
 			display: inline-block;
-
-			&:not( :last-child ) {
-				margin-inline-end: var(--bigupForms_gap);
-			}
 		}
 	}
 

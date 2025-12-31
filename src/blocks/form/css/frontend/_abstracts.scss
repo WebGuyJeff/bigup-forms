@@ -16,14 +16,14 @@
 		[type=password] ) {
 
 		--iconSize: 1em;
-		padding-inline-end: calc( var(--iconSize) + calc( var(--bigupForms_paddingY) * 2 ) );
+		padding-inline-end: calc( var(--iconSize) + calc( var(--bigupForms_paddingY, 0.75em) * 2 ) );
 		background-origin: padding-box;
-		background-position: center right var(--bigupForms_paddingX);
+		background-position: center right var(--bigupForms_paddingX, 0.5em);
 		background-repeat: no-repeat;
 		background-size: var(--iconSize) var(--iconSize);
 
 		&:is( textarea ) {
-			background-position: top var(--bigupForms_paddingY) right var(--bigupForms_paddingX);
+			background-position: top var(--bigupForms_paddingY, 0.75em) right var(--bigupForms_paddingX, 0.5em);
 		}
 	}
 
