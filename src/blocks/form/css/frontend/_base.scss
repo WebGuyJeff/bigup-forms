@@ -1,6 +1,5 @@
 .bigupForms__form {
 	gap: var( --bigupForms_gap );
-	box-sizing: border-box;
 	display: flex;
     position: relative; // Parent to popup messages.
 	flex-flow: column;

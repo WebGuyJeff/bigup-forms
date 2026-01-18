@@ -1,5 +1,9 @@
 .bigupForms__form {
 
+	& * {
+		box-sizing: border-box;
+	}
+
 	// Typing inputs.
 	input[type=email],
 	input[type=number],

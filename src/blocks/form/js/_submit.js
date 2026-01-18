@@ -6,6 +6,7 @@ import { removeChildren } from '../../../common/_util'
 import { alertsShow, alertsUpdateWaitHide, alertsShowWaitHide } from './_alert'
 import { restSubmitURL, restNonce } from '../../../common/_wp-inlined-script'
 import { formReset } from './_form-reset'
+import { getClientData } from './_get-client-data'
 
 
 /**
@@ -58,9 +59,10 @@ async function submit( event ) {
 	formData.append(
 		'formMeta',
 		JSON.stringify( {
-			'name': form.getAttribute( 'name' ),
-			'id'  : form.getAttribute( 'data-form-post-id' ),
-			'url' : window.location.href,
+			'name'       : form.getAttribute( 'name' ),
+			'id'         : form.getAttribute( 'data-form-post-id' ),
+			'url'        : window.location.href,
+			'clientData' : await getClientData()
 		} )
 	)
 
