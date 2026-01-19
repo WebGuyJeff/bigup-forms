@@ -105,11 +105,11 @@ class Get_Settings {
 			$valid = true;
 			switch ( $name ) {
 				case 'username':
-					$valid = ( is_string( $value ) ) ? true : false;
+					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
 					break;
 
 				case 'password':
-					$valid = ( is_string( $value ) ) ? true : false;
+					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
 					break;
 
 				case 'host':
@@ -145,7 +145,6 @@ class Get_Settings {
 			}
 			if ( $valid === false ) {
 				// settings bad - we're done here
-				error_log( 'Bigup_Forms: Setting "' . $name . '" has failed validation.' );
 				return false;
 			}
 		}
