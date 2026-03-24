@@ -1,9 +1,13 @@
 {
 	"env": {
-        "es6": true
-    },
-	"plugins": [ "react" ],
-	"extends": [ "plugin:react/recommended" ],
+		"es6": true
+	},
+	"plugins": [
+		"react"
+	],
+	"extends": [
+		"plugin:react/recommended"
+	],
 	"parserOptions": {
 		"ecmaVersion": "latest",
 		"sourceType": "module",
@@ -13,7 +17,10 @@
 	},
 	"overrides": [
 		{
-		  "files": ["*.jsx", "*.js"]
+			"files": [
+				"*.jsx",
+				"*.js"
+			]
 		}
 	],
 	"root": true,
@@ -34,7 +41,7 @@
 		],
 		"space-in-parens": [
 			"error",
-			"always"
+			"never"
 		],
 		"no-multi-spaces": [
 			"error",
