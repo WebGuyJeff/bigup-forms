@@ -18,6 +18,7 @@ namespace BigupWeb\Forms;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use TheNetworg\OAuth2\Client\Provider\Azure;
 
 // Load Composer's autoloader.
 require BIGUPFORMS_PATH . 'vendor/autoload.php';

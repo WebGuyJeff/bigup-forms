@@ -165,7 +165,9 @@ class Admin_Settings {
 		$section = 'section_smtp';
 		add_settings_section( $section, 'SMTP Account', array( $this, 'smtp_test_markup_callback' ), $page );
 			add_settings_field( 'username', 'Username', array( &$this, 'echo_field_username' ), $page, $section );
+			add_settings_field( 'oauth_required', 'Oauth Required', array( &$this, 'echo_field_oauth_required' ), $page, $section );
 			add_settings_field( 'password', 'Password', array( &$this, 'echo_field_password' ), $page, $section );
+			add_settings_field( 'oauth', 'Oauth', array( &$this, 'echo_field_oauth' ), $page, $section );
 			add_settings_field( 'host', 'Host', array( &$this, 'echo_field_host' ), $page, $section );
 			add_settings_field( 'port', 'Port', array( &$this, 'echo_field_port' ), $page, $section );
 			add_settings_field( 'auth', 'Authentication', array( &$this, 'echo_field_auth' ), $page, $section );
@@ -225,13 +227,38 @@ class Admin_Settings {
 			$this->settings['username'] ?? ''
 		);
 	}
+	public function echo_field_oauth_required() {
+		$setting = 'bigup_forms_settings[oauth_required]';
+		printf(
+			'<input id="oauthToggle" type="checkbox" value="1" id="%s" name="%s" %s><label for="%s">%s</label>',
+			$setting,
+			$setting,
+			isset( $this->settings['oauth_required'] ) ? checked( '1', $this->settings['oauth_required'], false ) : '',
+			$setting,
+			'Tick if your SMTP provider requires OAuth authentication.'
+		);
+	}
 	public function echo_field_password() {
 		$setting = 'bigup_forms_settings[password]';
 		printf(
-			'<input class="regular-text" type="password" id="%s" name="%s" value="%s">',
+			'<input class="regular-text hideWhenOauthEnabled" type="password" id="%s" name="%s" value="%s">',
 			$setting,
 			$setting,
 			$this->settings['password'] ?? ''
+		);
+	}
+	public function echo_field_oauth() {
+		$setting = 'bigup_forms_settings[oauth]';
+		printf(
+			'<input class="regular-text hideWhenOauthDisabled" type="password" id="%s" name="%s" value="%s">',
+			$setting,
+			$setting,
+			$this->settings['oauth'] ?? ''
+		);
+		printf(
+			'<button id="%s" class="button button-primary" type="button" disabled>%s</button>',
+			'connectMicrosoftAccount',
+			'Connect Microsoft Account',
 		);
 	}
 	public function echo_field_host() {
@@ -260,7 +287,7 @@ class Admin_Settings {
 			$setting,
 			isset( $this->settings['auth'] ) ? checked( '1', $this->settings['auth'], false ) : '',
 			$setting,
-			'Tick if your SMTP provider requires authentication.'
+			'Tick if your SMTP provider requires password authentication.'
 		);
 	}
 
@@ -345,8 +372,16 @@ class Admin_Settings {
 			$sanitised['username'] = sanitize_text_field( $input['username'] );
 		}
 
+		if ( isset( $input['oauth_required'] ) ) {
+			$sanitised['oauth_required'] = $this->sanitise_checkbox( $input['oauth_required'] );
+		}
+
 		if ( isset( $input['password'] ) ) {
 			$sanitised['password'] = $this->sanitise_password( $input['password'] );
+		}
+
+		if ( isset( $input['oauth'] ) ) {
+			$sanitised['oauth'] = $this->sanitise_password( $input['oauth'] );
 		}
 
 		if ( isset( $input['host'] ) ) {

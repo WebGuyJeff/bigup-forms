@@ -1,0 +1,25 @@
+tr:has(#oauthToggle:not(:checked)) {
+	~ tr:has(.hideWhenOauthDisabled) {
+		display: none;
+	}
+
+	~ tr:has(.hideWhenOauthEnabled) {
+		display: table-row;
+	}
+}
+
+tr:has(#oauthToggle:checked) {
+	~ tr:has(.hideWhenOauthDisabled) {
+		display: table-row;
+	}
+
+	~ tr:has(.hideWhenOauthEnabled) {
+		display: none;
+	}
+}
+
+#connectMicrosoftAccount {
+	display: block;
+	margin-top: 0.5em;
+	margin-right: auto;
+}
