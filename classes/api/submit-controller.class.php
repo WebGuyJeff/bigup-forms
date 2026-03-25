@@ -150,7 +150,6 @@ class Submit_Controller {
 				$password              = $settings['password'],
 				$use_auth              = $settings['auth'],
 				$oauth_required        = $settings['oauth_required'],
-				$oauth                 = $settings['oauth'],
 				$oauth_provider	       = $settings['oauth_provider'],
 				$oauth_client_id       = $settings['oauth_client_id'],
 				$oauth_client_secret   = $settings['oauth_client_secret'],

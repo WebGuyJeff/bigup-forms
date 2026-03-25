@@ -16,9 +16,9 @@ class OAuth_Provider_Microsoft implements OAuth_Provider_Interface {
 
         $this->provider = new Azure(
             array(
-                'clientId'     => Settings::get( 'bigup_oauth_client_id' ),
-                'clientSecret' => Settings::get( 'bigup_oauth_client_secret' ),
-                'redirectUri'  => admin_url( 'admin-post.php?action=bigup_oauth_callback' ),
+                'clientId'     => Settings::get( 'oauth_client_id' ),
+                'clientSecret' => Settings::get( 'oauth_client_secret' ),
+                'redirectUri'  => admin_url( 'admin-post.php?action=bigup_forms_oauth_callback' ),
                 'tenant'       => 'common',
             )
         );
@@ -67,7 +67,7 @@ class OAuth_Provider_Microsoft implements OAuth_Provider_Interface {
             array(
                 'access_token'  => $token->getToken(),
                 'refresh_token' => $token->getRefreshToken(),
-                'expires'       => $token->getExpires(),
+                'expires'       => (int) $token->getExpires(),
             )
         );
     }

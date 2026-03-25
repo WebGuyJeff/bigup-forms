@@ -28,7 +28,7 @@ class Admin_Settings {
 	/**
 	 * Settings page slug to add with add_submenu_page().
 	 */
-	private $page_slug = 'bigup-web-contact-form';
+	private $page_slug = 'bigup-web-forms';
 
 	/**
 	 * The plugin settings saved the wp_options table.
@@ -41,7 +41,14 @@ class Admin_Settings {
 	 * To add multiple sections to the same settings page, all settings
 	 * registered for that page MUST BE IN THE SAME 'OPTION GROUP'.
 	 */
-	private $group_name = 'group_contact_form_settings';
+	private $group_default = 'group_contact_form_settings';
+
+	/**
+	 * Microsoft Connected Flag
+	 *
+	 * Will be true when a Microsoft account is connected.
+	 */
+	private $ms_connected;
 
 
 	/**
@@ -53,6 +60,7 @@ class Admin_Settings {
 		new Admin_Settings_Parent();
 		add_action( 'admin_menu', array( &$this, 'register_admin_menu' ), 99 );
 		add_action( 'admin_init', array( &$this, 'register_settings' ) );
+		$this->ms_connected = ! empty( $this->settings['oauth_microsoft_token']['refresh_token'] );
 	}
 
 
@@ -95,46 +103,129 @@ class Admin_Settings {
 		wp_enqueue_style( 'bigup_forms_admin_css' );
 		?>
 
-		<div class="wrap">
+		<div class="wrap adminPage">
+			<header class="adminHeader">
+				<h1>
+					<span class="dashicons-bigup-logo" style="font-size: 2em; margin-right: 0.2em;"></span>
+					Bigup Web Forms Settings
+				</h1>
 
-			<h1>
-				<span class="dashicons-bigup-logo" style="font-size: 2em; margin-right: 0.2em;"></span>
-				Bigup Web Contact Form Settings
-			</h1>
+				<?php settings_errors(); // Display the form save notices here. ?>
 
-			<?php settings_errors(); // Display the form save notices here. ?>
+				<h2>
+					Instructions
+				</h2>
+				<ul class="adminInstructionsList">
+					<li>
+						Complete all settings before making any forms live.
+					</li>
+					<li>
+						Test the settings using the button at the bottom, and submit a form entry on your
+						site to make sure it's working.
+					</li>
+					<li>
+						See all form submissions in the
+						<a target="_blank" href="/wp-admin/edit.php?post_type=bigup_form_entry">Form Entries</a>
+						admin page.
+					</li>
+				</ul>
+				<p>
+					🥳 Thanks for using Bigup Forms!
+				</p>
+			</header>
 
-			<h2>
-				Notice
-			</h2>
-			<p>
-				Complete these settings before making any contact forms live. Test the settings
-				using the button below, and test the form on your site once it is published to avoid
-				missed submissions.
-			</p>
-			<p>
-				It is recommended you complete the SMTP settings as well as allowing the local mail
-				server as a redundancy in case of SMTP errors. This will further reduce the chance
-				of missed submissions.
-			</p>
-			<p>
-				All form entries that are recieved by this website are logged in the 'Form Entries'
-				admin page, even when sending to your recipient email fails. It is however
-				impossible to account for errors that occur on user devices.
-			</p>
-			<p>
-				Thanks for using Bigup Forms!
-			</p>
+			<div class="adminBody">
 
-			<form method="post" action="options.php">
+				<h2>Connect your SMTP account</h2>
 
-				<?php
-					settings_fields( $this->group_name );
+				<table id="providerSelection" class="form-table" role="presentation">
+					<tbody>
+						<tr>
+							<th scope="row">SMTP Provider</th>
+							<td>
+								<select id="smtpProvider">
+									<option value="generic">Generic SMTP (traditional user/pass)</option>
+									<option value="microsoft" <?php echo $this->ms_connected ? 'selected' : ''; ?>>Microsoft SMTP (OAuth)</option>
+								</select>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<form id="microsoftAccountForm" style="display: none;" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+					<h2><?php esc_html_e( 'Microsoft OAuth Setup', 'bigup-forms' ); ?></h2>
+
+					<div class="setupInstructions">
+						<ol style="margin-left:20px;">
+							<li>
+								<strong><?php esc_html_e( 'Create a Microsoft Azure App', 'bigup-forms' ); ?></strong><br>
+								<a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
+								target="_blank">
+									<?php esc_html_e( 'Open Azure App Registrations →', 'bigup-forms' ); ?>
+								</a>
+							</li>
+							<li>
+								<strong><?php esc_html_e( 'Set this Redirect URI', 'bigup-forms' ); ?></strong><br>
+								<code><?php echo esc_html( admin_url( 'admin-post.php?action=bigup_forms_oauth_callback' ) ); ?></code>
+							</li>
+							<li>
+								<strong><?php esc_html_e( 'Add these API Permissions', 'bigup-forms' ); ?></strong><br>
+								<code>SMTP.Send</code> & <code>offline_access</code>
+							</li>
+							<li>
+								<strong><?php esc_html_e( 'Copy Client ID & Client Secret into the fields below, and save the settings', 'bigup-forms' ); ?></strong>
+							</li>
+							<li>
+								<strong><?php esc_html_e( 'Click the button to connect your Microsoft account', 'bigup-forms' ); ?></strong>
+							</li>
+						</ol>
+					</div>
+
+					<input type="hidden" name="action" value="bigup_forms_connect_microsoft" />
+
+					<?php wp_nonce_field( 'bigup_forms_connect_microsoft_action', 'bigup_forms_connect_microsoft_nonce' ); ?>
+
+					<div class="adminButtonRow">
+						<div class="msConnectWrapper">
+							<button id="connectMicrosoftAccount" class="button button-primary" type="submit">
+								<img src="<?php echo BIGUPFORMS_URL . 'assets/images/provider_logos/microsoft_logo_64px.png'; ?>">
+								Connect Microsoft Account
+							</button>
+							<span><?php echo $this->ms_connected ? '✅ Account connected' : '⚠️ Not connected'; ?></span>
+						</div>
+						<p class="description">
+							<?php esc_html_e( 'This will open Microsoft login to authorize email sending.', 'bigup-forms' ); ?>
+						</p>
+					</div>
+
+				</form>
+
+				<form method="post" action="options.php">
+					<?php
+					settings_fields( $this->group_default );
 					do_settings_sections( $this->page_slug );
-					submit_button( 'Save' );
-				?>
+					?>
+					<div class="adminButtonRow">
 
-			</form>
+						<?php submit_button( 'Save Settings' ); ?>
+
+						<div class="bigupForms__smtpTest_wrapper">
+							<button type="button" class="button button-secondary bigupForms__button-submit bigupForms__smtpTest_button" disabled>
+								<span class="bigupForms__submitLabel-ready">
+									<?php _e( 'Test Connection (Save first!)', 'bigup_forms' ); ?>
+								</span>
+								<span class="bigupForms__submitLabel-notReady">
+									<?php _e( 'Test Connection [Check your configuration]', 'bigup_forms' ); ?>
+								</span>
+							</button>
+							<div class='bigupForms__alertsContainer' style="display:none;">
+								<div class='bigupForms__alerts'></div>
+							</div>
+						</div>
+
+					</div>
+				</form>
+			</div>
 
 		</div>
 
@@ -151,7 +242,7 @@ class Admin_Settings {
 	 */
 	public function register_settings() {
 
-		$group = $this->group_name;
+		$group = $this->group_default;
 		$page  = $this->page_slug;
 
 		// A single serialsed array holds all plugin settings.
@@ -161,29 +252,29 @@ class Admin_Settings {
 			array( $this, 'sanitise' )     // sanitise_callback.
 		);
 
-		// SMTP Account.
-		$section = 'section_smtp';
-		add_settings_section( $section, 'SMTP Account', array( $this, 'smtp_test_markup_callback' ), $page );
+		$section = 'oauth_app_settings';
+		add_settings_section( $section, 'OAuth App Settings', array(), $page );
+			add_settings_field( 'oauth_client_id', 'OAuth Client ID', array( &$this, 'echo_field_oauth_client_id' ), $page, $section );
+			add_settings_field( 'oauth_client_secret', 'OAuth Client Secret', array( &$this, 'echo_field_oauth_client_secret' ), $page, $section );
+
+		$section = 'section_smtp_settings';
+		add_settings_section( $section, 'SMTP Settings', array(), $page );
 			add_settings_field( 'username', 'Username', array( &$this, 'echo_field_username' ), $page, $section );
 			add_settings_field( 'oauth_required', 'Oauth Required', array( &$this, 'echo_field_oauth_required' ), $page, $section );
 			add_settings_field( 'password', 'Password', array( &$this, 'echo_field_password' ), $page, $section );
-			add_settings_field( 'oauth', 'Oauth', array( &$this, 'echo_field_oauth' ), $page, $section );
 			add_settings_field( 'host', 'Host', array( &$this, 'echo_field_host' ), $page, $section );
 			add_settings_field( 'port', 'Port', array( &$this, 'echo_field_port' ), $page, $section );
 			add_settings_field( 'auth', 'Authentication', array( &$this, 'echo_field_auth' ), $page, $section );
 
-		// Message Header.
-		$section = 'section_headers';
-		add_settings_section( $section, 'Message Headers', array( &$this, 'echo_intro_section_headers' ), $page );
-			add_settings_field( 'from_email', 'Sent-from Email Address', array( &$this, 'echo_field_from_email' ), $page, $section );
-			add_settings_field( 'to_email', 'Send-to Email Address', array( &$this, 'echo_field_to_email' ), $page, $section );
+		$section = 'section_sending';
+		add_settings_section( $section, 'Message Sending', array( &$this, 'echo_intro_section_sending' ), $page );
+			add_settings_field( 'from_email', 'Sent-from email address', array( &$this, 'echo_field_from_email' ), $page, $section );
+			add_settings_field( 'to_email', 'Email to send messages to', array( &$this, 'echo_field_to_email' ), $page, $section );
 
-		// Local mail server.
 		$section = 'section_local_mail_server';
 		add_settings_section( $section, 'Local Mail Server', array( &$this, 'echo_intro_section_local_mail_server' ), $page );
 			add_settings_field( 'use_local_mail_server', 'Use Local Mail Server', array( &$this, 'echo_field_use_local_mail_server' ), $page, $section );
 
-		// Developer.
 		$section = 'section_developer';
 		add_settings_section( $section, 'Developer', array( &$this, 'echo_intro_section_developer' ), $page );
 			add_settings_field( 'debug', 'Enable debugging', array( &$this, 'echo_field_debug' ), $page, $section );
@@ -191,32 +282,30 @@ class Admin_Settings {
 
 
 	/**
-	 * SMTP test markup.
-	 *
-	 * Output a button which will trigger an email send test.
+	 * Output Form Fields - OAuth App Settings
 	 */
-	public function smtp_test_markup_callback() {
-		// The SMTP test button is enabled by JS once vaild saved settings are detected.
-		?>
-			<div class="bigupForms__smtpTest_wrapper">
-				<button class="button button-secondary bigupForms__button-submit bigupForms__smtpTest_button" type="submit" disabled>
-					<span class="bigupForms__submitLabel-ready">
-						<?php _e( 'Test Settings', 'bigup_forms' ); ?>
-					</span>
-					<span class="bigupForms__submitLabel-notReady">
-						<?php _e( 'Test Settings [Check your configuration]', 'bigup_forms' ); ?>
-					</span>
-				</button>
-				<div class='bigupForms__alertsContainer' style="display:none;">
-					<div class='bigupForms__alerts'></div>
-				</div>
-			</div>
-		<?php
+	public function echo_field_oauth_client_id() {
+		$setting = 'bigup_forms_settings[oauth_client_id]';
+		printf(
+			'<input class="regular-text" type="text" id="%s" name="%s" value="%s">',
+			$setting,
+			$setting,
+			$this->settings['oauth_client_id'] ?? ''
+		);
+	}
+	public function echo_field_oauth_client_secret() {
+		$setting = 'bigup_forms_settings[oauth_client_secret]';
+		printf(
+			'<input class="regular-text" type="password" id="%s" name="%s" value="%s">',
+			$setting,
+			$setting,
+			$this->settings['oauth_client_secret'] ?? ''
+		);
 	}
 
 
 	/**
-	 * Output Form Fields - SMTP Account Settings
+	 * Output Form Fields - SMTP Settings
 	 */
 	public function echo_field_username() {
 		$setting = 'bigup_forms_settings[username]';
@@ -245,22 +334,6 @@ class Admin_Settings {
 			$setting,
 			$setting,
 			$this->settings['password'] ?? ''
-		);
-	}
-	public function echo_field_oauth() {
-		$ms_connected = ! empty( $this->settings['oauth_microsoft_token']['refresh_token'] );
-		printf(
-			'<div class="msConnectWrapper"><button id="%s" class="button button-primary" type="button" disabled>%s</button><span>%s</span></div>',
-			'connectMicrosoftAccount',
-			'Connect Microsoft Account',
-			$ms_connected ? '✅ Account connected' : '⚠️ Not connected',
-		);
-		$setting = 'bigup_forms_settings[oauth]';
-		printf(
-			'<input class="regular-text hideWhenOauthDisabled" type="password" id="%s" name="%s" value="%s">',
-			$setting,
-			$setting,
-			$this->settings['oauth'] ?? ''
 		);
 	}
 	public function echo_field_host() {
@@ -295,11 +368,22 @@ class Admin_Settings {
 
 
 	/**
-	 * Output Form Fields - Message Header Settings
+	 * Output Form Fields - Message Sending
 	 */
-	public function echo_intro_section_headers() {
-		echo '<p>To improve deliverability, the <code>sent from</code> email address should match your website domain, or at least the SMTP host domain.</p>';
-		echo '<p>Mail providers (Gmail, Microsoft, Yahoo, etc) heavily use <strong>DMARC</strong>, <strong>SPF</strong>, and <strong>DKIM</strong> to verify that mail is legitimately coming from the domain it claims to come from. Ensure these DNS entries are set correctly to authenticate the <code>sent from</code> domain.</p>';
+	public function echo_intro_section_sending() {
+		?>
+			<ul class="adminInstructionsList">
+				<li>
+					The <code>sent from</code> email should match your website domain to improve
+					deliverability.
+				</li>
+				<li>
+					Ensure DNS is configured with <strong>DMARC</strong>, <strong>SPF</strong>, and
+					<strong>DKIM</strong> so the <code>sent from</code> domain can be authenticated
+					to improve deliverability.
+				</li>
+			</ul>
+		<?php
 	}
 	public function echo_field_from_email() {
 		$setting = 'bigup_forms_settings[from_email]';
@@ -322,15 +406,26 @@ class Admin_Settings {
 
 
 	/**
-	 * Output Form Fields - Local mail server Settings
+	 * Output Form Fields - Local Mail Server
 	 */
 	public function echo_intro_section_local_mail_server() {
-		echo '<p>If present on the server, you can opt to try and use the local mail() package to send emails when using SMTP fails, or account settings are not configured.</p>';
-		echo '<p><span style="font-weight:800;color:blue;">Please note: </span>Depending on the hosting config, this may return false positives making it look like mail has sent. Please test-send an email to yourself via the contact form. SMTP is highly recommended as it will always alert the user of send failure!</p>';
+		?>
+			<ul class="adminInstructionsList">
+				<li>
+					If present on the server, you can opt to try and use the local mail() package as
+					a fallback in case of SMTP errors.
+				</li>
+				<li>
+					Depending on the hosting config, this may return false positives making it look
+					like mail has sent. SMTP is preferred as it will always alert the user of send
+					failure.
+				</li>
+			</ul>
+		<?php
 		if ( function_exists( 'mail' ) ) {
-			echo '<p>Status: <span style="font-weight:800;color:green;">OK </span>- mail() package is present.</p>';
+			echo '<p>✅ mail() package is installed.</p>';
 		} else {
-			echo '<p>Status: <span style="font-weight:800;color:red;">Not found. </span>- mail() package not detected. Option unavailable.</p>';
+			echo '<p>❌ mail() package not detected. Option unavailable.</p>';
 		}
 	}
 	public function echo_field_use_local_mail_server() {
@@ -348,7 +443,7 @@ class Admin_Settings {
 
 
 	/**
-	 * Output Form Fields - Developer Settings
+	 * Output Form Fields - Developer
 	 */
 	public function echo_intro_section_developer() {
 		echo '<p>Settings for developers.</p>';
@@ -370,6 +465,14 @@ class Admin_Settings {
 
 		$sanitised = array();
 
+		if ( isset( $input['oauth_client_id'] ) ) {
+			$sanitised['oauth_client_id'] = sanitize_text_field( $input['oauth_client_id'] );
+		}
+
+		if ( isset( $input['oauth_client_secret'] ) ) {
+			$sanitised['oauth_client_secret'] = $this->sanitise_password( $input['oauth_client_secret'] );
+		}
+
 		if ( isset( $input['username'] ) ) {
 			$sanitised['username'] = sanitize_text_field( $input['username'] );
 		}
@@ -380,10 +483,6 @@ class Admin_Settings {
 
 		if ( isset( $input['password'] ) ) {
 			$sanitised['password'] = $this->sanitise_password( $input['password'] );
-		}
-
-		if ( isset( $input['oauth'] ) ) {
-			$sanitised['oauth'] = $this->sanitise_password( $input['oauth'] );
 		}
 
 		if ( isset( $input['host'] ) ) {

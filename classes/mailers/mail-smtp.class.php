@@ -35,7 +35,7 @@ class Mail_SMTP {
 		$use_auth,
 		$oauth_required,
 		$oauth,
-		$oauth_provider,
+		$oauth_provider, // Check if this is needed.
 		$oauth_client_id,
 		$oauth_client_secret,
 		$oauth_microsoft_token,

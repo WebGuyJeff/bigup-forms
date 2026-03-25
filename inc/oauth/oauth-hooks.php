@@ -9,12 +9,27 @@ defined( 'ABSPATH' ) || exit;
  * Connect Microsoft button handler
  */
 add_action(
-    'admin_post_bigup_connect_microsoft',
+    'admin_post_bigup_forms_connect_microsoft',
     function () {
+
+	// DEBUG.
+	error_log( '$POST: ' . implode( ', ', $_POST ) );
+
+	    // Security check
+        if (
+            ! isset( $_POST['bigup_forms_connect_microsoft_nonce'] ) ||
+            ! wp_verify_nonce( $_POST['bigup_forms_connect_microsoft_nonce'], 'bigup_forms_connect_microsoft_action' )
+        ) {
+            wp_die( 'Security check failed' );
+        }
 
         Settings::set( 'bigup_oauth_provider', 'microsoft' );
 
         $provider = new OAuth_Provider_Microsoft();
+
+	// DEBUG.
+	//wp_redirect( 'https://example.com' );
+	//exit;
 
         wp_redirect( $provider->get_authorization_url() );
         exit;
@@ -25,7 +40,7 @@ add_action(
  * OAuth callback handler
  */
 add_action(
-    'admin_post_bigup_oauth_callback',
+    'admin_post_bigup_forms_oauth_callback',
     function () {
 
         if ( empty( $_GET['code'] ) ) {

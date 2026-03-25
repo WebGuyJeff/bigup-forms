@@ -6,7 +6,7 @@
  */
 function formLock(form, shouldLock) {
 	const inputs = form.querySelectorAll(':is( input, textarea )'),
-		button = form.querySelector('button[type="submit"]')
+		button = form.querySelector('.bigupForms__smtpTest_button')
 
 	if (shouldLock) {
 		form.classList.add('bigupForms__form-locked')

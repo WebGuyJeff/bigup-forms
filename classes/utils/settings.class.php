@@ -29,47 +29,50 @@ class Settings {
 	 *
 	 * Gets plugin settings from the database.
 	 */
-	public static function get( $keys = array(
-			'username',
-			'oauth_required',
-			'password',
-			'oauth',
-			'host',
-			'port',
-			'auth',
-			'use_local_mail_server',
-			'from_email',
-			'to_email',
-			'oauth_provider',
-			'oauth_client_id',
-			'oauth_client_secret',
-			'oauth_microsoft_token',
-		) ) {
+	public static function get( $keys = null ) {
 
-		if ( empty( $keys ) ) {
-			return false;
+		$settings = get_option( 'bigup_forms_settings' );
+
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
 		}
 
-		if ( ! is_array( $keys ) && ! is_string( $keys ) ) {
-			return false;
+		// Return ALL settings
+		if ( null === $keys ) {
+			return is_array( $settings ) ? $settings : array();
 		}
 
+		// Single key
 		if ( is_string( $keys ) ) {
-			$keys = array( $keys );
+			return isset( $settings[ $keys ] ) ? $settings[ $keys ] : null;
 		}
 
-		$settings       = array();
-		$saved_settings = get_option( 'bigup_forms_settings' );
-		foreach ( $keys as $key ) {
-			if ( array_key_exists( $key, $saved_settings ) ) {
-				$settings[ $key ] = $saved_settings[ $key ];
+		// Multiple keys
+		if ( is_array( $keys ) ) {
+			$result = array();
+
+			foreach ( $keys as $key ) {
+				if ( isset( $settings[ $key ] ) ) {
+					$result[ $key ] = $settings[ $key ];
+				}
 			}
+
+			return $result;
 		}
 
-		if ( self::validate( $settings ) ) {
-			return $settings;
-		}
-		return false;
+		return null;
+	}
+
+
+	/**
+	 * Get plugin settings or default.
+	 *
+	 * Gets plugin settings from the database or returns default value.
+	 */
+	public static function get_or_default( $key, $default = null ) {
+		$value = self::get( $key );
+
+		return ( null === $value ) ? $default : $value;
 	}
 
 
@@ -78,19 +81,32 @@ class Settings {
 	 *
 	 * Sets plugin settings in the database.
 	 */
-	public static function set( $settings = array() ) {
+	public static function set( $updates = array() ) {
 
-		if ( ! self::validate( $settings ) || empty( $settings ) ) {
+		if ( ! is_array( $updates ) || empty( $updates ) ) {
 			return false;
 		}
 
-		$new_settings = get_option( 'bigup_forms_settings' );
-		foreach ( $settings as $key => $value ) {
-			if ( array_key_exists( $key, $new_settings ) ) {
-				$new_settings[ $key ] = $value;
-			}
+		$current = get_option( 'bigup_forms_settings', array() );
+
+		if ( ! is_array( $current ) ) {
+			$current = array();
 		}
-		return update_option( 'bigup_forms_settings', $new_settings );
+
+		$updated = false;
+
+		foreach ( $updates as $key => $value ) {
+
+			// Validate single setting
+			if ( ! self::validate( array( $key => $value ) ) ) {
+				return false;
+			}
+
+			$current[ $key ] = $value;
+			$updated = true;
+		}
+
+		return $updated ? update_option( 'bigup_forms_settings', $current ) : false;
 	}
 
 
@@ -115,9 +131,8 @@ class Settings {
 			return false;
 		}
 
-		if ( isset( $settings['oauth_required'] ) && $settings['oauth_required'] ) {
-			if ( empty( $settings['oauth'] )
-				|| empty( $settings['oauth_provider'] )
+		if ( (int) $settings['oauth_required'] === 1 ) {
+			if ( empty( $settings['oauth_provider'] )
 				|| empty( $settings['oauth_client_id'] )
 				|| empty( $settings['oauth_client_secret'] ) ) {
 				return false;
@@ -148,19 +163,15 @@ class Settings {
 			$valid = true;
 			switch ( $name ) {
 				case 'username':
-					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
+					$valid = ( is_string( $value ) && mb_strlen( $value ) < 254 ) ? true : false;
 					break;
 
 				case 'oauth_required':
-					$valid = ( is_bool( (bool) $value ) ) ? true : false;
+					$valid = ( $value === 0 || $value === 1 || $value === true || $value === false );
 					break;
 
 				case 'password':
-					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
-					break;
-
-				case 'oauth':
-					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
+					$valid = ( is_string( $value ) && mb_strlen( $value ) < 100 ) ? true : false;
 					break;
 
 				case 'host':
@@ -178,11 +189,11 @@ class Settings {
 					break;
 
 				case 'auth':
-					$valid = ( is_bool( (bool) $value ) ) ? true : false;
+					$valid = ( $value === 0 || $value === 1 || $value === true || $value === false );
 					break;
 
 				case 'use_local_mail_server':
-					$valid = ( is_bool( (bool) $value ) ) ? true : false;
+					$valid = ( $value === 0 || $value === 1 || $value === true || $value === false );
 					break;
 
 				case 'from_email':
@@ -199,11 +210,11 @@ class Settings {
 					break;
 
 				case 'oauth_client_id':
-					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
+					$valid = ( is_string( $value ) && mb_strlen( $value ) < 100 ) ? true : false;
 					break;
 
 				case 'oauth_client_secret':
-					$valid = ( is_string( $value ) && mb_strlen( $value ) !== 0 ) ? true : false;
+					$valid = ( is_string( $value ) && mb_strlen( $value ) > 10 );
 					break;
 
 				case 'oauth_microsoft_token':
@@ -226,7 +237,7 @@ class Settings {
 									}
 									break;
 								case 'integer':
-									if ( ! is_int( $value[ $key ] ) ) {
+									if ( ! is_numeric( $value[ $key ] ) ) {
 										$valid = false;
 										break;
 									}
