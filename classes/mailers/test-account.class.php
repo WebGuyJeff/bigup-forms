@@ -2,7 +2,7 @@
 namespace BigupWeb\Forms;
 
 /**
- * Bigup Forms - PHPMailer SMTP Settings Test Handler.
+ * Bigup Forms - PHPMailer SMTP Account Test Handler.
  *
  * This uses the SMTP class alone to check that a connection can be made to an SMTP server,
  * authenticate, then disconnect
@@ -22,7 +22,7 @@ use PHPMailer\PHPMailer\Exception;
 require BIGUPFORMS_PATH . 'vendor/autoload.php';
 
 
-class Test_Settings {
+class Test_Account {
 
 	/**
 	 * Pretty log messages for test output.

@@ -15,7 +15,6 @@ namespace BigupWeb\Forms;
 
 // WordPress Dependencies.
 use WP_REST_Request;
-use get_option;
 
 class Store_Controller {
 

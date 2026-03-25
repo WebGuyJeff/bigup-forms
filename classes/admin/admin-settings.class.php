@@ -248,17 +248,19 @@ class Admin_Settings {
 		);
 	}
 	public function echo_field_oauth() {
+		$ms_connected = ! empty( $this->settings['oauth_microsoft_token']['refresh_token'] );
+		printf(
+			'<div class="msConnectWrapper"><button id="%s" class="button button-primary" type="button" disabled>%s</button><span>%s</span></div>',
+			'connectMicrosoftAccount',
+			'Connect Microsoft Account',
+			$ms_connected ? '✅ Account connected' : '⚠️ Not connected',
+		);
 		$setting = 'bigup_forms_settings[oauth]';
 		printf(
 			'<input class="regular-text hideWhenOauthDisabled" type="password" id="%s" name="%s" value="%s">',
 			$setting,
 			$setting,
 			$this->settings['oauth'] ?? ''
-		);
-		printf(
-			'<button id="%s" class="button button-primary" type="button" disabled>%s</button>',
-			'connectMicrosoftAccount',
-			'Connect Microsoft Account',
 		);
 	}
 	public function echo_field_host() {
@@ -453,6 +455,7 @@ class Admin_Settings {
 		$bool_checkbox = (bool) $checkbox;
 		return $bool_checkbox;
 	}
+
 
 	/**
 	 * Sanitise a password.

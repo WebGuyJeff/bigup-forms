@@ -116,13 +116,12 @@ class Submit_Controller {
 	 */
 	public function send_email( $form_data ) {
 
-		$smtp_settings  = Get_Settings::smtp();
-		$local_settings = Get_Settings::local_mail_server();
+		$settings = Settings::get();
+		$valid    = Settings::ready( $settings );
 
-		$this->log .= date( 'Y-m-d H:i:s' ) . ' SMTP settings ' . ( $smtp_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
-		$this->log .= date( 'Y-m-d H:i:s' ) . ' Local mailer settings ' . ( $local_settings ? 'OK.' . "\n" : 'Invalid.' . "\n" );
+		$this->log .= date( 'Y-m-d H:i:s' ) . ' Settings ' . ( $valid ? 'OK.' . "\n" : 'Invalid.' . "\n" );
 
-		if ( ! $smtp_settings && ! $local_settings ) {
+		if ( ! $valid ) {
 			$this->log .= date( 'Y-m-d H:i:s' ) . ' ERROR: No mail service configured.' . "\n";
 			return array( 503, 'Sending your message failed as no mail service has been configured' );
 		}
@@ -133,26 +132,32 @@ class Submit_Controller {
 		$domain         = wp_parse_url( html_entity_decode( get_bloginfo( 'url' ) ), PHP_URL_HOST );
 		$from_name      = get_bloginfo( 'name' );
 		$reply_name     = isset( $fields['name'] ) ? $fields['name']['value'] : $from_name;
-		$reply_email    = isset( $fields['email'] ) ? $fields['email']['value'] : $this->smtp_settings['from_email'];
+		$reply_email    = isset( $fields['email'] ) ? $fields['email']['value'] : $settings['from_email'];
 		$subject        = 'New ' . strtolower( $form_data['form']['name'] ) . ' form submission from ' . $domain;
 		$html_body      = $compose->html();
 		$plaintext_body = $compose->plaintext();
 		$attachments    = isset( $form_data['files'] ) ? $form_data['files'] : false;
 
 		// Try send using SMTP.
-		if ( $smtp_settings ) {
+		if ( $settings ) {
 			$this->log .= date( 'Y-m-d H:i:s' ) . ' Attempt SMTP mail.' . "\n";
 
 			$mailer                    = new Mail_SMTP();
 			$result                    = $mailer->send(
-				$host                  = $smtp_settings['host'],
-				$port                  = $smtp_settings['port'],
-				$username              = $smtp_settings['username'],
-				$password              = $smtp_settings['password'],
-				$use_auth              = $smtp_settings['auth'],
-				$use_local_mail_server = $smtp_settings['use_local_mail_server'],
-				$to_email              = $smtp_settings['to_email'],
-				$from_email            = $smtp_settings['from_email'],
+				$host                  = $settings['host'],
+				$port                  = $settings['port'],
+				$username              = $settings['username'],
+				$password              = $settings['password'],
+				$use_auth              = $settings['auth'],
+				$oauth_required        = $settings['oauth_required'],
+				$oauth                 = $settings['oauth'],
+				$oauth_provider	       = $settings['oauth_provider'],
+				$oauth_client_id       = $settings['oauth_client_id'],
+				$oauth_client_secret   = $settings['oauth_client_secret'],
+				$oauth_microsoft_token = $settings['oauth_microsoft_token'],
+				$use_local_mail_server = $settings['use_local_mail_server'],
+				$to_email              = $settings['to_email'],
+				$from_email            = $settings['from_email'],
 				$from_name,
 				$reply_name,
 				$reply_email,
@@ -162,6 +167,7 @@ class Submit_Controller {
 				$attachments,
 				$domain,
 			);
+
 			if ( 200 !== $result[0] ) {
 				$this->log .= date( 'Y-m-d H:i:s' ) . ' SMTP mailer reported: "' . $result[1] . "\n";
 				error_log( 'Bigup Forms: SMTP mailer reported: "' . $result[1] . '"' );
@@ -169,13 +175,13 @@ class Submit_Controller {
 		}
 
 		// If SMTP fails and local mail is enabled, try send using PHP mail.
-		if ( 200 !== $result[0] && $local_settings && $local_settings['use_local_mail_server'] && function_exists( 'mail' ) ) {
+		if ( 200 !== $result[0] && isset( $settings['use_local_mail_server'] ) && $settings['use_local_mail_server'] && function_exists( 'mail' ) ) {
 			$this->log .= date( 'Y-m-d H:i:s' ) . ' Attempt local mail.' . "\n";
 
 			$mailer         = new Mail_Local();
 			$result         = $mailer->send(
-				$to_email   = $local_settings['to_email'],
-				$from_email = $local_settings['from_email'],
+				$to_email   = $settings['to_email'],
+				$from_email = $settings['from_email'],
 				$from_name,
 				$reply_name,
 				$reply_email,
@@ -184,6 +190,7 @@ class Submit_Controller {
 				$plaintext_body,
 				$attachments,
 			);
+
 			if ( 200 !== $result[0] ) {
 				$this->log .= date( 'Y-m-d H:i:s' ) . ' Local mailer reported: "' . $result[1] . "\n";
 				error_log( 'Bigup Forms: Local mailer reported: "' . $result[1] . '"' );

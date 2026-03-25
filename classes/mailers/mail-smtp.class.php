@@ -18,7 +18,6 @@ namespace BigupWeb\Forms;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-use TheNetworg\OAuth2\Client\Provider\Azure;
 
 // Load Composer's autoloader.
 require BIGUPFORMS_PATH . 'vendor/autoload.php';
@@ -33,7 +32,13 @@ class Mail_SMTP {
 		$port,
 		$username,
 		$password,
-		$use_auth = true,
+		$use_auth,
+		$oauth_required,
+		$oauth,
+		$oauth_provider,
+		$oauth_client_id,
+		$oauth_client_secret,
+		$oauth_microsoft_token,
 		$use_local_mail_server,
 		$to_email,
 		$from_email,
@@ -56,12 +61,33 @@ class Mail_SMTP {
 			$mail->SMTPDebug   = SMTP::DEBUG_OFF;
 			$mail->Debugoutput = 'error_log';
 
+			if ( $oauth_required && OAuth_Manager::is_oauth_enabled() ) {
+				$provider       = OAuth_Manager::get_provider();
+				$settings       = get_option( 'bigup_forms_settings', array() );
+				$mail->AuthType = 'XOAUTH2';
+				$mail->setOAuth(
+					new \PHPMailer\PHPMailer\OAuth(
+						array(
+							'provider'     => $provider->get_provider_instance(),
+							'clientId'     => $oauth_client_id,
+							'clientSecret' => $oauth_client_secret,
+							'refreshToken' => $oauth_microsoft_token['refresh_token'],
+							'userName'     => $provider->get_email(),
+						)
+					)
+				);
+			} else if ( ! empty( $password ) ) {
+				$mail->Password = $password;
+			} else {
+				// No password provided and OAuth not in use → fail.
+				throw new Exception( 'No authentication method available: either a password or OAuth credentials are required.' );
+			}
+
 			$mail->isSMTP();
 			$mail->Host     = $host;
 			$mail->Port     = (int) $port;
 			$mail->SMTPAuth = (bool) $use_auth;
 			$mail->Username = $username;
-			$mail->Password = $password;
 			$mail->CharSet  = 'UTF-8';
 			$mail->Helo     = $domain;
 

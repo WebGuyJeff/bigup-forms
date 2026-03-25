@@ -18,8 +18,14 @@ tr:has(#oauthToggle:checked) {
 	}
 }
 
-#connectMicrosoftAccount {
-	display: block;
-	margin-top: 0.5em;
-	margin-right: auto;
+.msConnectWrapper {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	margin: 0.5em 0;
+
+	button#connectMicrosoftAccount {
+		display: block;
+		margin-right: 1em;
+	}
 }

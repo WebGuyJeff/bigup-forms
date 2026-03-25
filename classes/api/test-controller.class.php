@@ -15,7 +15,6 @@ namespace BigupWeb\Forms;
 
 // WordPress Dependencies.
 use WP_REST_Request;
-use get_option;
 
 class Test_Controller {
 
@@ -42,12 +41,12 @@ class Test_Controller {
 
 		switch ( $test_request['test'] ) {
 			case 'SMTP':
-				$settings = Get_Settings::smtp();
+				$settings = Settings::get();
 				if ( false === (bool) $settings ) {
 					return array( 500, 'There was a problem retrieving your SMTP settings from the database.' );
 				}
-				$test_settings = new Test_Settings();
-				$result        = $test_settings->smtp_connection(
+				$test_account = new Test_Account();
+				$result        = $test_account->smtp_connection(
 					$settings['host'],
 					$settings['port'],
 					$settings['username'],

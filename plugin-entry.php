@@ -30,6 +30,12 @@ $namespace = 'BigupWeb\\Forms\\';
 $root      = BIGUPFORMS_PATH . 'classes/';
 require_once $root . 'autoload.php';
 
+// Load OAuth.
+require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-provider-interface.class.php';
+require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-provider-microsoft.class.php';
+require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-manager.class.php';
+require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-hooks.php';
+
 // Setup the plugin.
 $init = new Init();
 $init->setup();

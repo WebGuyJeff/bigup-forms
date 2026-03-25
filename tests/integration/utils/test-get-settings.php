@@ -3,7 +3,7 @@
 namespace BigupWeb\Forms\Tests\Integration;
 
 use WP_UnitTestCase;
-use BigupWeb\Forms\Get_Settings;
+use BigupWeb\Forms\Settings;
 
 
 /**
@@ -47,7 +47,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         update_option( 'bigup_forms_settings', $valid_settings );
         
         // Act
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         // Assert
         $this->assertIsArray( $result );
@@ -67,7 +67,7 @@ class GetSettingsTest extends WP_UnitTestCase {
     public function test_smtp_returns_false_when_no_settings_exist() {
         // Don't set any options
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -88,7 +88,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -109,7 +109,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -130,7 +130,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -154,7 +154,7 @@ class GetSettingsTest extends WP_UnitTestCase {
             ];
             update_option( 'bigup_forms_settings', $settings );
             
-            $result = Get_Settings::smtp();
+            $result = Settings::get();
             
             $this->assertIsArray( $result, "Port $port should be valid" );
             $this->assertEquals( $port, $result['port'] );
@@ -177,7 +177,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -198,7 +198,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -219,67 +219,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
-        
-        $this->assertFalse( $result );
-    }
-    
-    /**
-     * Test local mail server settings with all valid values
-     */
-    public function test_local_mail_server_returns_settings_when_all_valid() {
-        $valid_settings = [
-            'use_local_mail_server' => true,
-            'from_email' => 'sender@example.com',
-            'to_email' => 'recipient@example.com',
-        ];
-        update_option( 'bigup_forms_settings', $valid_settings );
-        
-        $result = Get_Settings::local_mail_server();
-        
-        $this->assertIsArray( $result );
-        $this->assertTrue( $result['use_local_mail_server'] );
-        $this->assertEquals( 'sender@example.com', $result['from_email'] );
-        $this->assertEquals( 'recipient@example.com', $result['to_email'] );
-    }
-    
-    /**
-     * Test local mail server returns false when settings don't exist
-     */
-    public function test_local_mail_server_returns_false_when_no_settings_exist() {
-        $result = Get_Settings::local_mail_server();
-        
-        $this->assertFalse( $result );
-    }
-    
-    /**
-     * Test local mail server returns false with invalid from_email
-     */
-    public function test_local_mail_server_returns_false_with_invalid_from_email() {
-        $invalid_settings = [
-            'use_local_mail_server' => true,
-            'from_email' => 'not-an-email',
-            'to_email' => 'recipient@example.com',
-        ];
-        update_option( 'bigup_forms_settings', $invalid_settings );
-        
-        $result = Get_Settings::local_mail_server();
-        
-        $this->assertFalse( $result );
-    }
-    
-    /**
-     * Test local mail server returns false with invalid to_email
-     */
-    public function test_local_mail_server_returns_false_with_invalid_to_email() {
-        $invalid_settings = [
-            'use_local_mail_server' => true,
-            'from_email' => 'sender@example.com',
-            'to_email' => 'recipient@',
-        ];
-        update_option( 'bigup_forms_settings', $invalid_settings );
-        
-        $result = Get_Settings::local_mail_server();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -301,7 +241,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         $this->assertIsArray( $result );
         $this->assertTrue( $result['auth'] );
         
@@ -309,7 +249,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         $settings['auth'] = false;
         update_option( 'bigup_forms_settings', $settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         $this->assertIsArray( $result );
         $this->assertFalse( $result['auth'] );
     }
@@ -331,7 +271,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         $this->assertIsArray( $result );
         $this->assertTrue( $result['use_local_mail_server'] );
         
@@ -339,7 +279,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         $settings['use_local_mail_server'] = false;
         update_option( 'bigup_forms_settings', $settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         $this->assertIsArray( $result );
         $this->assertFalse( $result['use_local_mail_server'] );
     }
@@ -360,7 +300,7 @@ class GetSettingsTest extends WP_UnitTestCase {
         ];
         update_option( 'bigup_forms_settings', $invalid_settings );
         
-        $result = Get_Settings::smtp();
+        $result = Settings::get();
         
         $this->assertFalse( $result );
     }
@@ -392,7 +332,7 @@ class GetSettingsTest extends WP_UnitTestCase {
             ];
             update_option( 'bigup_forms_settings', $settings );
             
-            $result = Get_Settings::smtp();
+            $result = Settings::get();
             
             $this->assertFalse( $result, "Email '$invalid_email' should be invalid" );
         }
@@ -423,7 +363,7 @@ class GetSettingsTest extends WP_UnitTestCase {
             ];
             update_option( 'bigup_forms_settings', $settings );
             
-            $result = Get_Settings::smtp();
+            $result = Settings::get();
             
             $this->assertIsArray( $result, "Email '$valid_email' should be valid" );
         }

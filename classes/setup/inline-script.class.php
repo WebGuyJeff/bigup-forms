@@ -25,7 +25,7 @@ class Inline_Script {
 	public static function get_frontend_form_variables() {
 		return self::JS_OBJECT_NAME . ' = ' . wp_json_encode(
 			array(
-				'settingsOK'            => self::mail_settings_are_set(),
+				'settingsOK'            => Settings::ready(),
 				'restSubmitURL'         => get_rest_url( null, 'bigup/forms/v1/submit' ),
 				'restStoreURL'          => get_rest_url( null, 'bigup/forms/v1/store' ),
 				'restTestURL'           => get_rest_url( null, 'bigup/forms/v1/test' ),
@@ -47,33 +47,6 @@ class Inline_Script {
 		} else {
 			return false;
 		}
-	}
-
-
-	/**
-	 * Mail settings are set check.
-	 *
-	 * @return boolean $result True if mail settings are set, false otherwise.
-	 */
-	private static function mail_settings_are_set() {
-		// Check if settings have been configured ready to test email sending.
-		$settings              = get_option( 'bigup_forms_settings' );
-		$required_smtp         = array(
-			'username',
-			'password',
-			'host',
-			'port',
-		);
-		$required_headers      = array(
-			'to_email',
-			'from_email',
-		);
-		$smtp_ok               = self::all_are_set( $settings, $required_smtp );
-		$headers_ok            = self::all_are_set( $settings, $required_headers );
-		$local_mailer_selected = ( ! empty( $settings['use_local_mail_server'] ) && true === $settings['use_local_mail_server'] );
-		$result                = ( $smtp_ok && $headers_ok || $local_mailer_selected && $headers_ok );
-
-		return $result;
 	}
 
 
