@@ -131,7 +131,7 @@ class Settings {
 			return false;
 		}
 
-		if ( (int) $settings['oauth_required'] === 1 ) {
+		if ( empty( $settings['oauth_required'] ) || (int) $settings['oauth_required'] === 1 ) {
 			if ( empty( $settings['oauth_provider'] )
 				|| empty( $settings['oauth_client_id'] )
 				|| empty( $settings['oauth_client_secret'] ) ) {
@@ -156,7 +156,7 @@ class Settings {
 	 * Returns false if ANY setting is invalid.
 	 * This only validates settings and should not manipulate values.
 	 */
-	private static function validate( $settings ) {
+	public static function validate( $settings ) {
 
 		foreach ( $settings as $name => $value ) {
 

@@ -174,7 +174,7 @@ foreach ( $fields as $name => $data ) {
 								<tbody>
 									<tr>
 										<td class="content-block powered-by" style="font-family: Helvetica, sans-serif; vertical-align: top; color: #9a9ea6; font-size: 16px; text-align: center;" valign="top" align="center">
-											Powered by <a href="https://bigupweb.uk" style="color: #9a9ea6; font-size: 16px; text-align: center; text-decoration: none;">Bigup Forms</a>
+											Powered by <a href="https://bigupweb.com" style="color: #9a9ea6; font-size: 16px; text-align: center; text-decoration: none;">Bigup Forms</a>
 										</td>
 									</tr>
 								</tbody>

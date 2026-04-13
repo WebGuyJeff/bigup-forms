@@ -48,18 +48,4 @@ class Inline_Script {
 			return false;
 		}
 	}
-
-
-	/**
-	 * Check all test items exist as populated keys in data.
-	 */
-	private static function all_are_set( $data, $test_items ) {
-		$all_set = true;
-		foreach ( $test_items as $item ) {
-			if ( empty( $data[ $item ] ) ) {
-				$all_set = false;
-			}
-		}
-		return $all_set;
-	}
 }

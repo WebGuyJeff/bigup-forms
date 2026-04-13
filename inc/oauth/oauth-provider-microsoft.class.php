@@ -14,10 +14,22 @@ class OAuth_Provider_Microsoft implements OAuth_Provider_Interface {
 
     public function __construct() {
 
+		$clientId     = Settings::get( 'oauth_client_id' );
+		$clientSecret = Settings::get( 'oauth_client_secret' );
+
+		$valid = Settings::validate( array(
+			'oauth_client_id'     => $clientId,
+			'oauth_client_secret' => $clientSecret,
+		) );
+
+		if ( ! $valid ) {
+			wp_die( 'Invalid OAuth settings.' );
+		}
+
         $this->provider = new Azure(
             array(
-                'clientId'     => Settings::get( 'oauth_client_id' ),
-                'clientSecret' => Settings::get( 'oauth_client_secret' ),
+                'clientId'     => $clientId,
+                'clientSecret' => $clientSecret,
                 'redirectUri'  => admin_url( 'admin-post.php?action=bigup_forms_oauth_callback' ),
                 'tenant'       => 'common',
             )

@@ -41,7 +41,7 @@ class Admin_Settings {
 	 * To add multiple sections to the same settings page, all settings
 	 * registered for that page MUST BE IN THE SAME 'OPTION GROUP'.
 	 */
-	private $group_default = 'group_contact_form_settings';
+	private $group_default = 'group_bigup_forms_settings';
 
 	/**
 	 * Microsoft Connected Flag
@@ -157,27 +157,95 @@ class Admin_Settings {
 
 					<div class="setupInstructions">
 						<ol style="margin-left:20px;">
+
 							<li>
-								<strong><?php esc_html_e( 'Create a Microsoft Azure App', 'bigup-forms' ); ?></strong><br>
+								<strong><?php esc_html_e( 'Access App registrations in Azure', 'bigup-forms' ); ?></strong><br>
 								<a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade"
 								target="_blank">
 									<?php esc_html_e( 'Open Azure App Registrations →', 'bigup-forms' ); ?>
 								</a>
 							</li>
+
 							<li>
-								<strong><?php esc_html_e( 'Set this Redirect URI', 'bigup-forms' ); ?></strong><br>
+								<strong><?php esc_html_e( 'Click "New registration"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Enter an application name', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Select Supported account type', 'bigup-forms' ); ?></strong><br>
+								<?php esc_html_e( 'Choose: Accounts in this organizational directory only (Single tenant)', 'bigup-forms' ); ?>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Set Redirect URI', 'bigup-forms' ); ?></strong><br>
+								<?php esc_html_e( 'Platform: Web', 'bigup-forms' ); ?><br>
 								<code><?php echo esc_html( admin_url( 'admin-post.php?action=bigup_forms_oauth_callback' ) ); ?></code>
 							</li>
+
 							<li>
-								<strong><?php esc_html_e( 'Add these API Permissions', 'bigup-forms' ); ?></strong><br>
-								<code>SMTP.Send</code> & <code>offline_access</code>
+								<strong><?php esc_html_e( 'Click "Register"', 'bigup-forms' ); ?></strong>
 							</li>
+
 							<li>
-								<strong><?php esc_html_e( 'Copy Client ID & Client Secret into the fields below, and save the settings', 'bigup-forms' ); ?></strong>
+								<strong><?php esc_html_e( 'Open "API permissions"', 'bigup-forms' ); ?></strong>
 							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Remove the default "User.Read" permission', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Click "Add a permission"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Select "Microsoft Graph"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Choose "Delegated permissions"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Add the following permissions:', 'bigup-forms' ); ?></strong><br>
+								<code>email</code>, <code>offline_access</code>, <code>SMTP.Send</code>
+								<p class="description">
+									<?php esc_html_e( 'After adding permissions, you may need to click "Grant admin consent".', 'bigup-forms' ); ?>
+								</p>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Click "Add permissions"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Go to "Certificates & secrets"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Click "New client secret"', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Enter a description and choose an expiry', 'bigup-forms' ); ?></strong>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Copy the client secret value immediately', 'bigup-forms' ); ?></strong><br>
+								<?php esc_html_e( 'It is only shown once.', 'bigup-forms' ); ?>
+							</li>
+
+							<li>
+								<strong><?php esc_html_e( 'Copy the Application (client) ID into the fields below and save settings', 'bigup-forms' ); ?></strong>
+							</li>
+
 							<li>
 								<strong><?php esc_html_e( 'Click the button to connect your Microsoft account', 'bigup-forms' ); ?></strong>
 							</li>
+
 						</ol>
 					</div>
 
@@ -260,7 +328,7 @@ class Admin_Settings {
 		$section = 'section_smtp_settings';
 		add_settings_section( $section, 'SMTP Settings', array(), $page );
 			add_settings_field( 'username', 'Username', array( &$this, 'echo_field_username' ), $page, $section );
-			add_settings_field( 'oauth_required', 'Oauth Required', array( &$this, 'echo_field_oauth_required' ), $page, $section );
+			add_settings_field( 'oauth_required', 'Oauth Required', array( &$this, 'echo_field_oauth_required' ), $page, $section, array( 'class' => 'hidden' ) );
 			add_settings_field( 'password', 'Password', array( &$this, 'echo_field_password' ), $page, $section );
 			add_settings_field( 'host', 'Host', array( &$this, 'echo_field_host' ), $page, $section );
 			add_settings_field( 'port', 'Port', array( &$this, 'echo_field_port' ), $page, $section );
