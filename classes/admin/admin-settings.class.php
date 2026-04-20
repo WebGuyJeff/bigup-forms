@@ -249,6 +249,12 @@ class Admin_Settings {
 						</ol>
 					</div>
 
+					<?php
+					if (isset($_GET['oauth']) && $_GET['oauth'] === 'success') {
+						echo '<div class="notice notice-success"><p>Microsoft account connected successfully.</p></div>';
+					}
+					?>
+
 					<input type="hidden" name="action" value="bigup_forms_connect_microsoft" />
 
 					<?php wp_nonce_field( 'bigup_forms_connect_microsoft_action', 'bigup_forms_connect_microsoft_nonce' ); ?>

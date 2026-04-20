@@ -28,10 +28,11 @@ class OAuth_Provider_Microsoft implements OAuth_Provider_Interface {
 
         $this->provider = new Azure(
             array(
-                'clientId'     => $clientId,
-                'clientSecret' => $clientSecret,
-                'redirectUri'  => admin_url( 'admin-post.php?action=bigup_forms_oauth_callback' ),
-                'tenant'       => 'common',
+                'clientId'               => $clientId,
+                'clientSecret'           => $clientSecret,
+                'redirectUri'            => admin_url('admin-post.php'),
+                'tenant'                 => 'common',
+				'defaultEndPointVersion' => '2.0',
             )
         );
     }
@@ -41,9 +42,13 @@ class OAuth_Provider_Microsoft implements OAuth_Provider_Interface {
         return $this->provider->getAuthorizationUrl(
             array(
                 'scope' => array(
-                    'offline_access',
-                    'https://outlook.office.com/SMTP.Send',
+					'openid',
+					'profile',
+					'offline_access',
+					'https://graph.microsoft.com/User.Read',
+                    'https://graph.microsoft.com/Mail.Send',
                 ),
+				'prompt' => 'consent',
             )
         );
     }

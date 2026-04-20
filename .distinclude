@@ -5,9 +5,8 @@
 ./build
 ./classes
 ./dashicons
+./inc
 ./parts
-./readme.md
-./vendor/autoload.php
-./vendor/composer
-./vendor/phpmailer
+./vendor
 ./plugin-entry.php
+./readme.md

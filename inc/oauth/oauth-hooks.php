@@ -13,7 +13,8 @@ add_action(
     function () {
 
 	// DEBUG.
-	error_log( '$POST: ' . implode( ', ', $_POST ) );
+	error_log( '## admin_post_bigup_forms_connect_microsoft ##' );
+	error_log( 'OAuth POST: ' . implode( ', ', $_POST ) );
 
 	    // Security check
         if (
@@ -27,11 +28,23 @@ add_action(
 
         $provider = new OAuth_Provider_Microsoft();
 
-	// DEBUG.
-	//wp_redirect( 'https://example.com' );
-	//exit;
+		$authUrl = $provider->get_authorization_url();
 
-        wp_redirect( $provider->get_authorization_url() );
+		// Get the generated state from provider
+        $state = $provider->get_provider_instance()->getState();
+
+        // Store state in transient (10 min expiry is typical)
+        set_transient(
+            'bigup_oauth_state_' . get_current_user_id(),
+            'bigup_' . $state,
+            10 * MINUTE_IN_SECONDS
+        );
+
+
+error_log('AUTH URL: ' . $provider->get_authorization_url());
+
+
+        wp_redirect( $authUrl );
         exit;
     }
 );
@@ -39,24 +52,56 @@ add_action(
 /**
  * OAuth callback handler
  */
-add_action(
-    'admin_post_bigup_forms_oauth_callback',
-    function () {
+add_action('admin_init', function () {
 
-        if ( empty( $_GET['code'] ) ) {
-            wp_die( 'OAuth failed.' );
-        }
-
-        $provider = OAuth_Manager::get_provider();
-
-        $provider->get_access_token(
-            sanitize_text_field( $_GET['code'] )
-        );
-
-        wp_redirect(
-            admin_url( 'options-general.php?page=bigup-settings&oauth=success' )
-        );
-
-        exit;
+    // Only run if this looks like an OAuth callback
+    if (
+        empty($_GET['code']) ||
+        empty($_GET['state'])
+    ) {
+        return;
     }
-);
+
+    // Optional: extra safety so we don't run on unrelated admin pages
+    if (!is_admin()) {
+        return;
+    }
+
+    // DEBUG.
+    error_log('## OAuth callback via admin_init ##');
+    error_log('OAuth GET: ' . implode( ', ', $_GET ));
+
+    $user_id = get_current_user_id();
+
+    $stored_state = get_transient('bigup_oauth_state_' . $user_id);
+
+    // Always delete after reading (one-time use)
+    delete_transient('bigup_oauth_state_' . $user_id);
+
+    if (
+        empty($stored_state) ||
+        $_GET['state'] !== str_replace('bigup_', '', $stored_state)
+    ) {
+        wp_die('Invalid OAuth state');
+    }
+
+    if (empty($_GET['code'])) {
+        wp_die('Missing authorization code');
+    }
+
+    $provider = \BigupWeb\Forms\OAuth_Manager::get_provider();
+
+    try {
+        $provider->get_access_token(
+            sanitize_text_field($_GET['code'])
+        );
+    } catch (\Exception $e) {
+        wp_die('Token exchange failed: ' . $e->getMessage());
+    }
+
+    wp_redirect(
+        admin_url('options-general.php?page=bigup-settings&oauth=success')
+    );
+
+    exit;
+});
