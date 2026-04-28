@@ -1,0 +1,25 @@
+.footer {
+	margin-top: var(--bf_pageGap);
+	background: var(--bf_color__neutral1);
+	padding-block: var(--bf_sectionPaddingY);
+	padding-inline: var(--bf_pagePaddingX);
+	font-size: 13px;
+}
+
+.inner {
+	gap: 1.5em;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.meta {
+	color: #666;
+}
+
+.right {
+	gap: 1em;
+	display: flex;
+	align-items: center;
+}

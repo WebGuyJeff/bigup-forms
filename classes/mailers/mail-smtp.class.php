@@ -34,12 +34,9 @@ class Mail_SMTP {
 		$password,
 		$use_auth,
 		$oauth_required,
-		$oauth,
-		$oauth_provider, // Check if this is needed.
 		$oauth_client_id,
 		$oauth_client_secret,
 		$oauth_microsoft_token,
-		$use_local_mail_server,
 		$to_email,
 		$from_email,
 		$from_name,
@@ -50,6 +47,7 @@ class Mail_SMTP {
 		$plaintext_body,
 		$attachments,
 		$domain,
+		$smtp_encryption = 'auto'
 	) {
 
 		// Make sure PHP server script limit is higher than mailer timeout!
@@ -62,8 +60,10 @@ class Mail_SMTP {
 			$mail->Debugoutput = 'error_log';
 
 			if ( $oauth_required && OAuth_Manager::is_oauth_enabled() ) {
-				$provider       = OAuth_Manager::get_provider();
-				$settings       = get_option( 'bigup_forms_settings', array() );
+				$provider = OAuth_Manager::get_provider();
+				if ( ! is_array( $oauth_microsoft_token ) || empty( $oauth_microsoft_token['refresh_token'] ) ) {
+					throw new Exception( 'Microsoft OAuth token is missing or invalid.' );
+				}
 				$mail->AuthType = 'XOAUTH2';
 				$mail->setOAuth(
 					new \PHPMailer\PHPMailer\OAuth(
@@ -146,6 +146,20 @@ class Mail_SMTP {
 					// No STARTTLS offered → allow opportunistic TLS just in case.
 					$mail->SMTPSecure  = '';
 					$mail->SMTPAutoTLS = true;
+				}
+			}
+
+			$enc = is_string( $smtp_encryption ) ? strtolower( trim( $smtp_encryption ) ) : 'auto';
+			if ( ! ( $oauth_required && OAuth_Manager::is_oauth_enabled() ) && 'auto' !== $enc ) {
+				if ( 'none' === $enc ) {
+					$mail->SMTPSecure   = '';
+					$mail->SMTPAutoTLS = false;
+				} elseif ( 'starttls' === $enc ) {
+					$mail->SMTPSecure   = PHPMailer::ENCRYPTION_STARTTLS;
+					$mail->SMTPAutoTLS = false;
+				} elseif ( 'ssl' === $enc ) {
+					$mail->SMTPSecure   = PHPMailer::ENCRYPTION_SMTPS;
+					$mail->SMTPAutoTLS = false;
 				}
 			}
 

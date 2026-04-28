@@ -1,10 +1,8 @@
 import { __ } from '@wordpress/i18n'
 import { InnerBlocks, useBlockProps } from '@wordpress/block-editor'
-import { Honeypot } from '../../components/Honeypot'
-import { SubmitButton } from '../../components/SubmitButton'
-import { ResetButton } from '../../components/ResetButton'
+import { Honeypot, SubmitButton, ResetButton } from './components'
 
-export default function save( { attributes } ) {
+export default function save({ attributes }) {
 
 	const {
 		uniqueID, // ID unique to every form block.
@@ -16,7 +14,7 @@ export default function save( { attributes } ) {
 		showResetButton
 	} = attributes
 
-	const blockProps = useBlockProps.save( {
+	const blockProps = useBlockProps.save({
 		className: 'bigupForms__form',
 		style: { textAlign: textAlign },
 		'data-unique-id': uniqueID,
@@ -25,7 +23,7 @@ export default function save( { attributes } ) {
 		method: 'post',
 		acceptCharset: 'utf-8',
 		autoComplete: 'on'
-	} )
+	})
 
 	return (
 		<form { ...blockProps } >

@@ -1,0 +1,12 @@
+.panel {
+	border-top: var(--bf_containerBorder);
+	background: var(--bf_color__neutral1);
+	padding-block: var(--bf_sectionPaddingY);
+	padding-inline: var(--bf_pagePaddingX);
+}
+
+.gridColumns {
+	gap: var(--bf_gap__md);
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+}

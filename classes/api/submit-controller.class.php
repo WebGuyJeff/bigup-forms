@@ -138,25 +138,28 @@ class Submit_Controller {
 		$plaintext_body = $compose->plaintext();
 		$attachments    = isset( $form_data['files'] ) ? $form_data['files'] : false;
 
+		$result = array( 500, 'Sending your message failed.' );
+
 		// Try send using SMTP.
-		if ( $settings ) {
+		if ( is_array( $settings ) && ! empty( $settings ) ) {
 			$this->log .= date( 'Y-m-d H:i:s' ) . ' Attempt SMTP mail.' . "\n";
 
-			$mailer                    = new Mail_SMTP();
-			$result                    = $mailer->send(
-				$host                  = $settings['host'],
-				$port                  = $settings['port'],
-				$username              = $settings['username'],
-				$password              = $settings['password'],
-				$use_auth              = $settings['auth'],
-				$oauth_required        = $settings['oauth_required'],
-				$oauth_provider	       = $settings['oauth_provider'],
-				$oauth_client_id       = $settings['oauth_client_id'],
-				$oauth_client_secret   = $settings['oauth_client_secret'],
-				$oauth_microsoft_token = $settings['oauth_microsoft_token'],
-				$use_local_mail_server = $settings['use_local_mail_server'],
-				$to_email              = $settings['to_email'],
-				$from_email            = $settings['from_email'],
+			$mailer = new Mail_SMTP();
+			$conn   = Mail_Sending_Config::smtp_connection_args( $settings );
+			$enc    = $settings['smtp_encryption'] ?? 'auto';
+
+			$result = $mailer->send(
+				$conn[0],
+				$conn[1],
+				$conn[2],
+				$conn[3],
+				$conn[4],
+				$conn[5],
+				$conn[6],
+				$conn[7],
+				$conn[8],
+				$settings['to_email'],
+				$settings['from_email'],
 				$from_name,
 				$reply_name,
 				$reply_email,
@@ -165,6 +168,7 @@ class Submit_Controller {
 				$plaintext_body,
 				$attachments,
 				$domain,
+				is_string( $enc ) ? $enc : 'auto',
 			);
 
 			if ( 200 !== $result[0] ) {

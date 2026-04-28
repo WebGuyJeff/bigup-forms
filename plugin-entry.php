@@ -17,24 +17,24 @@ namespace BigupWeb\Forms;
  * @link https://webguyjeff.com
  */
 
-$settings     = get_option( 'bigup_forms_settings' );
-$enable_debug = ( $settings && array_key_exists( 'debug', $settings ) && $settings['debug'] ) ? true : false;
-
-// Set global constants.
-define( 'BIGUPFORMS_DEBUG', $enable_debug );
 define( 'BIGUPFORMS_PATH', trailingslashit( __DIR__ ) );
-define( 'BIGUPFORMS_URL', trailingslashit( get_site_url( null, strstr( __DIR__, '/wp-content/' ) ) ) );
 
 // Register namespaced autoloader.
 $namespace = 'BigupWeb\\Forms\\';
 $root      = BIGUPFORMS_PATH . 'classes/';
 require_once $root . 'autoload.php';
 
-// Load OAuth.
+// Load OAuth before Settings::get() so mail + transport helpers can reference provider classes safely.
 require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-provider-interface.class.php';
 require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-provider-microsoft.class.php';
 require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-manager.class.php';
 require_once BIGUPFORMS_PATH . 'inc/oauth/oauth-hooks.php';
+
+$settings     = Settings::get();
+$enable_debug = ! empty( $settings['debug'] );
+
+define( 'BIGUPFORMS_DEBUG', $enable_debug );
+define( 'BIGUPFORMS_URL', trailingslashit( get_site_url( null, strstr( __DIR__, '/wp-content/' ) ) ) );
 
 // Setup the plugin.
 $init = new Init();

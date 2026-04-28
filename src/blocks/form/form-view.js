@@ -1,4 +1,4 @@
-import { init } from './js/_init'
+import { init } from './view/_init'
 
 /**
  * When this file is defined as the value of the `viewScript` property

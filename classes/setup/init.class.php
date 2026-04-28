@@ -49,18 +49,61 @@ class Init {
 	 * Register admin scripts and styles.
 	 */
 	public function admin_scripts_and_styles( $hook_suffix ) {
-		wp_register_style( 'bigup_forms_admin_css', BIGUPFORMS_URL . 'build/admin/css/bigup-forms-admin.css', array(), filemtime( BIGUPFORMS_PATH . 'build/admin/css/bigup-forms-admin.css' ), 'all' );
-		wp_register_script( 'bigup_forms_admin_js', BIGUPFORMS_URL . 'build/admin/js/bigup-forms-admin.js', array(), filemtime( BIGUPFORMS_PATH . 'build/admin/js/bigup-forms-admin.js' ), false );
-		wp_add_inline_script( 'bigup_forms_admin_js', Inline_Script::get_frontend_form_variables(), 'before' );
-		if ( ! wp_script_is( 'bigup_icons', 'registered' ) ) {
-			wp_register_style( 'bigup_icons', BIGUPFORMS_URL . 'dashicons/css/bigup-icons.css', array(), filemtime( BIGUPFORMS_PATH . 'dashicons/css/bigup-icons.css' ), 'all' );
-		}
-		if ( ! wp_script_is( 'bigup_icons', 'enqueued' ) ) {
-			wp_enqueue_style( 'bigup_icons' );
+
+		$cpt_css_location = 'build/admin/bigup-forms-custom-post.css';
+		wp_register_style(
+			'bigup_forms_custom_post_css',
+			BIGUPFORMS_URL . $cpt_css_location,
+			array(),
+			file_exists( BIGUPFORMS_PATH . $cpt_css_location ) ? filemtime( BIGUPFORMS_PATH . $cpt_css_location ) : '0',
+			'all'
+		);
+		if ( 'post.php' === $hook_suffix || 'edit.php' === $hook_suffix ) {
+			wp_enqueue_style( 'bigup_forms_custom_post_css', null );
 		}
 
-		if ( 'post.php' === $hook_suffix || 'edit.php' === $hook_suffix ) {
-			wp_enqueue_style( 'bigup_forms_admin_css', null );
+		$spa_css_location = 'build/admin/bigup-forms-spa.css';
+		wp_register_style(
+			'bigup_forms_spa_css',
+			BIGUPFORMS_URL . $spa_css_location,
+			array(),
+			file_exists( BIGUPFORMS_PATH . $spa_css_location ) ? filemtime( BIGUPFORMS_PATH . $spa_css_location ) : '0',
+			'all'
+		);
+		wp_style_add_data( 'bigup_forms_spa_css', 'rtl', 'replace' );
+
+		$admin_js_asset = BIGUPFORMS_PATH . 'build/admin/bigup-forms-spa.asset.php';
+		$admin_js       = file_exists( $admin_js_asset ) ? require $admin_js_asset : array( 'dependencies' => array(), 'version' => '' );
+		$admin_js_deps  = isset( $admin_js['dependencies'] ) && is_array( $admin_js['dependencies'] ) ? $admin_js['dependencies'] : array();
+		$admin_js_ver   = isset( $admin_js['version'] ) ? $admin_js['version'] : filemtime( BIGUPFORMS_PATH . 'build/admin/bigup-forms-spa.js' );
+
+		wp_register_script(
+			'bigup_forms_spa_js',
+			BIGUPFORMS_URL . 'build/admin/bigup-forms-spa.js',
+			$admin_js_deps,
+			$admin_js_ver,
+			false
+		);
+		if ( str_contains( $hook_suffix, 'bigup-web-forms' ) ) {
+			wp_add_inline_script(
+				'bigup_forms_spa_js',
+				Inline_Script::get_frontend_form_variables() . "\n" . Inline_Script::get_admin_spa_variables(),
+				'before'
+			);
+		}
+
+		if ( ! wp_style_is( 'bigup_dashicons_css', 'registered' ) ) {
+			$dashicons_css_location = 'dashicons/css/bigup-icons.css';
+			wp_register_style(
+				'bigup_dashicons_css',
+				BIGUPFORMS_URL . $dashicons_css_location,
+				array(),
+				file_exists( BIGUPFORMS_PATH . $dashicons_css_location ) ? filemtime( BIGUPFORMS_PATH . $dashicons_css_location ) : '0',
+				'all'
+			);
+		}
+		if ( ! wp_style_is( 'bigup_dashicons_css', 'enqueued' ) ) {
+			wp_enqueue_style( 'bigup_dashicons_css' );
 		}
 	}
 
@@ -81,6 +124,48 @@ class Init {
 	 * @link https://developer.wordpress.org/reference/functions/register_rest_route/
 	 */
 	public function register_rest_api_routes() {
+		$admin_controller = new Action_Controller();
+
+		register_rest_route(
+			'bigup/forms-admin/v1',
+			'/bootstrap',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( $admin_controller, 'bootstrap' ),
+				'permission_callback' => array( $admin_controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'bigup/forms-admin/v1',
+			'/settings',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $admin_controller, 'update_setting' ),
+				'permission_callback' => array( $admin_controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'bigup/forms-admin/v1',
+			'/email/test',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $admin_controller, 'test' ),
+				'permission_callback' => array( $admin_controller, 'can_manage_options' ),
+			)
+		);
+
+		register_rest_route(
+			'bigup/forms-admin/v1',
+			'/email/oauth-disconnect',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( $admin_controller, 'oauth_disconnect' ),
+				'permission_callback' => array( $admin_controller, 'can_manage_options' ),
+			)
+		);
+
 		// Form submission endpoint.
 		register_rest_route(
 			'bigup/forms/v1',
@@ -98,16 +183,6 @@ class Init {
 			array(
 				'methods'             => 'POST',
 				'callback'            => array( new Store_Controller(), 'bigup_forms_rest_api_store_callback' ),
-				'permission_callback' => '__return_true',
-			)
-		);
-		// SMTP account settings test endpoint.
-		register_rest_route(
-			'bigup/forms/v1',
-			'/test',
-			array(
-				'methods'             => 'POST',
-				'callback'            => array( new Test_Controller(), 'bigup_forms_rest_api_test_callback' ),
 				'permission_callback' => '__return_true',
 			)
 		);

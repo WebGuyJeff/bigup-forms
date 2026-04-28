@@ -3,9 +3,7 @@ import { PropTypes } from 'prop-types'
 import React, { useEffect } from 'react'
 import { InnerBlocks, useBlockProps, InspectorControls, AlignmentToolbar, BlockControls, RichText } from '@wordpress/block-editor'
 import { PanelBody, SelectControl, CheckboxControl, TextControl, Button } from '@wordpress/components'
-import { Honeypot } from '../../components/Honeypot'
-import { SubmitButton } from '../../components/SubmitButton'
-import { ResetButton } from '../../components/ResetButton'
+import { Honeypot, SubmitButton, ResetButton } from './components'
 import { restStoreURL, restNonce } from '../../common/_wp-inlined-script'
 import './form-editor.scss.js'
 
@@ -23,7 +21,7 @@ const ALLOWED_BLOCKS = [
 
 const uniqueIDs = []
 
-export default function Edit( props ) {
+export default function Edit(props) {
 
 	const {
 		name,
@@ -42,7 +40,7 @@ export default function Edit( props ) {
 		showResetButton
 	} = attributes
 
-	const blockProps = useBlockProps( {
+	const blockProps = useBlockProps({
 		className: 'bigupForms__form',
 		style: { textAlign: textAlign },
 		'data-unique-id': uniqueID,
@@ -51,55 +49,55 @@ export default function Edit( props ) {
 		method: 'post',
 		acceptCharset: 'utf-8',
 		autoComplete: 'on'
-	} )
+	})
 
-	useEffect( () => {
+	useEffect(() => {
 		// Catch uniqueID in a new variable to avoid infinite loop with setAttributes.
 		let newUniqueID = uniqueID
-		const getUiniqueID = () => Math.random().toString( 36 ).substring( 2, 8 )
-		while ( newUniqueID === null || newUniqueID === undefined || newUniqueID === '' || uniqueIDs.includes( newUniqueID ) ) {
+		const getUiniqueID = () => Math.random().toString(36).substring(2, 8)
+		while (newUniqueID === null || newUniqueID === undefined || newUniqueID === '' || uniqueIDs.includes(newUniqueID)) {
 			newUniqueID = getUiniqueID()
 		}
-		if ( uniqueID !== newUniqueID ) {
-			setAttributes( { uniqueID: newUniqueID } )
-			uniqueIDs.push( newUniqueID )
+		if (uniqueID !== newUniqueID) {
+			setAttributes({ uniqueID: newUniqueID })
+			uniqueIDs.push(newUniqueID)
 		} else {
-			uniqueIDs.push( uniqueID )
+			uniqueIDs.push(uniqueID)
 		}
-	}, [] )
+	}, [])
 
 	// Select control values.
-	const blockVariations  = wp.blocks.getBlockType( name ).variations
+	const blockVariations  = wp.blocks.getBlockType(name).variations
 	const variationOptions = []
-	Object.values( blockVariations ).forEach( variation => {
-		variationOptions.push( { label: variation.title, value: variation.name } )
-	} )
+	Object.values(blockVariations).forEach(variation => {
+		variationOptions.push({ label: variation.title, value: variation.name })
+	})
 
 	/*
 	 * 1. Scrape the form block and all children (will become pattern).
 	 * 2. Fetch request to save/update the form custom post.
 	 * 3. Catch the returned post ID and save to ID block attribute - form is now 'hard linked' to the post/pattern.
 	 */
-	const handleSave = async ( event ) => {
+	const handleSave = async (event) => {
 		event.preventDefault()
 
 		// Scrape form blocks from post content.
-		const postContentHTML = wp.data.select( "core/editor" ).getEditedPostContent()
-		const formBlocks      = scrapeFormBlocksFromHTML( postContentHTML )
+		const postContentHTML = wp.data.select("core/editor").getEditedPostContent()
+		const formBlocks      = scrapeFormBlocksFromHTML(postContentHTML)
 
 
 
 		// DEBUG.
-		console.log( 'formBlocks', formBlocks )
+		console.log('formBlocks', formBlocks)
 
 
-		if ( ! formBlocks.length ) {
+		if (! formBlocks.length) {
 			return
 		}
 
 		// Build fetch payload.
 		const formData = new FormData()
-		formData.append( 'content', JSON.stringify( formBlocks ) )
+		formData.append('content', JSON.stringify(formBlocks))
 		const options = {
 			method: "POST",
 			headers: {
@@ -111,17 +109,17 @@ export default function Edit( props ) {
 	
 		// Fetch request.
 		try {
-			const response   = await fetch( restStoreURL, { ...options, signal: AbortSignal.timeout( 10000 ) } )
+			const response   = await fetch(restStoreURL, { ...options, signal: AbortSignal.timeout(10000) })
 			const result     = await response.json()
 
-			if ( result.ok && result?.output && result.output !== formPostID ) {
-				setAttributes( { formPostID: result.output } )
+			if (result.ok && result?.output && result.output !== formPostID) {
+				setAttributes({ formPostID: result.output })
 			} else {
 				throw result
 			}
 	
-		} catch ( error ) {
-			console.error( error )
+		} catch (error) {
+			console.error(error)
 		}
 	}
 
@@ -132,8 +130,8 @@ export default function Edit( props ) {
 	 * Returns all wp:bigup-forms/form blocks found in a single HTML string.
 	 * Each result includes the full block string and the parsed formPostID.
 	 */
-	function scrapeFormBlocksFromHTML( html ) {
-		if ( typeof html !== 'string' ) throw new TypeError( 'html must be a string' )
+	function scrapeFormBlocksFromHTML(html) {
+		if (typeof html !== 'string') throw new TypeError('html must be a string')
 
 		const results = []
 
@@ -143,7 +141,7 @@ export default function Edit( props ) {
 		 */
 		const regex = /(<!--\s*wp:bigup-forms\/form\s*(\{[\s\S]*?\})\s*-->[\s\S]*?<!--\s*\/wp:bigup-forms\/form\s*-->)/gi
 
-		for ( const match of html.matchAll( regex ) ) {
+		for (const match of html.matchAll(regex)) {
 			const blockString = match[ 1 ]
 			const attrsJson   = match[ 2 ]
 
@@ -153,7 +151,7 @@ export default function Edit( props ) {
 			let formName   = null
 
 			try {
-				attrs = JSON.parse( attrsJson )
+				attrs = JSON.parse(attrsJson)
 				uniqueID = attrs?.uniqueID ?? null
 				formPostID = attrs?.formPostID ?? null
 				formPostID = attrs?.formPostID ?? null
@@ -162,13 +160,13 @@ export default function Edit( props ) {
 				// Keep nulls; still return the block string.
 			}
 
-			results.push( {
+			results.push({
 				block: blockString,
 				uniqueID,
 				formPostID,
 				formName,
 				attrs, // Useful if we want other fields later.
-			} )
+			})
 		}
 
 		return results
@@ -179,14 +177,14 @@ export default function Edit( props ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Settings', 'bigup-forms' ) }
+					title={ __('Settings', 'bigup-forms') }
 					initialOpen={ true } 
 				>
 					<TextControl
-						label={ __( 'Name', 'bigup-forms' ) }
+						label={ __('Name', 'bigup-forms') }
 						type="text"
 						value={ formName }
-						onChange={ ( newValue ) => { setAttributes( { formName: newValue } ) } }
+						onChange={ (newValue) => { setAttributes({ formName: newValue }) } }
 						__nextHasNoMarginBottom
 					/>
 					<Button
@@ -197,41 +195,41 @@ export default function Edit( props ) {
 							marginRight: '12px'
 						}}
 					>
-						{ ( formPostID > 0 ) ? __( 'Update Form', 'bigup-forms' ) : __( 'Save Form', 'bigup-forms' ) }
+						{ (formPostID > 0) ? __('Update Form', 'bigup-forms') : __('Save Form', 'bigup-forms') }
 					</Button>
-					<span>{ formPostID > 0 ? 'ID: ' + formPostID : __( 'unsaved', 'bigup-forms' ) }</span>
+					<span>{ formPostID > 0 ? 'ID: ' + formPostID : __('unsaved', 'bigup-forms') }</span>
 					<SelectControl
-						label={ __( 'Replace With', 'bigup-forms' ) }
+						label={ __('Replace With', 'bigup-forms') }
 						labelPosition="top"
-						title={ __( 'Replace With', 'bigup-forms' ) }
+						title={ __('Replace With', 'bigup-forms') }
 						value={ variation }
 						options={ variationOptions }
-						onChange={ ( newValue ) => { setAttributes( { variation: newValue } ) } }
+						onChange={ (newValue) => { setAttributes({ variation: newValue }) } }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Form Elements', 'bigup-forms' ) }
+					title={ __('Form Elements', 'bigup-forms') }
 					initialOpen={ true } 
 				>
 					<TextControl
-						label={ __( 'Title', 'bigup-forms' ) }
+						label={ __('Title', 'bigup-forms') }
 						type="text"
 						value={ title }
-						onChange={ ( newValue ) => { setAttributes( { title: newValue } ) } }
+						onChange={ (newValue) => { setAttributes({ title: newValue }) } }
 						disabled={ ! showTitle }
 						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
-						label={ __( 'Show title', 'bigup-forms' ) }
+						label={ __('Show title', 'bigup-forms') }
 						checked={ showTitle }
-						onChange={ ( newValue ) => { setAttributes( { showTitle: newValue } ) } }
+						onChange={ (newValue) => { setAttributes({ showTitle: newValue }) } }
 						__nextHasNoMarginBottom
 					/>
 					<CheckboxControl
-						label={ __( 'Show reset button', 'bigup-forms' ) }
+						label={ __('Show reset button', 'bigup-forms') }
 						checked={ showResetButton }
-						onChange={ ( newValue ) => { setAttributes( { showResetButton: newValue } ) } }
+						onChange={ (newValue) => { setAttributes({ showResetButton: newValue }) } }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
@@ -241,7 +239,7 @@ export default function Edit( props ) {
 				<BlockControls>
 					<AlignmentToolbar
 						value={ textAlign }
-						onChange={ ( newValue ) => { setAttributes( { textAlign: newValue } ) } }
+						onChange={ (newValue) => { setAttributes({ textAlign: newValue }) } }
 					/>
 				</BlockControls>
 			}
@@ -253,9 +251,9 @@ export default function Edit( props ) {
 						<RichText
 							tagName="h2"
 							value={ title }
-							onChange={ ( newValue ) => setAttributes( { title: newValue } ) }
-							aria-label={ title ? __( 'Form title', 'bigup-forms' ) : __( 'Empty form title', 'bigup-forms' ) }
-							placeholder={ __( 'Add a form title', 'bigup-forms' ) }
+							onChange={ (newValue) => setAttributes({ title: newValue }) }
+							aria-label={ title ? __('Form title', 'bigup-forms') : __('Empty form title', 'bigup-forms') }
+							placeholder={ __('Add a form title', 'bigup-forms') }
 						/>
 					}
 				</header>

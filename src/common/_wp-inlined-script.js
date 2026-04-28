@@ -38,7 +38,6 @@ const {
 	settingsOK,
 	restSubmitURL,
 	restStoreURL,
-	restTestURL,
 	restNonce,
 	debug,
 } = bigupFormsWpInlinedScript
@@ -50,7 +49,6 @@ export {
 	settingsOK, // Boolean value indicating email settings are configured.
 	restSubmitURL, // REST API submit endpoint.
 	restStoreURL, // REST API store endpoint.
-	restTestURL, // REST API store endpoint.
 	restNonce, // WP nonce string.
 	debug, // Boolean value indicating whether debug output should be logged to console.
 	validationDefinitions // Server-side Validation definitions.

@@ -1,0 +1,25 @@
+.card {
+	border: var(--bf_containerBorder);
+	border-radius: var(--bf_borderRadius__md);
+	filter: var(--bf_filter__smokeyShadow);
+	background: var(--bf_color__bg);
+	padding: var(--bf_gap__md);
+
+	@media screen and (min-width: 480px) {
+		padding: var(--bf_gap__lg);
+	}
+
+	@media screen and (min-width: 782.001px) {
+		padding: var(--bf_gap__lg);
+	}
+}
+
+.title {
+	margin-bottom: var(--bf_gap__md);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.row {
+	margin-bottom: var(--bf_gap__md);
+}

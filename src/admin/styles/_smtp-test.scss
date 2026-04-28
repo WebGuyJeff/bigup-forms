@@ -1,0 +1,25 @@
+.bf_smtpLog__danger {
+	border-color: var(--bf_color__danger);
+}
+
+.bf_smtpLog__success {
+	border-color: var(--bf_color__success);
+}
+
+
+.bf_logOutput {
+	background: #111;
+	color: #e5e7eb;
+	padding: 1em;
+	border-radius: 0.5em;
+	max-height: 500px;
+	overflow: auto;
+	font-family: monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	word-break: break-word;
+
+	pre {
+		white-space: pre-wrap;
+	}
+}

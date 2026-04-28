@@ -16,6 +16,8 @@ class Inline_Script {
 
 	private const JS_OBJECT_NAME = 'bigupFormsWpInlinedScript';
 
+	private const JS_ADMIN_SPA_OBJECT_NAME = 'bigupFormsAdminInlinedScript';
+
 
 	/**
 	 * Generate JavaScript to be inlined by wp_add_inline_script().
@@ -28,7 +30,6 @@ class Inline_Script {
 				'settingsOK'            => Settings::ready(),
 				'restSubmitURL'         => get_rest_url( null, 'bigup/forms/v1/submit' ),
 				'restStoreURL'          => get_rest_url( null, 'bigup/forms/v1/store' ),
-				'restTestURL'           => get_rest_url( null, 'bigup/forms/v1/test' ),
 				'restNonce'             => wp_create_nonce( 'wp_rest' ),
 				'debug'                 => BIGUPFORMS_DEBUG,
 				'validationDefinitions' => self::get_validation_definitions_for_frontend(),
@@ -47,5 +48,22 @@ class Inline_Script {
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Variables for the admin SPA (REST base + nonce). Output only on the plugin settings screen.
+	 */
+	public static function get_admin_spa_variables(): string {
+		return self::JS_ADMIN_SPA_OBJECT_NAME . ' = ' . wp_json_encode(
+			array(
+				'restBaseURL' => untrailingslashit( get_rest_url( null, 'bigup/forms-admin/v1' ) ),
+				'restNonce'   => wp_create_nonce( 'wp_rest' ),
+				'pluginSlug'  => 'bigup-web-forms',
+				'urls'        => array(
+					'settings'    => admin_url( 'admin.php?page=bigup-web-forms' ),
+					'entriesList' => admin_url( 'edit.php?post_type=bigup_form_entry' ),
+				),
+			)
+		);
 	}
 }

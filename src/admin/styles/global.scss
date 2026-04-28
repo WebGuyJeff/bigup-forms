@@ -1,0 +1,211 @@
+/**
+ * Bigup Forms admin SPA — design tokens (--bf_*).
+ *
+ * Naming: bf_block_element__modifier (camelCase concatenated). Custom props: --bf_property__modifier.
+ */
+
+// GLOBAL.
+
+#bigupFormsAdmin {
+	--bf_color__bg: #fff;
+	--bf_color__border: #c5c7cb;
+	--bf_color__text: #1f2937;
+	--bf_color__muted: #6b7280;
+
+	--bf_color__primary: #3d76cb;
+	/* WP blue */
+	--bf_color__primaryHover: hsl(216, 63%, 57%);
+	--bf_color__success: #16a34a;
+	--bf_color__warning: #f59e0b;
+	--bf_color__danger: #dc2626;
+
+	--bf_color__white: #fff;
+	--bf_color__black: #1f2937;
+
+	--bf_color__neutral1: #fafafa;
+	--bf_color__neutral2: #ededed;
+	--bf_color__neutral3: #d6d6d6;
+	--bf_color__neutral4: #bfbfbf;
+	--bf_color__neutral5: #8c8c8c;
+	--bf_color__neutral6: #595959;
+
+	--bf_color__transNeutral1: #e8e8e855;
+	--bf_color__transNeutral2: #cfcfcf55;
+	--bf_color__transNeutral3: #b1b1b155;
+	--bf_color__transNeutral4: #8c8c8c55;
+	--bf_color__transNeutral5: #4a4a4a55;
+	--bf_color__transNeutral6: #00000055;
+
+	--bf_filter__smokeyShadow: drop-shadow(0px 0px 8px rgba(99, 99, 99, 0.2));
+
+	--bf_fieldBorder: 1px solid var(--bf_color__border);
+	--bf_containerBorder: 1px solid var(--bf_color__border);
+
+	--bf_borderRadius__xs: 0.25em;
+	--bf_borderRadius__sm: 0.5em;
+	--bf_borderRadius__md: 0.75em;
+	--bf_borderRadius__lg: 1em;
+	--bf_borderRadius__xl: 1.5em;
+
+	--bf_gap__xs: 0.25em;
+	--bf_gap__sm: 0.5em;
+	--bf_gap__md: 1em;
+	--bf_gap__lg: 2em;
+	--bf_gap__xl: 4em;
+
+	--bf_pageGap: var(--bf_gap__md);
+	--bf_pagePaddingX: var(--bf_gap__md);
+	--bf_sectionPaddingY: var(--bf_gap__md);
+
+	@media screen and (min-width: 480px) {
+		--bf_pagePaddingX: 0 var(--bf_gap__lg);
+		--bf_sectionPaddingY: var(--bf_gap__lg);
+	}
+
+	@media screen and (min-width: 782.001px) {
+		--bf_pagePaddingX: var(--bf_gap__xl);
+		--bf_pageGap: var(--bf_gap__lg);
+	}
+
+	--bf_wpadminbarHeight_jsControlled: 32px;
+
+	color: var(--bf_color__text);
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	label,
+	input,
+	select {
+		color: var(--bf_color__text);
+	}
+}
+
+// RESET — Bigup Forms settings screen only (admin CSS is also loaded on entry list/edit).
+
+body.bigup-web_page_bigup-web-forms #wpcontent {
+	padding: 0 !important;
+}
+
+#bigupFormsAdmin {
+	font-size: 15px !important;
+
+	* {
+		box-sizing: border-box;
+	}
+
+	p,
+	input,
+	textarea,
+	button {
+		font-size: inherit;
+	}
+
+	.bf-tabIntro,
+	.bf-tabHint {
+		color: var(--bf_color__muted);
+		font-size: 0.95em;
+		line-height: 1.45;
+	}
+
+	.bf-tabHint {
+		margin-top: 0.75em;
+	}
+
+	.bf-overviewTitle {
+		margin-top: 0;
+	}
+
+	.bf-overviewList {
+		margin: 0 0 1em 1.25em;
+		padding: 0;
+		line-height: 1.5;
+	}
+
+	.bf-overviewMuted {
+		color: var(--bf_color__muted);
+	}
+
+	.bf-overviewStatus {
+		margin-top: var(--bf_gap__md);
+		padding-top: var(--bf_gap__md);
+		border-top: var(--bf_containerBorder);
+	}
+
+	.bf-overviewStatusList {
+		margin: 0.5em 0 0 1.25em;
+		padding: 0;
+		color: var(--bf_color__muted);
+		font-size: 0.95em;
+		line-height: 1.5;
+	}
+
+	.bf-fieldset {
+		margin: 0 0 var(--bf_gap__md);
+		padding: 0;
+		border: 0;
+	}
+
+	.bf-fieldsetLegend {
+		padding: 0;
+		font-weight: 600;
+		margin-bottom: var(--bf_gap__xs);
+	}
+
+	.bf-radioRow {
+		margin: 0.35em 0;
+	}
+
+	.bf-radioLabel {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5em;
+		cursor: pointer;
+		line-height: 1.4;
+	}
+
+	.bf-subheading {
+		margin: var(--bf_gap__md) 0 var(--bf_gap__xs);
+		font-size: 1em;
+		font-weight: 600;
+	}
+
+	.bf-readonlyDl {
+		margin: 0 0 var(--bf_gap__md);
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.25em 1em;
+		font-size: 0.95em;
+
+		dt {
+			margin: 0;
+			color: var(--bf_color__muted);
+			font-weight: 500;
+		}
+
+		dd {
+			margin: 0;
+		}
+	}
+
+	.bf-detailsAdvanced {
+		margin-top: var(--bf_gap__md);
+		padding: var(--bf_gap__sm);
+		border: var(--bf_containerBorder);
+		border-radius: var(--bf_borderRadius__sm);
+		background: var(--bf_color__neutral1);
+
+		summary {
+			cursor: pointer;
+			font-weight: 600;
+		}
+	}
+
+	.bf-inlineForm {
+		display: inline-block;
+		margin: 0 0 var(--bf_gap__sm);
+	}
+}
