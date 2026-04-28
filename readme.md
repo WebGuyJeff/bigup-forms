@@ -1,163 +1,117 @@
-# Bigup Forms
+# Block Forms
 
-This plugin aims to build upon the reliable PHPMailer plugin and expand the static contact form into
-customisable forms of any type built directly in the Gutenberg editor.
-
-#### Goals:
-
-- Build any form type.
-- Preconfigured field blocks (name, email, etc) ready to drop-in.
-- No input field configuration required.
-- Customisable text block to create custom input fields.
-- All input field blocks provide their own validation/sanitisation.
-
-#### Support for classic plugin forms
-
-This plugin was expanded from a classic forms plugin and as such the repo contains files speicific
-to classic plugin functionality. These should be noted when classic support is removed:
-
- - CSS and JS are still located in the traditinal directories in src/. The files are imported by the block JS and CSS files, but also used to generate assets which are enqueued using the traditional method in the init class. These files are also dependent on eachother through imports, so these must be picked apart and separated into their block files carefully. There may be need to maintain some common files where more than one block rely on a file.
- - Classic classes have been moved into a classic-supports/ dir inside classes.
-
-#### ToDo's
-
- - field variation - move to 'transform to' on block menu bar thing.
- - input name - enforce unique key within form.
- - add input types: tickbox, calendar.
- - enable questionaire type forms with inputs that change on input selections. E.g. a user chooses an option then different inputs are displayed for the required data capture.
-
-#### Known bugs
-
- - Form save as post not complete (don't use!).
+> Gutenberg-powered form builder for creating flexible contact and custom forms directly in the WordPress block editor.
 
 ---
 
-## Testing
+## ✨ Features
 
-This plugin uses PHPUnit for automated testing with both unit tests and WordPress integration tests.
+- Build forms visually using the block editor (Gutenberg)
+- Add and arrange fields as blocks
+- Lightweight and flexible compared to traditional form builders
+- Designed to integrate naturally with WordPress editing workflows
+- Ideal for contact forms, simple data capture, and custom layouts
+- Email sending of submissions
+- Submission storage as posts
+- Input validation
+- Spam protection
 
-## Prerequisites
+---
 
-- PHP 7.4 or higher
-- Composer
-- MySQL
-- Subversion (SVN)
+## 📦 Installation
 
-## Setup
+### WordPress
 
-### 1. Install Dependencies
+1. Upload the plugin to `/wp-content/plugins/`
+2. Activate the plugin via the WordPress admin
+3. Open the block editor and search for “Form” or related blocks
 
-```bash
-composer install
-```
+---
 
-### 2. Configure Tests
+## 🚀 Usage
 
-Copy the sample configuration:
+### WordPress
 
-```bash
-cp tests/config-sample.php tests/config.php
-```
+1. Open a page or post in the block editor  
+2. Insert the **Form** block  
+3. Add fields (text, email, textarea, etc.) as inner blocks  
+4. Configure labels and settings as needed  
+5. Publish and start collecting submissions  
 
-Edit `tests/config.php` if you need to customize database settings or file paths.
+Use cases:
+- Contact forms  
+- Simple enquiry forms  
+- Custom inline forms within content  
 
-### 3. Install WordPress Test Suite
+---
 
-Run the installation script (you'll be prompted for your MySQL password):
+## ⚙️ Configuration
 
-```bash
-bin/install-wp-tests.sh
-```
+- Configure form fields directly within the block editor  
+- Adjust labels, placeholders, and required fields  
+- Control layout using standard block editor tools  
 
-The script will:
-- Download WordPress core
-- Download the WordPress test suite
-- Create a test database
-- Configure the test environment
+---
 
-**Note:** Your MySQL password is never stored in files - it's only used during installation.
+## 🧱 Blocks / Components
 
-## Running Tests
+- **Form Block** — Container for building a form  
+- **Field Blocks** — Input elements such as text, email, textarea, etc.  
+- **Submit Button** — Handles form submission (built into form block)
 
-```bash
-# Run all tests
-composer test
+---
 
-# Run only unit tests
-composer test:unit
+## 🎨 Styling
 
-# Run only integration tests
-composer test:integration
-```
+- Inherits styles from your active theme  
+- Fully compatible with block editor design tools  
+- Build in style presets for quick styling
 
-## Test Structure
+---
 
-```
-tests/
-├── bootstrap.php          # Test suite bootstrap
-├── config.php            # Local configuration (not committed)
-├── config-sample.php     # Configuration template
-├── unit/                 # Unit tests (isolated, no WordPress dependencies)
-│   └── test-*.php
-└── integration/          # Integration tests (with WordPress)
-    └── test-*.php
-```
+## 📸 Screenshots
 
-## Writing Tests
+...coming soon!
 
-### Unit Tests
+---
 
-Test individual functions in isolation:
+## 🛣 Roadmap
 
-```php
-<?php
-namespace MyPlugin\Tests\Unit;
+- [ ] Additional field types
+- [ ] Microsoft account email sending
+- [ ] Enhanced spam protection (e.g. CAPTCHA or equivilent)
+- [ ] Form templates
 
-use WP_UnitTestCase;
+---
 
-class MyTest extends WP_UnitTestCase {
-    public function test_something() {
-        $result = my_function( 'input' );
-        $this->assertEquals( 'expected', $result );
-    }
-}
-```
+## 🤝 Contributing
 
-### Integration Tests
+Contributions, issues, and feature requests are welcome.
 
-Test functionality with WordPress:
+If you’d like to contribute:
+1. Fork the repo  
+2. Create a feature branch  
+3. Submit a pull request  
 
-```php
-<?php
-namespace MyPlugin\Tests\Integration;
+---
 
-use WP_UnitTestCase;
+## 🐛 Issues
 
-class MyIntegrationTest extends WP_UnitTestCase {
-    public function test_creates_post() {
-        $post_id = $this->factory->post->create([
-            'post_title' => 'Test'
-        ]);
-        
-        $this->assertGreaterThan( 0, $post_id );
-    }
-}
-```
+If you find a bug, please open an issue with:
+- Steps to reproduce  
+- Expected behaviour  
+- Screenshots (if relevant)  
 
-## CI/CD
+---
 
-For continuous integration, set the MySQL password via environment variable:
+## 📄 License
 
-```bash
-export WP_TEST_DB_PASSWORD="your_password"
-bin/install-wp-tests.sh
-composer test
-```
+This project is licensed under the GNU General Public License v3.0.
 
-## Troubleshooting
+---
 
-**Tests not found:** Ensure WordPress test suite is installed with `bin/install-wp-tests.sh`
+## 👤 Author
 
-**Database errors:** Check your MySQL credentials in `tests/config.php`
+Built and maintained by **webguyjeff**
 
-**Permission errors:** Ensure `/tmp` directory is writable or change paths in `tests/config.php`
+---
